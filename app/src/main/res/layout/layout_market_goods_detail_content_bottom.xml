@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.hankkin.library.NoScrollListView
+            android:divider="@color/grey_normal_bg"
+            android:dividerHeight="@dimen/spacing_tiny"
+            android:id="@+id/nlv_good_detial_imgs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!--没有这个不能上拉-->
+        <TextView
+            android:id="@+id/duummy"
+            android:padding="5dp"
+            android:text="  "
+            style="@style/whiteTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/grey_normal_bg"
+            android:padding="@dimen/spacing_smallest">
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0.5dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/spacing_normal"
+                android:layout_toLeftOf="@+id/tv_good_detail_tuodong"
+                android:background="@color/deep_transparent" />
+
+            <TextView
+                android:id="@+id/tv_good_detail_tuodong"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="已到最底"
+                android:textSize="@dimen/font_small" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0.5dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/spacing_normal"
+                android:layout_toRightOf="@+id/tv_good_detail_tuodong"
+                android:background="@color/deep_transparent" />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+</ScrollView>

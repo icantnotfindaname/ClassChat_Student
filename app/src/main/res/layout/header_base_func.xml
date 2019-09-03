@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="#BB00D8A0">
+
+    <LinearLayout
+        android:id="@+id/id_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/id_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="课程表"
+            android:textColor="#BBFFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="选择周次"
+            android:textColor="#AAFFFFFF"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <ImageButton
+        android:layout_margin="8dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/id_more"
+        android:id="@+id/id_scan"
+        android:background="@drawable/icon_timetable_fragment"
+        />
+
+    <ImageButton
+        android:id="@+id/id_more"
+        android:text="功能"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/icon_timetable_menu"
+         />
+
+
+</RelativeLayout>

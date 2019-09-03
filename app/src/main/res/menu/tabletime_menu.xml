@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu   xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_add_course"
+        android:icon="@drawable/icon_purple_round1"
+        android:title="添加课程"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_import_classes"
+        android:icon="@drawable/icon_purple_round5"
+        android:title="导入课表"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_shownotthisweek"
+        android:icon="@drawable/icon_purple_round2"
+        android:title="显示非本周课程"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_hidenotthisweek"
+        android:icon="@drawable/icon_purple_round3"
+        android:title="隐藏非本周课程"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_showweekend"
+        android:icon="@drawable/icon_purple_round4"
+        android:title="显示周末"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_hideweekend"
+        android:icon="@drawable/icon_purple_round5"
+        android:title="隐藏周末"
+        app:showAsAction="always" />
+    <!--<item-->
+        <!--android:id="@+id/menu_scan"-->
+        <!--android:icon="@drawable/icon_purple_round6"-->
+        <!--android:title="扫一扫"-->
+        <!--app:showAsAction="always"/>-->
+    <!--<item-->
+        <!--android:id="@+id/menu_export"-->
+        <!--android:icon="@drawable/icon_purple_round3"-->
+        <!--android:title="生成课表二维码"-->
+        <!--app:showAsAction="always"/>-->
+
+</menu>

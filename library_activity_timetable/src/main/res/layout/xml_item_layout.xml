@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/id_item_framelayout"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+
+        <!--  课程信息 -->
+    <TextView
+        android:id="@+id/id_course_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="2dp"
+        android:textColor="#FFFFFF"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:background="@drawable/green_bg"/>
+
+    <!-- 右上角提示圆点 -->
+    <TextView
+        android:id="@+id/id_course_messagecount"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="right|top"
+        android:background="@drawable/xml_pinkpoint_round"
+        android:gravity="center"
+        android:textColor="#AA00D8A0"
+        android:textSize="13sp"
+        android:visibility="gone" />
+
+</FrameLayout>

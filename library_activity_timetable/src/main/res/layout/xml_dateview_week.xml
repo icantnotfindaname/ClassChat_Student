@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/id_dateview_week_layout"
+    android:orientation="vertical"
+    android:layout_width="0dp"
+    android:layout_height="50dp"
+    android:layout_weight="1.5"
+    android:gravity="center_horizontal|center_vertical">
+
+    <!-- 星期几 -->
+    <TextView
+        android:id="@+id/id_week_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="周一"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="#BB000000"/>
+
+    <!-- 几号 -->
+    <TextView
+        android:id="@+id/id_week_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="#BB000000"/>
+
+</LinearLayout>

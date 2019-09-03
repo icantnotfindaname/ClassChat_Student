@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    tools:context=".Activity.Activity_Modify">
+
+    <!-- 顶部导航栏 -->
+    <LinearLayout style="@style/top_nav" >
+
+        <ImageView
+            android:id="@+id/iv_modifyname_return"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.15"
+            android:src="@drawable/ico_left_back"
+            android:padding="8dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:text="更改名字"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/btn_modifyname_upload"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.15"
+            android:padding="8dp"
+            android:text="保存"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/et_modifyname_name"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textColor="#000000"
+            android:theme="@style/EditText" />
+    </RelativeLayout>
+
+</LinearLayout>

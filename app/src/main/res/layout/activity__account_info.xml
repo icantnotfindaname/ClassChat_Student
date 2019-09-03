@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    tools:context=".Activity.Activity_AccountInfo">
+
+    <!-- 顶部导航栏 -->
+    <LinearLayout style="@style/top_nav" >
+
+        <ImageView
+            android:id="@+id/iv_personalinfo_return"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.15"
+            android:src="@drawable/ico_left_back"
+            android:padding="8dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:text="个人信息"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_register"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.15"
+            android:padding="8dp"
+            android:text=""
+            android:gravity="center"
+            android:textColor="#404040"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- 信息展示部分 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#EDEDED"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_personalinfo_headimage"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#FFFFFF">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_alignParentLeft="true"
+                android:textColor="#000000"
+                android:text="头像"
+                android:textSize="13sp"
+                android:paddingLeft="8dp"/>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_personalinfo_headimage"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_toLeftOf="@+id/iv_headimage_arrow"
+                android:layout_marginRight="2dp" />
+
+            <ImageView
+                android:layout_centerVertical="true"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/iv_headimage_arrow"
+                android:src="@drawable/ic_rightarrow"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_personalinfo_name"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="#FFFFFF"
+            android:layout_marginTop="2dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_alignParentLeft="true"
+                android:textColor="#000000"
+                android:text="昵称"
+                android:textSize="13sp"
+                android:paddingLeft="8dp"/>
+
+            <ImageView
+                android:layout_centerVertical="true"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/iv_name_arrow"
+                android:src="@drawable/ic_rightarrow"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+            <TextView
+                android:id="@+id/tv_personalinfo_name"
+                android:textSize="13sp"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="测试昵称"
+                android:layout_toLeftOf="@+id/iv_name_arrow"
+                android:layout_marginRight="2dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="#FFFFFF"
+            android:layout_marginTop="2dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_alignParentLeft="true"
+                android:textColor="#000000"
+                android:text="唠课号"
+                android:textSize="13sp"
+                android:paddingLeft="8dp"/>
+
+            <ImageView
+                android:layout_centerVertical="true"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/iv_id_arrow"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+            <TextView
+                android:id="@+id/tv_personalinfo_id"
+                android:textSize="13sp"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="测试账号"
+                android:layout_toLeftOf="@+id/iv_id_arrow"
+                android:layout_marginRight="2dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_personalinfo_password"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="#FFFFFF"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_alignParentLeft="true"
+                android:textColor="#000000"
+                android:text="密码与安全"
+                android:textSize="13sp"
+                android:paddingLeft="8dp"/>
+
+            <ImageView
+                android:layout_centerVertical="true"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/iv_password_arrow"
+                android:src="@drawable/ic_rightarrow"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+            <TextView
+                android:textSize="13sp"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_toLeftOf="@+id/iv_password_arrow"
+                android:layout_marginRight="2dp" />
+        </RelativeLayout>
+
+
+
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragment.Fragment_SelfInformationCenter">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/coursedetail_name"
+            android:layout_margin="10dp"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text=""
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#BB000000"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/delete_class"
+            android:layout_margin="10dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/trash_can"/>
+
+        <ImageView
+            android:id="@+id/close_dialog"
+            android:layout_margin="5dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/close"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_margin="12dp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/rili"/>
+
+        <TextView
+            android:id="@+id/coursedetail_zhoutime"
+            android:layout_margin="10dp"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text=""
+            android:textSize="15sp"
+            android:textColor="#BB000000"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_margin="12dp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/lishi"/>
+
+        <TextView
+            android:id="@+id/coursedetail_daytime"
+            android:layout_margin="10dp"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text=""
+            android:textSize="15sp"
+            android:textColor="#BB000000"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_margin="12dp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/wode"/>
+
+        <TextView
+            android:id="@+id/coursedetail_teacher"
+            android:layout_margin="10dp"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text=""
+            android:textSize="15sp"
+            android:textColor="#BB000000"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_margin="12dp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/dingwei"/>
+
+        <TextView
+            android:id="@+id/coursedetail_room"
+            android:layout_margin="10dp"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text=""
+            android:textSize="15sp"
+            android:textColor="#BB000000"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="26dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/course_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_margin="10dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:background="@drawable/xiaoxi"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textSize="12sp"
+                android:textColor="#BB000000"
+                android:text="马上聊"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/course_file"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:background="@drawable/yuedu" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="藏经阁"
+                android:textColor="#BB000000"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/course_sign"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_margin="10dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:background="@drawable/baogao"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:textColor="#BB000000"
+                android:text="上上签"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/course_note"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_margin="10dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:background="@drawable/linggan"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:textColor="#BB000000"
+                android:text="随心记"/>
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
