@@ -49,6 +49,7 @@ import com.sdsmdg.tastytoast.TastyToast;
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -57,6 +58,8 @@ import okhttp3.Call;
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static com.example.classchat.Util.Util_getSerialNumber.getSerialNumber;
 
 public class Fragment_Market extends Fragment {
 //    private static final String TAG = "Fragment_Market";
@@ -104,7 +107,11 @@ public class Fragment_Market extends Fragment {
         super.onCreate(savedInstanceState);
         //手势监听
 //        Sensey.getInstance().init(getContext());
+
+        Util_ToastUtils.showToast(getContext(),getSerialNumber());
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

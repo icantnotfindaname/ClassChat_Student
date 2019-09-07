@@ -47,8 +47,8 @@
         android:background="@drawable/bg_radius_sign" >
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:src="@drawable/app_logo" />
     </LinearLayout>
 
@@ -118,13 +118,20 @@
                 android:textSize="14sp" />
 
         </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="40dp"
-        android:orientation="horizontal" >
+        android:layout_marginRight="40dp">
+
+        <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@null">
 
         <CheckBox
             android:id="@+id/btn_loginactivity_autologin"
@@ -132,24 +139,42 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="自动登录"
+            android:textSize="10sp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
             android:textColor="@android:color/darker_gray"/>
 
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="登录或注册则表示您同意"-->
+<!--            android:textColor="@android:color/darker_gray"-->
+<!--            android:textSize="13sp" />-->
         <TextView
+            android:id="@+id/tv_find_password"
+            android:layout_toLeftOf="@id/tv_change_device"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="登录或注册则表示您同意"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="13sp" />
+            android:layout_centerVertical="true"
+            android:padding="14dp"
+            android:text="找回密码"
+            android:textColor="#63d065"
+            android:textSize="10sp"
+            />
 
         <TextView
-            android:id="@+id/tv_termOfService"
+            android:id="@+id/tv_change_device"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="14dp"
-            android:paddingTop="18dp"
-            android:text="《使用条款》"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="14dp"
+            android:text="更换设备"
             android:textColor="#63d065"
-            android:textSize="10sp" />
+            android:textSize="10sp"/>
+
+    </RelativeLayout>
+
     </LinearLayout>
 
     <Button
@@ -162,12 +187,6 @@
         android:text="登  录"
         android:textColor="#ffffff"
         android:textSize="15sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
 
 
 </LinearLayout>

@@ -27,7 +27,7 @@
     <string name="phone_login">无密码登录</string>
     <string name="logout_ing">正在退出登录</string>
     <string name="title_activity_about_us_acitivity">AboutUsAcitivity</string>
-    <string name="HelpAndFeedback">     请尽量详细描述您遇到的问题，以便于我们尽快为您解决，我们为所带来的不便深感歉意！</string>
+    <string name="HelpAndFeedback">     请用微信扫描二维码，描述您遇到的问题，我们将尽快为您解决。</string>
     <string name="HelpAndFeedbackHint">     请描述您遇到的问题</string>
     <string name="MarketSearchBarHint">搜索商品</string>
 </resources>

@@ -31,6 +31,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.classchat.R;
 import com.example.classchat.Util.Util_NetUtil;
 import com.nightonke.boommenu.Util;
+import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,11 +42,13 @@ import okhttp3.FormBody;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static com.example.classchat.Util.Util_getSerialNumber.getSerialNumber;
+
 public class Activity_Enter extends AppCompatActivity implements View.OnClickListener{
 
     //初始化图形控件
     private EditText editPerson, editCode;
-    private TextView register;
+    private TextView register, changeDevice, findPassword;
     private Button login;
     private CheckBox isLogin;
 
@@ -67,8 +70,9 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
 
     // 声明一个数组permissions，将需要的权限都放在里面
     String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS,
-    Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_WIFI_STATE, Manifest.permission.CHANGE_NETWORK_STATE, Manifest.permission.ACCESS_NETWORK_STATE};
-    // 创建一个mPermissionList，逐个判断哪些权限未授予，未授予的权限存储到mPerrrmissionList中
+    Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_WIFI_STATE, Manifest.permission.CHANGE_NETWORK_STATE, Manifest.permission.ACCESS_NETWORK_STATE,
+    Manifest.permission.CAMERA, Manifest.permission.READ_PHONE_STATE};
+    // 创建一个mPermissionList，逐个判断哪些权限未授予，未授予的权限存储到mPermissionList中
     List<String> mPermissionList = new ArrayList<>();
 
     final int mFirstRequestCode = 100;//权限请求码
@@ -82,15 +86,15 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
             switch (msg.what){
                 case LOGIN_FAILED:
                     //密码错误报警
-                    Toast.makeText(Activity_Enter.this,"用户名或密码错误",Toast.LENGTH_SHORT).show();
-                    editPerson.setText(null);editCode.setText(null);
+                    TastyToast.makeText(Activity_Enter.this,"用户名或密码错误或未使用注册设备登陆", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+                    editCode.setText(null);
                     if (loadingForLogin != null && loadingForLogin.isShowing()) {
                         loadingForLogin.dismiss();
                     }
                     break;
                 case LOGIN_SUCCESS:
                     //登录成功
-                    Toast.makeText(Activity_Enter.this,"登录成功",Toast.LENGTH_SHORT).show();
+                    TastyToast.makeText(Activity_Enter.this,"登录成功", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
                     if (isLogin.isChecked()) {
                         saveUserInfo();
                     }
@@ -130,7 +134,7 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
         }
         initPermission(); // 初始化权限请求
         init(); // 初始化各控件
-        getUserInfo(); // 取出储存好的用户信息
+        //getUserInfo(); // 取出储存好的用户信息
 
     }
 
@@ -189,7 +193,20 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
         editCode = findViewById(R.id.et_password);
         editPerson = findViewById(R.id.et_username);
         register = findViewById(R.id.tv_register);
+        changeDevice = findViewById(R.id.tv_change_device);
+        findPassword = findViewById(R.id.tv_find_password);
         register.setOnClickListener(this);
+        changeDevice.setOnClickListener(this);
+        findPassword.setOnClickListener(this);
+
+        SharedPreferences sp = getSharedPreferences("userinfo" , Context.MODE_PRIVATE );
+
+        /* 多次判断 */
+        if(sp!=null){
+            editPerson .setText(sp.getString("name",""));
+            editCode.setText(sp.getString("psw",""));
+            isLogin.setChecked(sp.getBoolean("auto", false));
+        }
     }
 
     /*
@@ -202,11 +219,15 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
                 login(v);
                 break;
             case R.id.tv_register:  //注册按钮
-                Intent intent = new Intent(this, Activity_Register.class);
-                startActivity(intent);
+                startActivity(new Intent(this, Activity_Register.class));
                 break;
             case R.id.btn_loginactivity_autologin:
                 isLogin.setChecked(isLogin.isChecked());
+            //TODO 用户更换登陆设备
+            case R.id.tv_change_device:
+                startActivity(new Intent(this, Activity_HelpAndFeedback.class));
+            case R.id.tv_find_password:
+                startActivity(new Intent(this, Activity_FindPassword.class));
         }
     }
 
@@ -217,6 +238,7 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
 
         String currentUsername = editPerson.getText().toString(); //去除空格，获取手机号
         String currentPassword = editCode.getText().toString();  //去除空格，获取密码
+        String currentSerialNumber = getSerialNumber();
 
         if (TextUtils.isEmpty(currentUsername)) { //判断手机号是不是为空
             Toast.makeText(this, R.string.User_name_cannot_be_empty, Toast.LENGTH_SHORT).show();
@@ -238,9 +260,13 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
         /*
         开启网络线程，发送登录请求
          */
+        //TODO 获取用户设备号信息是否为空，若为空则获取本次登陆设备号作为设备号信息上传
+
         final RequestBody requestBody = new FormBody.Builder()
                 .add("username", currentUsername)
                 .add("password", currentPassword)
+                //TODO 判断设备号是否符合
+                //.add("serialnumber", currentSerialNumber)
                 .build();   //构建请求体
 
         Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/login/student", requestBody, new okhttp3.Callback() {
@@ -249,8 +275,7 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
                 // 得到服务器返回的具体内容
                 Message message = new Message();
                 String responsedata = response.body().string();
-                if (responsedata.equals("ERROR"))
-                {
+                if (responsedata.equals("ERROR")) {
                     message.what = LOGIN_FAILED;
                     handler.sendMessage(message);
                 } else {
@@ -262,6 +287,7 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
                     proUni = jsonObject.getString("university") + "_" + jsonObject.getString("school");
                     token = jsonObject.getString("token");
                     headUrl = jsonObject.getString("head");
+
                     message.what = LOGIN_SUCCESS;
                     handler.sendMessage(message);
                 }
@@ -283,16 +309,9 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("name",editPerson.getText().toString()).commit();
         editor.putString("psw" , editCode.getText().toString()).commit();
+        editor.putBoolean("auto",isLogin.isChecked()).commit();
     }
 
-    /*
-    登录时获取存储的用户的账号和密码
-     */
-    private void getUserInfo(){
-        SharedPreferences sp = getSharedPreferences("userinfo" ,Context.MODE_PRIVATE );
-        editPerson.setText(sp.getString("name",""));
-        editCode.setText(sp.getString("psw",""));
-    }
 
     @Override
     public Resources getResources() {//禁止app字体大小跟随系统字体大小调节
@@ -304,4 +323,5 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
         }
         return resources;
     }
+
 }
