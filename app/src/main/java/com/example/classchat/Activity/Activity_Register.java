@@ -25,8 +25,6 @@ import com.example.classchat.R;
 import com.example.classchat.Util.TimingButton;
 import com.example.classchat.Util.Util_NetUtil;
 import com.example.classchat.Util.Util_ToastUtils;
-import com.sdsmdg.tastytoast.TastyToast;
-
 import java.io.IOException;
 
 import cn.smssdk.EventHandler;
@@ -92,13 +90,13 @@ public class Activity_Register extends AppCompatActivity implements View.OnClick
                     if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
                         if (result == SMSSDK.RESULT_COMPLETE) {
                             // 处理成功得到验证码的结果
-                            TastyToast.makeText(Activity_Register.this, "请查收短信", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
+                            Util_ToastUtils.showToast(Activity_Register.this, "请查收短信");
                             // 请注意，此时只是完成了发送验证码的请求，验证码短信还需要几秒钟之后才送达
                         } else {
                             // 处理错误的结果
                             Log.d(TAG, "handleMessage: " + result);
                             editSMS.setText(null);
-                            TastyToast.makeText(Activity_Register.this, "验证码服务出错，请稍后再试试？", Toast.LENGTH_SHORT, TastyToast.ERROR).show();
+                            Util_ToastUtils.showToast(Activity_Register.this, "验证码服务出错，请稍后再试试？");
                             ((Throwable) data).printStackTrace();
                         }
                     } else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
@@ -140,7 +138,7 @@ public class Activity_Register extends AppCompatActivity implements View.OnClick
                             });
                         } else {
                             // TODO 处理错误的结果
-                            TastyToast.makeText(Activity_Register.this, "验证码错误", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+                            Util_ToastUtils.showToast(Activity_Register.this, "验证码错误");
                             ((Throwable) data).printStackTrace();
                         }
                     }
@@ -153,7 +151,7 @@ public class Activity_Register extends AppCompatActivity implements View.OnClick
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        TastyToast.makeText(this,"  注册后签到将绑定此设备,更换（一年至多2次）请联系客服",TastyToast.DEFAULT,TastyToast.WARNING).show();
+        Util_ToastUtils.showToast(this,"  注册后签到将绑定此设备,更换（一年至多2次）请联系客服");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__register);
         if (Build.VERSION.SDK_INT >= 21) {
@@ -219,15 +217,15 @@ public class Activity_Register extends AppCompatActivity implements View.OnClick
         final String password = editSMS.getText().toString().trim();
         String confirm_password = editTextCT.getText().toString().trim();
         if (TextUtils.isEmpty(username)) {  //当手机号没有输入时
-            TastyToast.makeText(this, "手机号不能为空！", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+            Util_ToastUtils.showToast(this, "手机号不能为空！");
             editTextP.requestFocus();//使输入框失去焦点
             return;
         } else if (TextUtils.isEmpty(password)) {//当验证码没有输入时
-            TastyToast.makeText(this, "验证码不能为空！", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+            Util_ToastUtils.showToast(this, "验证码不能为空！");
             editSMS.requestFocus();//使输入框失去焦点
             return;
         } else if (TextUtils.isEmpty(confirm_password)) {//当注册密码没有输入时
-            TastyToast.makeText(this, "密码不能为空！", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+            Util_ToastUtils.showToast(this, "密码不能为空！");
             editTextCT.requestFocus();//使输入框失去焦点
             return;
         }

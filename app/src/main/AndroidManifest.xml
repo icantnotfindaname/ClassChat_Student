@@ -108,4 +108,6 @@
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /><!--检测网络链接状况-->
+
 </manifest>

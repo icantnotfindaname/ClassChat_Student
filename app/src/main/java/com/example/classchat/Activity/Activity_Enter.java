@@ -5,9 +5,12 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -17,6 +20,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -29,9 +33,11 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.classchat.R;
+import com.example.classchat.Util.NetBroadcastReceiver;
+import com.example.classchat.Util.Util_NetState;
 import com.example.classchat.Util.Util_NetUtil;
-import com.nightonke.boommenu.Util;
-import com.sdsmdg.tastytoast.TastyToast;
+import com.example.classchat.Util.Util_ToastUtils;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,7 +50,12 @@ import okhttp3.Response;
 
 import static com.example.classchat.Util.Util_getSerialNumber.getSerialNumber;
 
-public class Activity_Enter extends AppCompatActivity implements View.OnClickListener{
+public class Activity_Enter extends AppCompatActivity implements View.OnClickListener, NetBroadcastReceiver.NetEvent {
+
+    //判断网络状态
+    public NetBroadcastReceiver netBroadcastReceiver;
+    public static NetBroadcastReceiver.NetEvent event;
+    private int netMobile;
 
     //初始化图形控件
     private EditText editPerson, editCode;
@@ -86,7 +97,7 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
             switch (msg.what){
                 case LOGIN_FAILED:
                     //密码错误报警
-                    TastyToast.makeText(Activity_Enter.this,"用户名或密码错误", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+                    Util_ToastUtils.showToast(Activity_Enter.this,"用户名或密码错误");
                     editCode.setText(null);
                     if (loadingForLogin != null && loadingForLogin.isShowing()) {
                         loadingForLogin.dismiss();
@@ -94,7 +105,7 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
                     break;
                 case LOGIN_SUCCESS:
                     //登录成功
-                    TastyToast.makeText(Activity_Enter.this,"登录成功", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
+                    Util_ToastUtils.showToast(Activity_Enter.this,"登录成功");
                     if (isLogin.isChecked()) {
                         saveUserInfo();
                     }
@@ -135,6 +146,18 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
         initPermission(); // 初始化权限请求
         init(); // 初始化各控件
         //getUserInfo(); // 取出储存好的用户信息
+
+        event = this;
+        //实例化IntentFilter对象
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        netBroadcastReceiver = new NetBroadcastReceiver();
+        registerReceiver(netBroadcastReceiver, filter);
+
+
 
     }
 
@@ -324,5 +347,19 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
         }
         return resources;
     }
+
+    @Override
+    public void onNetChange(int netMobile) {
+        this.netMobile = netMobile;
+        Log.e("网络", netMobile+"");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(netBroadcastReceiver);
+
+    }
+
 
 }

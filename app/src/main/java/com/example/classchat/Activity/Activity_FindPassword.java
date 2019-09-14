@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.example.classchat.R;
 import com.example.classchat.Util.TimingButton;
 import com.example.classchat.Util.Util_NetUtil;
-import com.sdsmdg.tastytoast.TastyToast;
+import com.example.classchat.Util.Util_ToastUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -53,11 +53,11 @@ public class Activity_FindPassword extends AppCompatActivity implements View.OnC
         public void handleMessage(Message msg){
             switch (msg.what){
                 case CHANGE_SUCCESS:
-                    TastyToast.makeText(Activity_FindPassword.this,"修改密码成功！", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
+                    Util_ToastUtils.showToast(Activity_FindPassword.this,"修改密码成功！");
                     finish();
                     break;
                 case CHANGE_FAILED:
-                    TastyToast.makeText(Activity_FindPassword.this,"修改失败，请重试", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+                    Util_ToastUtils.showToast(Activity_FindPassword.this,"修改失败，请重试");
                     break;
             }
         }
@@ -107,15 +107,15 @@ public class Activity_FindPassword extends AppCompatActivity implements View.OnC
         final String code = smsCode.getText().toString().trim();
         newPassword = this.password.getText().toString().trim();
         if (TextUtils.isEmpty(cellphone)) {  //当手机号没有输入时
-            TastyToast.makeText(this, "手机号不能为空！", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+            Util_ToastUtils.showToast(this, "手机号不能为空！");
             phone.requestFocus();//使输入框失去焦点
             return;
         } else if (TextUtils.isEmpty(code)) {//当验证码没有输入时
-            TastyToast.makeText(this, "验证码不能为空！", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+            Util_ToastUtils.showToast(this, "验证码不能为空！");
             smsCode.requestFocus();//使输入框失去焦点
             return;
         } else if (TextUtils.isEmpty(newPassword)) {//当注册密码没有输入时
-            TastyToast.makeText(this, "密码不能为空！", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+            Util_ToastUtils.showToast(this, "密码不能为空！");
             this.password.requestFocus();//使输入框失去焦点
             return;
         }
@@ -143,13 +143,13 @@ public class Activity_FindPassword extends AppCompatActivity implements View.OnC
                     if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
                         if (result == SMSSDK.RESULT_COMPLETE) {
                             // 处理成功得到验证码的结果
-                            TastyToast.makeText(Activity_FindPassword.this, "请查收短信", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
+                            Util_ToastUtils.showToast(Activity_FindPassword.this, "请查收短信");
                             // 请注意，此时只是完成了发送验证码的请求，验证码短信还需要几秒钟之后才送达
                         } else {
                             // 处理错误的结果
                             Log.d(TAG, "handleMessage: " + result);
                             smsCode.setText(null);
-                            TastyToast.makeText(Activity_FindPassword.this, "验证码服务出错，请稍后再试试？", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+                            Util_ToastUtils.showToast(Activity_FindPassword.this, "验证码服务出错，请稍后再试试？");
                             ((Throwable) data).printStackTrace();
                         }
                     } else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
@@ -168,7 +168,7 @@ public class Activity_FindPassword extends AppCompatActivity implements View.OnC
                             Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/changepsw/student/findpassword", requestBody, new Callback() {
                                 @Override
                                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                                    TastyToast.makeText(getApplicationContext(), "修改失败",  TastyToast.LENGTH_SHORT, TastyToast.ERROR);
+                                    Util_ToastUtils.showToast(getApplicationContext(), "修改失败");
                                 }
 
                                 @Override
@@ -190,7 +190,7 @@ public class Activity_FindPassword extends AppCompatActivity implements View.OnC
                             });
 
                         } else {
-                            TastyToast.makeText(Activity_FindPassword.this, "验证码错误", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+                            Util_ToastUtils.showToast(Activity_FindPassword.this, "验证码错误");
                             ((Throwable) data).printStackTrace();
                         }
                     }
