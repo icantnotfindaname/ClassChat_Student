@@ -11,12 +11,13 @@
     <LinearLayout style="@style/top_nav">
 
         <ImageView
-            android:id="@+id/iv_HelpandFeedBack_back"
+            android:id="@+id/iv_help_and_feedback_back"
             android:layout_width="0dp"
             android:layout_weight="0.15"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:src="@drawable/ico_left_back" />
+            android:src="@drawable/ico_left_back"
+            android:onClick="back"/>
 
         <TextView
             android:layout_width="0dp"
@@ -45,11 +46,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
             android:padding="5dp"
             android:textSize="12sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+           android:textAlignment="center"
             android:text="@string/HelpAndFeedback"/>
 
 <!--        TODO 换图片-->
@@ -58,7 +61,7 @@
            android:layout_width="200dp"
            android:layout_height="200dp"
            android:layout_gravity="center"
-           android:background="@drawable/ic_launcher_background"/>
+           android:background="@drawable/help"/>
 
     </LinearLayout>
 

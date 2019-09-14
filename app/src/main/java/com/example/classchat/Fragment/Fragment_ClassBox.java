@@ -10,15 +10,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -28,15 +25,12 @@ import android.support.v4.provider.DocumentFile;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -44,11 +38,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -56,38 +47,17 @@ import com.baidu.location.LocationClientOption;
 import com.example.classchat.Activity.Activity_AddSearchCourse;
 import com.example.classchat.Activity.Activity_AutoPullCourseFromWeb;
 import com.example.classchat.Activity.Activity_CourseNote;
-import com.example.classchat.Activity.Activity_Enter;
-import com.example.classchat.Activity.Activity_SearchAddCourse;
 import com.example.classchat.Activity.MainActivity;
 import com.example.classchat.Object.MySubject;
 import com.example.classchat.R;
 import com.example.classchat.Util.Util_NetUtil;
-import com.example.classchat.Util.Util_PictureTool;
 import com.example.library_activity_timetable.Activity_TimetableView;
 import com.example.library_activity_timetable.listener.ISchedule;
 import com.example.library_activity_timetable.listener.IWeekView;
 import com.example.library_activity_timetable.model.Schedule;
 import com.example.library_activity_timetable.view.WeekView;
 import com.example.library_cache.Cache;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import com.alibaba.fastjson.JSON;
+import com.sdsmdg.tastytoast.TastyToast;
 import com.yzq.zxinglibrary.android.CaptureActivity;
 import com.yzq.zxinglibrary.bean.ZxingConfig;
 import com.yzq.zxinglibrary.common.Constant;
@@ -95,23 +65,32 @@ import com.yzq.zxinglibrary.encode.CodeCreator;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.UserInfo;
-import io.rong.message.LocationMessage;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 
 import static android.app.Activity.RESULT_OK;
+import static com.example.classchat.Util.Util_getSerialNumber.getSerialNumber;
 import static io.rong.imkit.RongIM.connect;
 
 
@@ -123,7 +102,7 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
     private Uri imageUri;
 
     //初始化 登录等待 控件
-    private ProgressDialog loadingForLogin;
+    private ProgressDialog loadingForSignIn;
 
     private static final String TAG = "Activity_Main_Timetable";
 
@@ -197,9 +176,18 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
     private LocalBroadcastManager localBroadcastManager;
 
     private Context mcontext;
-
-
     private ImageView qrcode;
+
+    private static final int SCAN_TABLE = 2;
+
+    private static final int INIT_TABLE = 1;
+    private static final int LOCATION_CORRECT = 2;
+    private static final int LOCATION_WRONG = 3;
+    private static final int SIGN_IN_SUCCESSED = 4;
+    private static final int GET_LOCATION = 5;
+    private static final int SIGN_IN_FAILED = 6;
+    private static final int UPDATE_TABLE = 7;
+
     /*
     设置handler接收网络线程的信号并处理
      */
@@ -207,22 +195,12 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
     public Handler handler = new Handler(){
         public void handleMessage(Message msg){
             switch (msg.what){
-                case 1:
+                case INIT_TABLE:
                     initTimetableView();
                     break;
-                case 2:
-                    Toast.makeText(getContext() , "位置校验无误，请进行人脸识别" , Toast.LENGTH_SHORT).show();
-                    //调用相机进行人脸识别
-                    takephoto();
-                    break;
-                case 3:
-                    Toast.makeText(getContext() , "位置有误，签到失败！" , Toast.LENGTH_SHORT).show();
-                    break;
-                case 5:
-                    loadingForLogin.dismiss();
-                    Toast.makeText(getContext(),"签到成功！" ,Toast.LENGTH_SHORT).show();
-                    break;
-                case 4:
+                case LOCATION_CORRECT:
+                    Toast.makeText(getContext() , "位置校验无误" , Toast.LENGTH_SHORT).show();
+                    //更新签到数据
                     RequestBody requestBody = new FormBody.Builder()
                             .add("groupId", signstatus.getString("groupId"))
                             .add("userId" , userId)
@@ -230,39 +208,37 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                             .build();
                     Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/course/updatesignstatus", requestBody, new okhttp3.Callback() {
                         @Override
-                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
-                        }
+                        public void onFailure(@NotNull Call call, @NotNull IOException e) { }
 
                         @Override
                         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-
-
                             Message message = new Message();
-                            message.what = 5;
+                            message.what = SIGN_IN_SUCCESSED;
                             handler.sendMessage(message);
-
                         }
                     });
                     break;
-                case 6:
-                    Toast.makeText(getContext(),"签到失败，请调整照相姿势，重新签到！" ,Toast.LENGTH_SHORT).show();
-                    loadingForLogin.dismiss();
+                case LOCATION_WRONG:
+                    TastyToast.makeText(getContext() , "位置有误，签到失败！" , TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
                     break;
-                case 7:
+                case SIGN_IN_SUCCESSED:
+                    loadingForSignIn.dismiss();
+                    TastyToast.makeText(getContext(),"签到成功！" , TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
+                    break;
+                case GET_LOCATION:
                     client = new LocationClient(getContext());
                     client.registerLocationListener(new MyLocationListener());
                     initclient();
                     client.start();
-                    loadingForLogin = new ProgressDialog(getContext());  //初始化等待动画
-                    loadingForLogin.setCanceledOnTouchOutside(false); //
-                    loadingForLogin.setMessage("正在获取位置....");  //等待动画的标题
-                    loadingForLogin.show();  //显示等待动画
+                    loadingForSignIn = new ProgressDialog(getContext());  //初始化等待动画
+                    loadingForSignIn.setCanceledOnTouchOutside(false); //
+                    loadingForSignIn.setMessage("正在获取位置....");  //等待动画的标题
+                    loadingForSignIn.show();  //显示等待动画
                     break;
-                case 8:
-                    Toast.makeText(getContext(),"签到失败" ,Toast.LENGTH_SHORT).show();
+                case SIGN_IN_FAILED:
+                    TastyToast.makeText(getContext(),"签到失败" , TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
                     break;
-                case 9:
+                case UPDATE_TABLE:
                     //这里需要向服务器发出这些课程，服务器再返回合格的mysubjects
                     RequestBody requestBody1 = new FormBody.Builder()
                             .add("userId", userId)
@@ -271,13 +247,10 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                             .build();
                     Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/autoupdatecourse", requestBody1, new okhttp3.Callback() {
                         @Override
-                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
-                        }
+                        public void onFailure(@NotNull Call call, @NotNull IOException e) { }
 
                         @Override
-                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        }
+                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException { }
                     });
                 default:
                     break;
@@ -305,7 +278,7 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
         token = mainActivity.getToken();
         imageUrl = mainActivity.getImageUrl();
         scanButton = getActivity().findViewById(R.id.id_scan);
-        moreButton =(ImageButton)getActivity().findViewById(R.id.id_more);
+        moreButton = getActivity().findViewById(R.id.id_more);
         moreButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -335,15 +308,15 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                     config.setScanLineColor(R.color.colorAccent);//设置扫描线的颜色 默认白色
                     config.setFullScreenScan(true);//是否全屏扫描  默认为true  设为false则只会在扫描框中扫描
                     intent.putExtra(Constant.INTENT_ZXING_CONFIG, config);
-                    startActivityForResult(intent, 3);
+                    startActivityForResult(intent, SCAN_TABLE);
                 }
             }
         });
 
 
 
-        titleTextView = (TextView)getActivity().findViewById(R.id.id_title);
-        layout = (LinearLayout)getActivity().findViewById(R.id.id_layout);
+        titleTextView = getActivity().findViewById(R.id.id_title);
+        layout = getActivity().findViewById(R.id.id_layout);
         layout.setOnClickListener(this);
 
         //广播接收
@@ -426,7 +399,7 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                     groupChatManager = getGroupChatManager(mySubjects);
 
                     Message message = new Message();
-                    message.what = 1;
+                    message.what = INIT_TABLE;
                     handler.sendMessage(message);
 
                     // 发送登录聊天的广播
@@ -437,7 +410,13 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
         } else {
 
             mySubjects.clear();
-            mySubjects = JSON.parseArray(mClassBoxData, MySubject.class);
+            // 转化为具体的对象列表
+            List<String> jsonlist = JSON.parseArray(mClassBoxData, String.class);
+            mySubjects.clear();
+            for(String s : jsonlist) {
+                MySubject mySubject = JSON.parseObject(s, MySubject.class);
+                mySubjects.add(mySubject);
+            }
 
             //获取 课程id 和未读消息数的 Key Value 关系
             groupChatManager = getGroupChatManager(mySubjects);
@@ -473,8 +452,8 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
      */
     private void initTimetableView() {
         //获取控件
-        mWeekView = (WeekView)getActivity().findViewById(R.id.id_weekview);
-        mTimetableView = (Activity_TimetableView)getActivity().findViewById(R.id.id_timetableView);
+        mWeekView = getActivity().findViewById(R.id.id_weekview);
+        mTimetableView = getActivity().findViewById(R.id.id_timetableView);
         mBeginClassTime=Cache.with(myContext.getActivity())
                 .path(getCacheDir(myContext.getActivity()))
                 .getCache("BeginClassTime",String.class);
@@ -696,11 +675,14 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
         linearLayoutSign.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO 增加判断签到时的设备号与注册时的设备号是否相同，若后端该用户的设备号数据为空则将设备号设置为此次签到的设备号（在设备号
+                // 与此前已有设备号不重复的情况下），并返回true
                 RequestBody requestBody = new FormBody.Builder()
                         .add("time", String.valueOf(System.currentTimeMillis()))
                         .add("groupId", bean.getId())
                         .add("userId", userId)
                         .add("tablename", proUni)
+                        .add("serialnumber", getSerialNumber())
                         .build();
 
                 Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/course/issignable", requestBody, new Callback() {
@@ -712,13 +694,13 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         if (Boolean.valueOf(response.body().string())) {
-                            android.os.Message message1 = new android.os.Message();
-                            message1.what = 7;
-                            handler.sendMessage(message1);
+                            android.os.Message message = new android.os.Message();
+                            message.what = GET_LOCATION;
+                            handler.sendMessage(message);
                         }else {
-                            android.os.Message message1 = new android.os.Message();
-                            message1.what = 8;
-                            handler.sendMessage(message1);
+                            android.os.Message message = new android.os.Message();
+                            message.what = SIGN_IN_FAILED;
+                            handler.sendMessage(message);
                         }
                     }
                 });
@@ -877,7 +859,6 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
         mWeekView.isShow(false);
     }
 
-    //TODO 导入课表的函数
     /**
      * 教务导入课表
      */
@@ -928,6 +909,8 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
 
             initTimetableView();
         }
+
+
     }
 
     class UpdateGroupIdReceiver extends BroadcastReceiver {
@@ -1137,62 +1120,26 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
             Log.d(TAG, "onReceiveLocation: "+ now_latitude);
             Log.d(TAG, "onReceiveLocation: "+ now_longitude);
             // 不要转圈
-            loadingForLogin.dismiss();
+            loadingForSignIn.dismiss();
             // 判断符不符合
             if((Math.abs((now_latitude - signstatus.getDoubleValue("la")))) < 0.1&&(Math.abs((now_longitude - signstatus.getDoubleValue("lo")))) < 0.1){
                 Message message = new Message();
-                message.what = 2;
+                message.what = LOCATION_CORRECT;
                 handler.sendMessage(message);
             }else{
                 Message message = new Message();
-                message.what = 3;
+                message.what = LOCATION_WRONG;
                 handler.sendMessage(message);
             }
 
         }
     }
 
-    public void takephoto(){
-        //创建File对象，用于存储拍照后的照片
-        File outputImage = new File(getCacheDir(getContext()),
-                "output_image.jpg");
-        try {
-            if (outputImage.exists()){
-                outputImage.delete();
-            }
-            outputImage.createNewFile();
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        if (Build.VERSION.SDK_INT >= 24){
-            imageUri = FileProvider.getUriForFile(getContext(),
-                    "com.example.classchat.FileProvider",outputImage);
-        } else {
-            imageUri = Uri.fromFile(outputImage);
-        }
-        //启动相机程序
-        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-        intent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
-        startActivityForResult(intent,2);
-    }
 
-    //照相得到结果回调
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         switch (requestCode){
-            case 2:
-                if (resultCode == RESULT_OK){
-                    try {
-                        //将拍摄的照片显示出来
-                        bitmap = Util_PictureTool.rotateImageView(
-                                Util_PictureTool.readPictureDegree(Environment.getExternalStorageDirectory() + "/output_image.jpg"),
-                                BitmapFactory.decodeStream(getContext().getContentResolver().openInputStream(imageUri)));
-                        sign();
-                    }catch (FileNotFoundException e){
-                        e.printStackTrace();
-                    }
-                }
-            case 3:
+            case SCAN_TABLE:
                 if (resultCode == RESULT_OK) {
                     if (data != null) {
                         String content = data.getStringExtra(Constant.CODED_CONTENT);
@@ -1229,11 +1176,11 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                                 groupChatManager = getGroupChatManager(mySubjects);
 
                                 Message message = new Message();
-                                message.what = 1;
+                                message.what = INIT_TABLE;
                                 handler.sendMessage(message);
 
                                 Message message1 = new Message();
-                                message1.what = 9;
+                                message1.what = UPDATE_TABLE;
                                 handler.sendMessage(message1);
 
                                 // 发送登录聊天的广播
@@ -1248,118 +1195,5 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                 break;
         }
     }
-
-    public String bitmapToBase64(Bitmap bitmap) {
-        String result = null;
-        ByteArrayOutputStream baos = null;
-        try {
-            if (bitmap != null) {
-                baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos);
-
-                baos.flush();
-                baos.close();
-
-                byte[] bitmapBytes = baos.toByteArray();
-                result = Base64.encodeToString(bitmapBytes, Base64.DEFAULT);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (baos != null) {
-                    baos.flush();
-                    baos.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return result;
-    }
-
-
-
-    private void sign() {
-        loadingForLogin.setMessage("正在进行人脸识别");
-        loadingForLogin.show();
-        Log.d(TAG, "sign: "+ headUrl);
-        RequestBody requestBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("api_key","MyoixvqhJTuO4SsirijhOQH6qeHX2Z8N")
-                .addFormDataPart("api_secret", "T6qzPC3JpUWeZhG1PdEaPpSToIMp59qD")
-//                .addFormDataPart("image_base64_1", bitmapToBase64(bitmap))
-//                .addFormDataPart("image_base64_2", bitmapToBase64(bitmap))
-                .addFormDataPart("image_url1", headUrl)
-//                .addFormDataPart("image_url2", "http://farm.rxsy.net/wp-content/uploads/2019/08/Vladimir-Serov-the-faces-2.jpg")
-//                .addFormDataPart("image_file1", "image_file1", RequestBody.create(MediaType.parse("image/jpeg"), Util_PictureTool.compressImage(bitmap, "image_file1")))
-                .addFormDataPart("image_file2", "image_file2", RequestBody.create(MediaType.parse("image/jpeg"), BitmapToFile(bitmap, "image_file2")))
-                .build();   //构建请求体
-
-        Util_NetUtil.sendOKHTTPRequest("https://api-cn.faceplusplus.com/facepp/v3/compare", requestBody, new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String res = response.body().string();
-                JSONObject object = JSON.parseObject(res);
-                double confidence = object.getDoubleValue("confidence");
-                Log.d(TAG, "confidence:"+ confidence);
-                Log.d(TAG, "onResponse: " + object.getString("image_id1"));
-                Log.d(TAG, "onResponse: " + object.getString("image_id2"));
-                Log.d(TAG, "onResponse: " + object.getJSONArray("faces1"));
-                Log.d(TAG, "onResponse: " + object.getJSONArray("faces2"));
-                Log.d(TAG, "onResponse: " + object.getString("error_message"));
-                if(confidence >= 90){
-                    Message message = new Message();
-                    message.what = 4;
-                    handler.sendMessage(message);
-                }
-                else {
-                    Message message = new Message();
-                    message.what = 6;
-                    handler.sendMessage(message);
-                }
-            }
-        });
-    }
-
-    /**
-     * 单纯的进行质量压缩，不进行尺寸压缩
-     * @param uri 拍照返回的Uri
-     * @return Bitmap 返回bitmap
-     */
-    public Bitmap compressBitmapInQuality(Uri uri) throws IOException {
-        InputStream input = getActivity().getContentResolver().openInputStream(uri);
-        Bitmap bitmap = BitmapFactory.decodeStream(input); // 这里直接把图片从流里取出，不过内存会一下子变大
-        input.close();
-        return bitmap;
-    }
-
-    public static File BitmapToFile(Bitmap bitmap, String name) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
-        File file = new File(Environment.getExternalStorageDirectory(), name + ".jpg");
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            try {
-                fos.write(baos.toByteArray());
-                fos.flush();
-                fos.close();
-            } catch (IOException e) {
-
-                e.printStackTrace();
-            }
-        } catch (FileNotFoundException e) {
-
-            e.printStackTrace();
-        }
-        return file;
-    }
-
-
 
 }

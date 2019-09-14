@@ -41,11 +41,11 @@ public class Activity_AboutUs extends AppCompatActivity {
         View aboutPage = new AboutPage(this)
                 .isRTL(false)
                 .setDescription("唠课团队历时四个月打磨出的App。学生可以查课表，泡论坛，逛同校商城，有专属的课程群聊，还能够有专属的笔记空间；老师可以轻松准确的传达作业和信息，有课程资料上传专区；学校可以管理学生考勤，了解学生民意。" +
-                        "唠课有以下几个特点：" +
-                        "1.功能简洁，做到“麻雀虽小 五脏俱全”。" +
-                        "2.刷脸   GPS定位 双重考勤" +
-                        "3.严格的实名认证带来稳定的社区生态" +
-                        "4.唠课论坛帮助学生建立自己的交流平台                                \n\n\n" +
+                        "唠课有以下几个特点：\n" +
+                        "1.功能简洁，做到“麻雀虽小 五脏俱全”\n" +
+                        "2.设备号  +   GPS定位 双重考勤\n" +
+                        "3.严格的实名认证带来稳定的社区生态\n" +
+                        "4.唠课论坛帮助学生建立自己的交流平台\n" +
                         "  唠课源于学生，服务学生！")//介绍
                 .addItem(new Element().setTitle("Version 1.0"))
                 .addGroup("与我们联系")

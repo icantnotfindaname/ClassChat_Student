@@ -36,7 +36,7 @@ public class Activity_Password extends AppCompatActivity {
 
     private static final String TAG = "PasswordActivity";
 
-    // 初始化添加商品的等待控件
+    // 初始化修改密码的等待控件
     private ProgressDialog loadingUpload;
 
     // 控件成员
@@ -123,8 +123,6 @@ public class Activity_Password extends AppCompatActivity {
                             .add("oldpsw", etOldPassword.getText().toString())
                             .add("newpsw", etNewPassword.getText().toString())
                             .build();
-
-                    System.out.println(etOldPassword.getText().toString());
 
                     Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/changepsw/student", requestBody, new Callback() {
                         @Override

@@ -107,8 +107,6 @@ public class Fragment_Market extends Fragment {
         super.onCreate(savedInstanceState);
         //手势监听
 //        Sensey.getInstance().init(getContext());
-
-        Util_ToastUtils.showToast(getContext(),getSerialNumber());
     }
 
 

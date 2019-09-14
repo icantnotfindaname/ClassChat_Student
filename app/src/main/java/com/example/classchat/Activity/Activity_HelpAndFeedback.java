@@ -25,5 +25,7 @@ public class Activity_HelpAndFeedback extends AppCompatActivity {
         setContentView(R.layout.activity__help_and_feedback);
     }
 
-
+    public void back(View view) {
+        finish();
+    }
 }

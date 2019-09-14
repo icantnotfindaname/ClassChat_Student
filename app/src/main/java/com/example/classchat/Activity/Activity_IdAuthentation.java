@@ -167,14 +167,14 @@ public class Activity_IdAuthentation extends AppCompatActivity {
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
 
         mContext = this;
-        name = (EditText) findViewById(R.id.auth_name);
+        name = findViewById(R.id.auth_name);
 //        id_card = (EditText) findViewById(R.id.auth_number);
-        st_card = (EditText) findViewById(R.id.auth_st_number);
-        face = (ImageView) findViewById(R.id.auth_photo_face);
-        card = (ImageView) findViewById(R.id.auth_photo_card);
-        confirm = (Button) findViewById(R.id.auth_confirm);
-        university = (Spinner) findViewById(R.id.auth_university);
-        college = (Spinner) findViewById(R.id.auth_colloge);
+        st_card =  findViewById(R.id.auth_st_number);
+        face = findViewById(R.id.auth_photo_face);
+        card = findViewById(R.id.auth_photo_card);
+        confirm = findViewById(R.id.auth_confirm);
+        university = findViewById(R.id.auth_university);
+        college = findViewById(R.id.auth_colloge);
         back = findViewById(R.id.back_from_authentation_button);
 
         loadingForAddCommodity = new ProgressDialog(Activity_IdAuthentation.this);  //初始化等待动画
@@ -206,7 +206,7 @@ public class Activity_IdAuthentation extends AppCompatActivity {
         university.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                school_ = (String) adapter1.getItem(pos);
+                school_ = adapter1.getItem(pos);
                 System.out.println(school_);
             }
 
@@ -400,8 +400,6 @@ public class Activity_IdAuthentation extends AppCompatActivity {
                                 Util_PictureTool.readPictureDegree(Environment.getExternalStorageDirectory() + "/output_image.jpg"),
                                 BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri)));
                     } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                     card.setImageBitmap(secondBitmap);

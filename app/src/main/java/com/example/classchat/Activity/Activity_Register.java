@@ -37,6 +37,8 @@ import okhttp3.FormBody;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static com.example.classchat.Util.Util_getSerialNumber.getSerialNumber;
+
 public class Activity_Register extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "Activity_Register";
@@ -62,7 +64,7 @@ public class Activity_Register extends AppCompatActivity implements View.OnClick
                     finish();
                     break;
                 case REGISTER_FAILED:
-                    //用户名不存在
+                    //用户名存在
                     Toast.makeText(Activity_Register.this, "此账户已存在", Toast.LENGTH_SHORT).show();
                     editTextP.setText(null);
                     editSMS.setText(null);
@@ -74,7 +76,6 @@ public class Activity_Register extends AppCompatActivity implements View.OnClick
         }
     };
 
-    //TODO 注册时增加一个用户设备号信息 获取设备号方法：getSerialNumber()
     EventHandler eventHandler = new EventHandler() {
         public void afterEvent(int event, int result, Object data) {
             // afterEvent会在子线程被调用，因此如果后续有UI相关操作，需要将数据发送到UI线程
@@ -107,9 +108,11 @@ public class Activity_Register extends AppCompatActivity implements View.OnClick
                             /*
                             建立网络线程询问能否注册
                              */
+                            //TODO 注册时增加一个用户设备号信息 获取设备号方法：getSerialNumber()，后端确保设备号不重复
                             RequestBody requestBody = new FormBody.Builder()
                                     .add("username", editTextP.getText().toString())
                                     .add("password", editTextCT.getText().toString())
+                                    .add("serialnumber", getSerialNumber())
                                     .build();   //构建请求体
 
                             Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/register/student", requestBody, new Callback() {
@@ -150,7 +153,7 @@ public class Activity_Register extends AppCompatActivity implements View.OnClick
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        TastyToast.makeText(this,"  注册将绑定此设备,更换设备（一年至多更换2次）请到反馈联系客服",TastyToast.DEFAULT,TastyToast.WARNING).show();
+        TastyToast.makeText(this,"  注册后签到将绑定此设备,更换（一年至多2次）请联系客服",TastyToast.DEFAULT,TastyToast.WARNING).show();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__register);
         if (Build.VERSION.SDK_INT >= 21) {

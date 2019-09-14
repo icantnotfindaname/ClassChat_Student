@@ -10,22 +10,17 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.classchat.Adapter.Adapter_Course;
-import com.example.classchat.Fragment.Fragment_ClassBox;
 import com.example.classchat.Object.Course;
-import com.example.classchat.Object.MySubject;
 import com.example.classchat.R;
 import com.example.classchat.Util.Util_NetUtil;
-import com.example.library_cache.Cache;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -68,7 +63,7 @@ public class Activity_MyCourse extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity__my_wallet);
+        setContentView(R.layout.activity__my_course);
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("userId");
@@ -88,7 +83,7 @@ public class Activity_MyCourse extends AppCompatActivity {
         initData();
 
         recyclerView = findViewById(R.id.rl_course);
-        back = findViewById(R.id.iv_mywallet_back);
+        back = findViewById(R.id.iv_my_course_back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

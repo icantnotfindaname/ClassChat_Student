@@ -29,13 +29,13 @@
             android:layout_margin="10dp"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/trash_can"/>
+            android:src="@drawable/delete"/>
 
         <ImageView
             android:id="@+id/close_dialog"
-            android:layout_margin="5dp"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:background="@drawable/close"/>
 
     </LinearLayout>

@@ -68,11 +68,9 @@ public class Fragment_SelfInformationCenter extends Fragment {
 
     private TextView textViewforName;
     private TextView textViewforId;
-    private TextView textViewforMoney;
 
     private String correctId;
     private String name;
-    private Double money;
     private String imageUrl;
     private Boolean isAuthentation;
     private String proUni;
@@ -110,7 +108,6 @@ public class Fragment_SelfInformationCenter extends Fragment {
         linearLayoutforShoucang = view.findViewById(R.id.shoucang);
 
         textViewforId = view.findViewById(R.id.user_stuID);
-        textViewforMoney = view.findViewById(R.id.user_money);
         textViewforName = view.findViewById(R.id.user_name);
 
         //获得用户ID

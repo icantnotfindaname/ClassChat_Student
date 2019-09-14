@@ -156,7 +156,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:padding="14dp"
+            android:layout_marginRight="14dp"
             android:text="找回密码"
             android:textColor="#63d065"
             android:textSize="10sp"
@@ -168,7 +168,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:padding="14dp"
+
             android:text="更换设备"
             android:textColor="#63d065"
             android:textSize="10sp"/>

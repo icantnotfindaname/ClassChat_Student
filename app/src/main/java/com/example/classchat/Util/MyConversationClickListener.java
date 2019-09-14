@@ -106,6 +106,7 @@ public class MyConversationClickListener implements RongIM.ConversationClickList
             final PopupWindow popupWindow = new PopupWindow(v , ViewGroup.LayoutParams.WRAP_CONTENT ,ViewGroup.LayoutParams.WRAP_CONTENT , true );
             popupWindow.setTouchable(true);
             popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     return false;

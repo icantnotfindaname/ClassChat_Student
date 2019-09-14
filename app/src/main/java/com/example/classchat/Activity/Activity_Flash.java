@@ -55,6 +55,8 @@ public class Activity_Flash extends AppCompatActivity {
     private static final int LOGIN_FAILED = 0;
     private static final int LOGIN_SUCCESS = 1;
 
+    Timer timer = new Timer();
+
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -66,18 +68,20 @@ public class Activity_Flash extends AppCompatActivity {
         getWindow().setFlags(flag, flag);
         setContentView(R.layout.activity__flash);
         getUserInfo();
-//        handler = new Handler();
-//        handler.postDelayed(runnable = new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                    //从闪屏界面跳转到首界面
-//                    Intent intent = new Intent(Activity_Flash.this, Activity_Enter.class);
-//                    startActivity(intent);
-//                    finish();
-//                }
-//            }
-//        }, SPLASH_DISPLAY_LENGHT*1000);//延迟3S后发送handler信息
+        timer.schedule(task, 1000, 1000);//等待时间一秒，停顿时间一秒
+        /**
+         * 正常情况下不点击跳过
+         */
+        handler = new Handler();
+        handler.postDelayed(runnable = new Runnable() {
+            @Override
+            public void run() {
+                //从闪屏界面跳转到首界面
+                Intent intent = new Intent(Activity_Flash.this, Activity_Enter.class);
+                startActivity(intent);
+                finish();
+            }
+        }, SPLASH_DISPLAY_LENGHT*1000);//延迟5S后发送handler信息
 
         /*
             设置handler接收网络线程的信号并处理
@@ -136,13 +140,13 @@ public class Activity_Flash extends AppCompatActivity {
         if (isLogin){
             login();
         }
-        else{
-            //从闪屏界面跳转到首界面
-            //ditor.putString("psw" , "").commit();
-            Intent intent = new Intent(Activity_Flash.this, Activity_Enter.class);
-            startActivity(intent);
-            finish();
-        }
+//        else{
+//            //从闪屏界面跳转到首界面
+//            //ditor.putString("psw" , "").commit();
+//            Intent intent = new Intent(Activity_Flash.this, Activity_Enter.class);
+//            startActivity(intent);
+//            finish();
+//        }
     }
     /*
     登录方法
@@ -190,6 +194,21 @@ public class Activity_Flash extends AppCompatActivity {
 
     }
 
-
+    TimerTask task = new TimerTask() {
+        @Override
+        public void run() {
+            runOnUiThread(new Runnable() { // UI thread
+                @Override
+                public void run() {
+                    SPLASH_DISPLAY_LENGHT--;
+                    if (SPLASH_DISPLAY_LENGHT < 0) {
+                        timer.cancel();
+                    }
+                }
+            });
+        }
+    };
 }
+
+
 

@@ -86,7 +86,7 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
             switch (msg.what){
                 case LOGIN_FAILED:
                     //密码错误报警
-                    TastyToast.makeText(Activity_Enter.this,"用户名或密码错误或未使用注册设备登陆", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+                    TastyToast.makeText(Activity_Enter.this,"用户名或密码错误", TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
                     editCode.setText(null);
                     if (loadingForLogin != null && loadingForLogin.isShowing()) {
                         loadingForLogin.dismiss();
@@ -226,8 +226,12 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
             //TODO 用户更换登陆设备
             case R.id.tv_change_device:
                 startActivity(new Intent(this, Activity_HelpAndFeedback.class));
+                break;
             case R.id.tv_find_password:
                 startActivity(new Intent(this, Activity_FindPassword.class));
+                break;
+            default:
+                break;
         }
     }
 
@@ -260,13 +264,10 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
         /*
         开启网络线程，发送登录请求
          */
-        //TODO 获取用户设备号信息是否为空，若为空则获取本次登陆设备号作为设备号信息上传
 
         final RequestBody requestBody = new FormBody.Builder()
                 .add("username", currentUsername)
                 .add("password", currentPassword)
-                //TODO 判断设备号是否符合
-                //.add("serialnumber", currentSerialNumber)
                 .build();   //构建请求体
 
         Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/login/student", requestBody, new okhttp3.Callback() {
