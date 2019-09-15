@@ -29,8 +29,8 @@
 
     <ImageButton
         android:layout_margin="2dp"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/id_more"
         android:id="@+id/id_scan"
@@ -43,8 +43,8 @@
         android:layout_margin="2dp"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:background="@drawable/icon_timetable_menu"
          />
 
