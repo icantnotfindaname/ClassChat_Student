@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
         //mFragments.add(new Fragment_Market());
         mFragments.add(new Fragment_SelfInformationCenter());
         // 初始化展示MessageFragment
-        setFragmentPosition(0);
+        setFragmentPosition(1);
     }
 
     public void initBottomNavigation() {
