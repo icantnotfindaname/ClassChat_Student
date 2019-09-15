@@ -106,9 +106,10 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
                 case LOGIN_SUCCESS:
                     //登录成功
                     Util_ToastUtils.showToast(Activity_Enter.this,"登录成功");
-                    if (isLogin.isChecked()) {
-                        saveUserInfo();
-                    }
+//                    if (isLogin.isChecked()) {
+//
+//                    }
+                    saveUserInfo();
                     Intent intent = new Intent(Activity_Enter.this,MainActivity.class);
                     intent.putExtra("userName", nickName);
                     intent.putExtra("userPassword", editCode.getText().toString());

@@ -25,13 +25,16 @@ import android.support.v4.provider.DocumentFile;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -51,13 +54,13 @@ import com.example.classchat.Activity.MainActivity;
 import com.example.classchat.Object.MySubject;
 import com.example.classchat.R;
 import com.example.classchat.Util.Util_NetUtil;
+import com.example.classchat.Util.Util_ToastUtils;
 import com.example.library_activity_timetable.Activity_TimetableView;
 import com.example.library_activity_timetable.listener.ISchedule;
 import com.example.library_activity_timetable.listener.IWeekView;
 import com.example.library_activity_timetable.model.Schedule;
 import com.example.library_activity_timetable.view.WeekView;
 import com.example.library_cache.Cache;
-import com.sdsmdg.tastytoast.TastyToast;
 import com.yzq.zxinglibrary.android.CaptureActivity;
 import com.yzq.zxinglibrary.bean.ZxingConfig;
 import com.yzq.zxinglibrary.common.Constant;
@@ -65,10 +68,7 @@ import com.yzq.zxinglibrary.encode.CodeCreator;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -82,8 +82,6 @@ import io.rong.imlib.model.UserInfo;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import q.rorbin.badgeview.Badge;
@@ -105,6 +103,8 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
     private ProgressDialog loadingForSignIn;
 
     private static final String TAG = "Activity_Main_Timetable";
+    private static final String KEY_OF_REMINDER = "bianqian7456547";
+    private static final String ID_OF_REMINDER = "reminder";
 
     public JSONObject groupChatManager = new JSONObject();
 
@@ -157,6 +157,8 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
 
     // 对话框
     Dialog coursedetail_dialog;
+    Dialog editreminder_dialog;
+    Dialog reminder_dialog;
 
     //记录切换的周次，不一定是当前周
     int target = -1;
@@ -165,6 +167,7 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
     Fragment_ClassBox myContext = this;
 
     // 缓存
+    private String maddClassBoxData="";
     private String mClassBoxData = "";
     private String mBeginClassTime = "";
 
@@ -219,11 +222,11 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                     });
                     break;
                 case LOCATION_WRONG:
-                    TastyToast.makeText(getContext() , "位置有误，签到失败！" , TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+                    Util_ToastUtils.showToast(getContext() , "位置有误，签到失败！");
                     break;
                 case SIGN_IN_SUCCESSED:
                     loadingForSignIn.dismiss();
-                    TastyToast.makeText(getContext(),"签到成功！" , TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
+                    Util_ToastUtils.showToast(getContext(),"签到成功！");
                     break;
                 case GET_LOCATION:
                     client = new LocationClient(getContext());
@@ -236,7 +239,7 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                     loadingForSignIn.show();  //显示等待动画
                     break;
                 case SIGN_IN_FAILED:
-                    TastyToast.makeText(getContext(),"签到失败" , TastyToast.LENGTH_SHORT, TastyToast.ERROR).show();
+                    Util_ToastUtils.showToast(getContext(),"签到失败");
                     break;
                 case UPDATE_TABLE:
                     //这里需要向服务器发出这些课程，服务器再返回合格的mysubjects
@@ -346,7 +349,7 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
     }
 
     /**
-     * 模拟数据读取与存储
+     * 数据读取与存储
      */
     private void initClassBoxData(){
 
@@ -359,8 +362,8 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                 .path(getCacheDir(this.getActivity()))
                 .getCache("classBox", String.class);
 
-
-        if (mClassBoxData==null||mClassBoxData.length()<=0){
+        //TODO 添加memo
+        if (mClassBoxData == null||mClassBoxData.length() <= 0){
             //TODO  mClassBoxData=接收的json字符串
             // 请求网络方法，获取数据
             System.out.println(userId);
@@ -452,8 +455,8 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
      */
     private void initTimetableView() {
         //获取控件
-        mWeekView = getActivity().findViewById(R.id.id_weekview);
-        mTimetableView = getActivity().findViewById(R.id.id_timetableView);
+        mWeekView = (WeekView)getActivity().findViewById(R.id.id_weekview);
+        mTimetableView = (Activity_TimetableView)getActivity().findViewById(R.id.id_timetableView);
         mBeginClassTime=Cache.with(myContext.getActivity())
                 .path(getCacheDir(myContext.getActivity()))
                 .getCache("BeginClassTime",String.class);
@@ -490,13 +493,13 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                 .curTerm("大三下学期")
                 .maxSlideItem(12)
                 .monthWidthDp(30)
-
                 .callback(new ISchedule.OnItemClickListener() {
                     @Override
                     public void onItemClick(View v, Schedule schedule) {
-
-                        showDialog(schedule);
-
+                        if( !schedule.getTeacher() .equals(KEY_OF_REMINDER) )
+                            show_classdetails_dialog(schedule);
+                        else
+                            show_reminder_dialog(schedule);
                     }
                 })
                 .callback(new ISchedule.OnWeekChangedListener() {
@@ -519,17 +522,18 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                         builder.create().show();
                     }
                 })
-//                //旗标布局点击监听
-//                .callback(new ISchedule.OnFlaglayoutClickListener() {
-//                    @Override
-//                    public void onFlaglayoutClick(int day, int start) {
-//                        mTimetableView.hideFlaglayout();
-//                        Toast.makeText(getActivity(),
-//                                "点击了旗标:周" + (day + 1) + ",第" + start + "节",
-//                                Toast.LENGTH_SHORT).show();
-//                    }
-//                })
+                //旗标布局点击监听
+                .callback(new ISchedule.OnFlaglayoutClickListener() {
+                    @Override
+                    public void onFlaglayoutClick(int day, int start) {
+                        mTimetableView.hideFlaglayout();
+                        int day_ = day;
+                        int start_ = start;
+                        show_editReminder_dialog(day_ + 1,start_);
+                    }
+                })
                 .showView();
+        mTimetableView.showFlaglayout();
         hideNonThisWeek();
     }
 
@@ -584,7 +588,7 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
 
     private Badge badge = null;
 
-    protected void showDialog(final Schedule bean){
+    protected void show_classdetails_dialog(final Schedule bean){
         LayoutInflater inflater=LayoutInflater.from(this.getActivity());
         View myview=inflater.inflate(R.layout.dialog_coursedetail,null);
         final AlertDialog.Builder builder=new AlertDialog.Builder(this.getActivity());
@@ -712,6 +716,305 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), Activity_CourseNote.class);
                 startActivity(intent);
+            }
+        });
+
+    }
+
+    /**
+     * 显示编辑便签对话框
+     */
+    private EditText edit_reminder_title;
+    private EditText edit_reminder_details;
+    private EditText edit_reminder_start;
+    private EditText edit_reminder_end;
+    private TextView reminder_dayOfweek;
+    private Button back_editReminder;
+    private Button save_editReminder;
+    protected void show_editReminder_dialog(final int dayofweek, int start){
+        LayoutInflater inflater=LayoutInflater.from(this.getActivity());
+        View myview=inflater.inflate(R.layout.dialog_edit_reminder,null);
+        final AlertDialog.Builder builder=new AlertDialog.Builder(this.getActivity());
+
+        edit_reminder_title = myview.findViewById(R.id.edit_reminder_title);
+        edit_reminder_details = myview.findViewById(R.id.edit_reminder_details);
+        edit_reminder_start = myview.findViewById(R.id.edit_reminder_start);
+        edit_reminder_end = myview.findViewById(R.id.edit_reminder_end);
+        reminder_dayOfweek = myview.findViewById(R.id.edit_reminder_dayOfweek);
+        back_editReminder = myview.findViewById(R.id.dialog_edit_reminder_back);
+        save_editReminder = myview.findViewById(R.id.dialog_edit_reminder_save);
+
+        if(dayofweek == 1){ reminder_dayOfweek.setText("周一");}
+        else if(dayofweek == 2){ reminder_dayOfweek.setText("周二");}
+        else if(dayofweek == 3){ reminder_dayOfweek.setText("周三");}
+        else if(dayofweek == 4){ reminder_dayOfweek.setText("周四");}
+        else if(dayofweek == 5){ reminder_dayOfweek.setText("周五");}
+        else if(dayofweek == 6){ reminder_dayOfweek.setText("周六");}
+        else if(dayofweek == 7){ reminder_dayOfweek.setText("周日");}
+        String hold_start = Integer.toString(start);
+        edit_reminder_start.setText(hold_start);
+
+        builder.setView(myview);
+        editreminder_dialog=builder.create();
+        editreminder_dialog.show();
+
+        back_editReminder.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editreminder_dialog.dismiss();
+            }
+        });
+
+        save_editReminder.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int start ;
+                int end  ;
+                int step  ;
+                int curweek = mTimetableView.curWeek();
+
+                if(TextUtils.isEmpty(edit_reminder_title.getText())){
+                    alertBuilder = new AlertDialog.Builder(getContext());
+                    alertBuilder.setTitle("提示");
+                    alertBuilder.setMessage("便签标题不能为空哦！");
+                    alertBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    alertBuilder.show();
+                }
+                else if(TextUtils.isEmpty(edit_reminder_start.getText())||TextUtils.isEmpty(edit_reminder_end.getText())){
+                    alertBuilder = new AlertDialog.Builder(getContext());
+                    alertBuilder.setTitle("提示");
+                    alertBuilder.setMessage("请填完节次信息哦！");
+                    alertBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    alertBuilder.show();
+                }
+                else {
+                    start = Integer.parseInt(edit_reminder_start.getText().toString());
+                    end = Integer.parseInt(edit_reminder_end.getText().toString());
+                    step = end - start + 1;
+                    if (end < start||end>12||start<1) {
+                        alertBuilder = new AlertDialog.Builder(getContext());
+                        alertBuilder.setTitle("提示");
+                        alertBuilder.setMessage("请填入正确的节数哦！");
+                        alertBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                        alertBuilder.show();
+                    }
+
+                    else{
+                        String title_course = edit_reminder_title.getText().toString();
+                        String detail_place;
+                        if(TextUtils.isEmpty(edit_reminder_start.getText())){ detail_place = "(无)";}
+                        else { detail_place = edit_reminder_details.getText().toString();}
+                        String key_teacher = KEY_OF_REMINDER;
+                        List<Integer> weeksnum=new ArrayList<>();
+                        weeksnum.add(curweek);
+
+                        MySubject item = new MySubject( title_course, detail_place, key_teacher, weeksnum, start, step, dayofweek , ID_OF_REMINDER,0);
+                        if(is_ReminderLegal(item)) {
+                            maddClassBoxData = Cache.with(v.getContext())
+                                    .path(getCacheDir(v.getContext()))
+                                    .getCache("classBox", String.class);
+                            List<MySubject> myaddSubjects = JSON.parseArray(maddClassBoxData, MySubject.class);
+                            myaddSubjects.add(item);
+                            maddClassBoxData = JSON.toJSONString(myaddSubjects);
+                            Cache.with(v.getContext())
+                                    .path(getCacheDir(v.getContext()))
+                                    .saveCache("classBox", maddClassBoxData);
+
+                            Intent intent1 = new Intent("com.example.broadcasttest.LOCAL_BROADCAST1");
+                            localBroadcastManager.sendBroadcast(intent1);
+
+                            editreminder_dialog.dismiss();
+                        }
+                        else{
+                            alertBuilder = new AlertDialog.Builder(getContext());
+                            alertBuilder.setTitle("提示");
+                            alertBuilder.setMessage("当前时间有课或其他便签哦！");
+                            alertBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                            alertBuilder.show();
+                        }
+                    }
+                }
+
+            }
+        });
+
+    }
+
+    /**
+     * 显示便签对话框
+     */
+    private EditText reminder_title;
+    private EditText reminder_details;
+    private Button reminder_back;
+    private Button reminder_delete;
+    private Button reminder_modify;
+
+    protected  void show_reminder_dialog(final Schedule schedule){
+        LayoutInflater inflater=LayoutInflater.from(this.getActivity());
+        View myview=inflater.inflate(R.layout.dialog_reminder,null);
+        final AlertDialog.Builder builder=new AlertDialog.Builder(this.getActivity());
+
+        reminder_title = myview.findViewById(R.id.reminder_title);
+        reminder_details = myview.findViewById(R.id.reminder_detail);
+        reminder_title.setText(schedule.getName());
+        reminder_details.setText(schedule.getRoom());
+        // 设置不可编辑
+        reminder_title.setEnabled(false);
+        reminder_title.setFocusable(false);
+        reminder_title.setFocusableInTouchMode(false);
+        reminder_details.setEnabled(false);
+        reminder_details.setFocusable(false);
+        reminder_details.setFocusableInTouchMode(false);
+
+
+        reminder_back = myview.findViewById(R.id.back_from_reminder);
+        reminder_modify = myview.findViewById(R.id.reminder_modify);
+        reminder_delete = myview.findViewById(R.id.reminder_delete);
+
+        builder.setView(myview);
+        reminder_dialog=builder.create();
+        reminder_dialog.show();
+
+
+        reminder_back.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reminder_dialog.dismiss();
+            }
+        });
+        reminder_delete.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                alertBuilder = new AlertDialog.Builder(getContext());
+                alertBuilder.setTitle("提示");
+                alertBuilder.setMessage("确认删除？");
+                alertBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        removeSubject(new MySubject(schedule.getName(), schedule.getRoom(), schedule.getTeacher(), schedule.getWeekList(), schedule.getStart(), schedule.getStep(), schedule.getDay(), schedule.getId(), schedule.getMessagecount()));
+                        reminder_dialog.dismiss();
+                    }
+                });
+                alertBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                alertBuilder.show();
+            }
+        });
+
+        reminder_modify.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reminder_modify.setText("取消");
+                reminder_delete.setText("保存");
+                // 设置可编辑
+                reminder_title.setEnabled(true);
+                reminder_title.setFocusable(true);
+                reminder_title.setFocusableInTouchMode(true);
+                reminder_details.setEnabled(true);
+                reminder_details.setFocusable(true);
+                reminder_details.setFocusableInTouchMode(true);
+
+                //modify变成了取消
+                reminder_modify.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        reminder_modify.setText("修改");
+                        reminder_delete.setText("删除");
+                        // 设置不可编辑
+                        reminder_title.setEnabled(false);
+                        reminder_title.setFocusable(false);
+                        reminder_title.setFocusableInTouchMode(false);
+                        reminder_details.setEnabled(false);
+                        reminder_details.setFocusable(false);
+                        reminder_details.setFocusableInTouchMode(false);
+                    }
+                });
+                //delete变成了保存
+                reminder_delete.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(TextUtils.isEmpty(reminder_details.getText())){
+                            reminder_details.setText("(无)");
+                        }
+                        if(reminder_title.getText().toString().equals(schedule.getName()) && reminder_details.getText().toString().equals(schedule.getRoom())  ){
+                            reminder_modify.setText("修改");
+                            reminder_delete.setText("删除");
+                            // 设置不可编辑
+                            reminder_title.setEnabled(false);
+                            reminder_title.setFocusable(false);
+                            reminder_title.setFocusableInTouchMode(false);
+                            reminder_details.setEnabled(false);
+                            reminder_details.setFocusable(false);
+                            reminder_details.setFocusableInTouchMode(false);
+                        }
+                        else if(TextUtils.isEmpty(reminder_title.getText())){
+                            alertBuilder = new AlertDialog.Builder(getContext());
+                            alertBuilder.setTitle("提示");
+                            alertBuilder.setMessage("便签标题不能为空哦！");
+                            alertBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                            alertBuilder.show();
+                        }
+                        else{
+                            String title = reminder_title.getText().toString();
+                            String details = reminder_details.getText().toString();
+
+                            removeSubject(new MySubject(schedule.getName(), schedule.getRoom(), schedule.getTeacher(), schedule.getWeekList(), schedule.getStart(), schedule.getStep(), schedule.getDay(), schedule.getId(), schedule.getMessagecount()));
+                            maddClassBoxData= Cache.with(v.getContext())
+                                    .path(getCacheDir(v.getContext()))
+                                    .getCache("classBox", String.class);
+
+                            MySubject item = new MySubject( title, details, KEY_OF_REMINDER, schedule.getWeekList(), schedule.getStart(), schedule.getStep(), schedule.getDay(), ID_OF_REMINDER,0);
+
+                            List<MySubject> myaddSubjects = JSON.parseArray(maddClassBoxData, MySubject.class);
+                            myaddSubjects.add(item);
+                            maddClassBoxData=JSON.toJSONString(myaddSubjects);
+                            Cache.with(v.getContext())
+                                    .path(getCacheDir(v.getContext()))
+                                    .saveCache("classBox", maddClassBoxData);
+                            Intent intent1 = new Intent("com.example.broadcasttest.LOCAL_BROADCAST1");
+                            localBroadcastManager.sendBroadcast(intent1);
+
+                            reminder_modify.setText("修改");
+                            reminder_delete.setText("删除");
+                            // 设置不可编辑
+                            reminder_title.setEnabled(false);
+                            reminder_title.setFocusable(false);
+                            reminder_title.setFocusableInTouchMode(false);
+                            reminder_details.setEnabled(false);
+                            reminder_details.setFocusable(false);
+                            reminder_details.setFocusableInTouchMode(false);
+                        }
+                    }
+                });
             }
         });
 
@@ -1029,6 +1332,7 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
     }
 
     public void removeSubject (MySubject subject) {
+
         mClassBoxData = Cache.with(myContext.getActivity())
                 .path(getCacheDir(myContext.getActivity()))
                 .getCache("classBox", String.class);
@@ -1041,6 +1345,9 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
             if (item.getId().equals(subject.getId())) {
                 count++;
             }
+        }
+        if(count==0){
+            return;
         }
 
         if (count == 1) {
@@ -1069,7 +1376,7 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                 mySubjects.remove(i);
             }
         }
-
+        Log.d("remove", JSON.toJSONString(mySubjects));
         //获得数据后存入缓存
         Cache.with(myContext.getActivity())
                 .path(getCacheDir(myContext.getActivity()))
@@ -1195,5 +1502,35 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                 break;
         }
     }
+
+    //判断便签是否与其他subject重复
+    public Boolean is_ReminderLegal(MySubject subject) {
+
+        List<MySubject> doubtfulList = new ArrayList<>();
+
+        mClassBoxData = Cache.with(getActivity())
+                .path(getCacheDir(getActivity()))
+                .getCache("classBox", String.class);
+
+        List<MySubject> mySubjects = JSON.parseArray(mClassBoxData, MySubject.class);
+
+        for (MySubject item : mySubjects) {
+            //先筛选出可以列表
+            if ((item.getDay() == subject.getDay()) && !( (item.getStart() > (subject.getStart() + subject.getStep() - 1))|| ((item.getStart() + item.getStep() - 1) < subject.getStart())) ) {
+                doubtfulList.add(item);
+            }
+        }
+        //接下来判断这些可以的item会不会有和要添加的subject周数重合的
+        for(MySubject sub : doubtfulList){
+            List<Integer> week1 = sub.getWeekList();
+            List<Integer> week2 = subject.getWeekList();
+            week1.retainAll(week2);
+            if(!week1.isEmpty())
+                return false;
+        }
+        return true;
+    }
+
+
 
 }

@@ -22,10 +22,11 @@ import com.example.classchat.Adapter.Adapter_MyGoodsRecyclerView;
 import com.example.classchat.Object.Object_Commodity;
 import com.example.classchat.R;
 import com.example.classchat.Util.Util_NetUtil;
+import com.example.classchat.Util.Util_ToastUtils;
 import com.github.nisrulz.sensey.Sensey;
 import com.github.nisrulz.sensey.TouchTypeDetector;
 import com.mancj.materialsearchbar.MaterialSearchBar;
-import com.sdsmdg.tastytoast.TastyToast;
+
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
 
 import java.io.IOException;
@@ -204,7 +205,7 @@ public class Activity_Market_MyGoods extends AppCompatActivity {
                     mPullLoadMoreRecyclerView.setPullLoadMoreCompleted();
                     break;
                 case RECEIVE_NULL:
-                    TastyToast.makeText(getApplicationContext(),"还没有商品，快去发布试试吧！", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
+                   Util_ToastUtils.showToast(getApplicationContext(),"还没有商品，快去发布试试吧！");
                     break;
                 default:
                     getData();
@@ -238,7 +239,7 @@ public class Activity_Market_MyGoods extends AppCompatActivity {
             mPullLoadMoreRecyclerView.setPullLoadMoreCompleted();
         }
         else {
-            TastyToast.makeText(this,"还没有发布过这类商品", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING);
+            Util_ToastUtils.showToast(this,"还没有发布过这类商品");
         }
     }
 

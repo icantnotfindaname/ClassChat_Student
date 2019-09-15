@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragment.Fragment_SelfInformationCenter">
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/theme"
+            android:padding="10dp">
+
+
+            <Button
+                android:id="@+id/dialog_edit_reminder_back"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/ico_left_back"
+                android:gravity="center_vertical"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:layout_centerInParent="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:gravity="center"
+                    android:textColor="#FFF"
+                    android:textSize="20sp"
+                    android:text="便     签"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:layout_height="match_parent"/>
+
+                <TextView
+                    android:id="@+id/edit_reminder_dayOfweek"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="2dp"
+                    android:layout_gravity="center"
+                    android:text="周     几"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:textColor="#FFF"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="360dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:background="@drawable/baogao" />
+
+            <TextView
+                android:id="@+id/coursedetail_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:text="标题"
+                android:textColor="#000000"
+                android:textSize="15sp"/>
+
+            <EditText
+                android:id="@+id/edit_reminder_title"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:background="#FFF"
+                android:gravity="center_vertical"
+                android:textAlignment="center"
+                android:hint="请输入标题" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/lishi" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="第"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/edit_reminder_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="0.5"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="至"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/edit_reminder_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="0.5"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="节"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:layout_height="50dp">
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/rili"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:textColor="#000000"
+                    android:text="周次"
+                    android:layout_height="match_parent"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="6"
+                    android:id="@+id/reminder_week"
+                    android:textColor="#000000"
+                    android:textSize="15sp"
+                    android:layout_marginLeft="3dp"
+                    android:hint="本周"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp">
+
+                <EditText
+                    android:id="@+id/edit_reminder_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="top"
+                    android:layout_margin="10dp"
+                    android:background="#FFF"
+                    android:gravity="left"
+                    android:hint="内容详情"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/dialog_edit_reminder_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="#AA00D8A0"
+            android:textColor="#fff"
+            android:layout_marginBottom="10dp"
+            android:text="保存"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+</LinearLayout>

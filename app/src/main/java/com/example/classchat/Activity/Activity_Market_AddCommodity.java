@@ -31,7 +31,8 @@ import android.widget.Toast;
 
 import com.example.classchat.R;
 import com.example.classchat.Util.Util_NetUtil;
-import com.sdsmdg.tastytoast.TastyToast;
+import com.example.classchat.Util.Util_ToastUtils;
+
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -93,12 +94,12 @@ public class Activity_Market_AddCommodity extends AppCompatActivity {
         public void handleMessage(Message msg){
             switch (msg.what){
                 case SAVE_SUCCESS:
-                    TastyToast.makeText(Activity_Market_AddCommodity.this,"商品上传成功！",Toast.LENGTH_SHORT, TastyToast.SUCCESS).show();
+                    Util_ToastUtils.showToast(Activity_Market_AddCommodity.this,"商品上传成功！");
                     loadingForAddCommodity.dismiss();
                     finish();
                     break;
                 case SAVE_FAILED:
-                    TastyToast.makeText(Activity_Market_AddCommodity.this,"网络错误，再试试？",Toast.LENGTH_SHORT, TastyToast.ERROR).show();
+                    Util_ToastUtils.showToast(Activity_Market_AddCommodity.this,"网络错误，再试试？");
                     break;
             }
         }
@@ -167,7 +168,7 @@ public class Activity_Market_AddCommodity extends AppCompatActivity {
                     imagelist.add(compressImage(itemiamge3,"2"));
                     addItemToWeb(imagelist);
                 }else {
-                    TastyToast.makeText(Activity_Market_AddCommodity.this,"您的信息尚未输入完全，请补充完毕再上传",Toast.LENGTH_SHORT, TastyToast.CONFUSING).show();
+                    Util_ToastUtils.showToast(Activity_Market_AddCommodity.this,"您的信息尚未输入完全，请补充完毕再上传");
                 }
             }
         });
@@ -270,7 +271,7 @@ public class Activity_Market_AddCommodity extends AppCompatActivity {
 
             } else {
                 //权限被拒绝
-                TastyToast.makeText(this, "获得权限失败！", Toast.LENGTH_SHORT, TastyToast.ERROR).show();
+                Util_ToastUtils.showToast(this, "获得权限失败！");
             }
         }else if(requestCode == mRequestCode){
             for (int i = 0; i < grantResults.length; i++) {

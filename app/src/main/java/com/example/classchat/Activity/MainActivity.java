@@ -45,8 +45,9 @@ import com.example.classchat.R;
 import com.example.classchat.Util.ChangeStatusBarColor;
 import com.example.classchat.Util.MyConversationClickListener;
 import com.example.classchat.Util.Util_NetUtil;
+import com.example.classchat.Util.Util_ToastUtils;
 import com.github.nisrulz.sensey.Sensey;
-import com.sdsmdg.tastytoast.TastyToast;
+
 
 import org.jetbrains.annotations.NotNull;
 
@@ -149,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         // 第一次肯定会进入到if判断里面，然后把firstTime重新赋值当前的系统时间
         // 然后点击第二次的时候，当点击间隔时间小于2s，那么退出应用；反之不退出应用
         if (System.currentTimeMillis() - firstTime >= timeInterval) {
-            TastyToast.makeText(this, "再按一次退出程序", TastyToast.LENGTH_SHORT,TastyToast.WARNING).show();
+            Util_ToastUtils.showToast(this, "再按一次退出程序");
             firstTime = System.currentTimeMillis();
         } else {
             builder = new AlertDialog.Builder(MainActivity.this)

@@ -11,9 +11,14 @@ import com.example.library_activity_timetable.model.Schedule;
  */
 
 public class OnItemBuildAdapter implements ISchedule.OnItemBuildListener {
+    private static final String KEY_OF_REMINDER = "bianqian7456547";
     @Override
     public String getItemText(Schedule schedule, boolean isThisWeek) {
-        if (schedule == null || TextUtils.isEmpty(schedule.getName())) return "未命名";
+        if(schedule.getTeacher().equals(KEY_OF_REMINDER)){
+            return schedule.getName();
+        }
+        if (schedule == null || TextUtils.isEmpty(schedule.getName()))
+            return "未命名";
         if (schedule.getRoom() == null) {
             if (!isThisWeek)
                 return "[非本周]\n" + schedule.getName();

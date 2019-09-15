@@ -37,6 +37,7 @@ import java.util.List;
 
 public class SimpleOperater extends AbsOperater {
 
+    private static final String KEY_OF_REMINDER = "bianqian7456547";
     private static final String TAG = "SimpleOperater";
 
     protected Activity_TimetableView mView;
@@ -150,10 +151,15 @@ public class SimpleOperater extends AbsOperater {
         int top = (subject.getStart() - (pre.getStart() + pre.getStep()))
                 * (mView.itemHeight() + mView.marTop()) + mView.marTop();
 
-        if (i != 0 && top < 0) return null;
+            if (i != 0 && top < 0) return null;
 
-        // 设置Params
-        View view = inflater.inflate(R.layout.xml_item_layout, null, false);
+        View view;
+
+            if( ! subject.getTeacher().equals(KEY_OF_REMINDER) )
+                view = inflater.inflate(R.layout.xml_item_layout, null, false);
+            else
+                view = inflater.inflate(R.layout.item_reminder_layout, null, false);
+
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
         if (i == 0) {
@@ -163,7 +169,12 @@ public class SimpleOperater extends AbsOperater {
 
         view.setBackgroundColor(Color.TRANSPARENT);
         view.setTag(subject);
-        FrameLayout layout = view.findViewById(R.id.id_item_framelayout);
+
+        FrameLayout layout;
+        if( ! subject.getTeacher().equals(KEY_OF_REMINDER) )
+           layout = view.findViewById(R.id.id_item_framelayout);
+        else
+            layout = view.findViewById(R.id.id_reminder_framelayout);
         layout.setLayoutParams(lp);
 
         boolean isThisWeek = ScheduleSupport.isThisWeek(subject, curWeek);
@@ -171,19 +182,31 @@ public class SimpleOperater extends AbsOperater {
         TextView countTextView = (TextView) view.findViewById(R.id.id_course_messagecount);
         textView.setText(mView.onItemBuildListener().getItemText(subject, isThisWeek));
 
-        countTextView.setText("");
-        countTextView.setVisibility(View.GONE);
 
-        if (isThisWeek) {
-            textView.setTextColor(Color.parseColor("#FFFFFF"));
-            int count =subject.getMessagecount();
-            if (count >=1 ) {
-                countTextView.setVisibility(View.VISIBLE);
-                countTextView.setText(count + "");
+        if(! subject.getTeacher().equals(KEY_OF_REMINDER) ) {
+            if (isThisWeek) {
+                countTextView.setText("");
+                countTextView.setVisibility(View.GONE);
+                textView.setTextColor(Color.parseColor("#FFFFFF"));
+                int count = subject.getMessagecount();
+                if (count >= 1) {
+                    countTextView.setVisibility(View.VISIBLE);
+                    countTextView.setText(count + "");
+                }
+            } else {
+                textView.setTextColor(Color.parseColor("#8D91AA"));
+                textView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.weekview_white));
             }
-        } else {
-            textView.setTextColor(Color.parseColor("#8D91AA"));
-            textView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.weekview_white));
+            textView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    mView.onItemLongClickListener().onLongClick(view, subject.getDay(), subject.getStart());
+                    return true;
+                }
+            });
+        }
+        else{
+            textView.setTextColor(Color.parseColor("#000000"));
         }
 
         mView.onItemBuildListener().onItemUpdate(layout, textView, countTextView, subject);
@@ -197,13 +220,7 @@ public class SimpleOperater extends AbsOperater {
             }
         });
 
-        textView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                mView.onItemLongClickListener().onLongClick(view, subject.getDay(), subject.getStart());
-                return true;
-            }
-        });
+
 
         return view;
     }
@@ -242,7 +259,7 @@ public class SimpleOperater extends AbsOperater {
     protected void onPanelClicked(View view, float y) {
         if(mView.isShowFlaglayout()){
             flagLayout.setVisibility(View.GONE);
-//            flagLayout.setVisibility(View.VISIBLE);
+            flagLayout.setVisibility(View.VISIBLE);
         }else{
             flagLayout.setVisibility(View.GONE);
         }
@@ -308,28 +325,28 @@ public class SimpleOperater extends AbsOperater {
             /**
              * 点击空白格子时才会触发这个事件
              */
-//            panels[i].setOnTouchListener(new View.OnTouchListener() {
-//
-//                @Override
-//                public boolean onTouch(View arg0, MotionEvent arg1) {
-//                    switch (arg1.getAction()) {
-//                        case MotionEvent.ACTION_DOWN:
-//                            x = arg1.getX();
-//                            y = arg1.getY();
-//
-//                            break;
-//                        case MotionEvent.ACTION_UP:
-//                            float x2 = arg1.getX();
-//                            float y2 = arg1.getY();
-//                            if (x2 == x && y2 == y)
-//                                onPanelClicked(arg0, arg1.getY());
-//                            break;
-//                        default:
-//                            break;
-//                    }
-//                    return true;
-//                }
-//            });
+            panels[i].setOnTouchListener(new View.OnTouchListener() {
+
+                @Override
+                public boolean onTouch(View arg0, MotionEvent arg1) {
+                    switch (arg1.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            x = arg1.getX();
+                            y = arg1.getY();
+
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            float x2 = arg1.getX();
+                            float y2 = arg1.getY();
+                            if (x2 == x && y2 == y)
+                                onPanelClicked(arg0, arg1.getY());
+                            break;
+                        default:
+                            break;
+                    }
+                    return true;
+                }
+            });
         }
     }
 

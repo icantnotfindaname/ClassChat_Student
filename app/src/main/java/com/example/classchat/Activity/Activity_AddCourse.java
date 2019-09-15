@@ -55,6 +55,9 @@ public class Activity_AddCourse extends AppCompatActivity {
 
     private View view;
 
+    //手动课程id
+    private static final String ADD_COURSE_ID = "addCourse";
+
     //缓存
     private String mClassBoxData = "";
 
@@ -65,6 +68,7 @@ public class Activity_AddCourse extends AppCompatActivity {
     private AlertDialog.Builder builder1;
     private AlertDialog.Builder builder2;
     private AlertDialog.Builder builder3;
+    private AlertDialog.Builder builder4;
     //周数多选框
     private AlertDialog.Builder mutilChoicebuilder;
     //配合周数多选框的数组
@@ -151,7 +155,7 @@ public class Activity_AddCourse extends AppCompatActivity {
             }
         });
 
-        choose_week.setOnClickListener(new View.OnClickListener() {
+        choose_week.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 mutilChoicebuilder.show();
@@ -192,6 +196,16 @@ public class Activity_AddCourse extends AppCompatActivity {
             }
         });
 
+        //信息补全提示框4
+        builder4 = new AlertDialog.Builder(this);
+        builder4.setTitle("提示");
+        builder4.setMessage("您当前添加的课程与现有课程表存在冲突(这个时间段已经有此课程了),请先删除原有课程！");
+        builder4.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
 
         //返回
         back.setOnClickListener(new OnClickListener() {
@@ -225,30 +239,29 @@ public class Activity_AddCourse extends AppCompatActivity {
                     if (end_ < start_||end_>12||start_<1) { builder2.show(); }
                     else if(dayOfWeek_<1||dayOfWeek_>7){builder3.show();}
                     else {
-                        MySubject item = new MySubject( course_, room_, teacher_, weeksnum, start_, step, dayOfWeek_, null,0);
+                        MySubject item = new MySubject( course_, room_, teacher_, weeksnum, start_, step, dayOfWeek_,ADD_COURSE_ID ,0);
+                        if(isLegal(item)){
+                            mClassBoxData = Cache.with(v.getContext())
+                                    .path(getCacheDir(v.getContext()))
+                                    .getCache("classBox", String.class);
+                            List<MySubject> mySubjects = JSON.parseArray(mClassBoxData, MySubject.class);
+                            mySubjects.add(item);
+                            mClassBoxData = JSON.toJSONString(mySubjects);
+                            Cache.with(v.getContext())
+                                    .path(getCacheDir(v.getContext()))
+                                    .saveCache("classBox", mClassBoxData);
 
-                        mClassBoxData= Cache.with(v.getContext())
-                                .path(getCacheDir(v.getContext()))
-                                .getCache("classBox", String.class);
+                            Intent intent1 = new Intent("com.example.broadcasttest.LOCAL_BROADCAST1");
+                            localBroadcastManager.sendBroadcast(intent1);
 
-                        List<MySubject> mySubjects = JSON.parseArray(mClassBoxData, MySubject.class);
+                            Intent intent2 = new Intent();
+                            intent2.setClass(Activity_AddCourse.this, MainActivity.class);
+                            startActivity(intent2);
+                        }
+                        else{
+                            builder4.show();
+                        }
 
-                        mySubjects.add(item);
-
-                        mClassBoxData=mySubjects.toString();
-
-                        Log.v("mySubjects",mClassBoxData);
-
-                        Cache.with(v.getContext())
-                                .path(getCacheDir(v.getContext()))
-                                .saveCache("classBox", mClassBoxData);
-
-                        Intent intent1 = new Intent("com.example.broadcasttest.LOCAL_BROADCAST1");
-                        localBroadcastManager.sendBroadcast(intent1);
-
-                        Intent intent2 = new Intent();
-                        intent2.setClass(Activity_AddCourse.this,MainActivity.class);
-                        startActivity(intent2);
                     }
                 }
             }
@@ -268,4 +281,32 @@ public class Activity_AddCourse extends AppCompatActivity {
         }
         return cachePath;
     }
+
+    public Boolean isLegal(MySubject subject) {
+
+        List<MySubject> doubtfulList = new ArrayList<>();
+
+        mClassBoxData = Cache.with(Activity_AddCourse.this)
+                .path(getCacheDir(Activity_AddCourse.this))
+                .getCache("classBox", String.class);
+
+        List<MySubject> mySubjects = JSON.parseArray(mClassBoxData, MySubject.class);
+
+        for (MySubject item : mySubjects) {
+            //先筛选出可以列表
+            if ((item.getDay() == subject.getDay()) && !( (item.getStart() > (subject.getStart() + subject.getStep() - 1))|| ((item.getStart() + item.getStep() - 1) < subject.getStart())) ) {
+                doubtfulList.add(item);
+            }
+        }
+        //接下来判断这些可以的item会不会有和要添加的subject周数重合的
+        for(MySubject sub : doubtfulList){
+            List<Integer> week1 = sub.getWeekList();
+            List<Integer> week2 = subject.getWeekList();
+            week1.retainAll(week2);
+            if(!week1.isEmpty())
+                return false;
+        }
+        return true;
+    }
+
 }
