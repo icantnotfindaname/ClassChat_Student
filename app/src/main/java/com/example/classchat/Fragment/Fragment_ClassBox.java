@@ -9,7 +9,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -71,6 +73,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -519,7 +522,9 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                     @Override
                     public void onLongClick(View v, int day, int start) {
                         Log.d(TAG, "onLongClick: + " + mClassBoxData);
-                        Bitmap bitmap = CodeCreator.createQRCode("http://106.12.105.160:8081/getallcourse/student?userId=" + userId, 700, 700, null);
+                        Resources r = getContext().getResources();
+                        Bitmap bmp = BitmapFactory.decodeResource(r, R.drawable.icon_logo);
+                        Bitmap bitmap = CodeCreator.createQRCode("http://106.12.105.160:8081/getallcourse/student?userId=" + userId, 700, 700, bmp);
                         LayoutInflater inflater=LayoutInflater.from(getContext());
                         View xxview=inflater.inflate(R.layout.fragment_qrcodeshowdialog,null);
                         final AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
