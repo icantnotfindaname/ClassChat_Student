@@ -17,7 +17,7 @@
             android:layout_height="25dp"
             android:layout_gravity="center_vertical"
             android:id="@+id/back_from_addCourse2_button"
-            android:background="@drawable/icon_back"/>
+            android:background="@drawable/ico_left_back"/>
 
 
         <TextView

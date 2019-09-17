@@ -20,7 +20,7 @@
             android:layout_height="25dp"
             android:layout_gravity="center_vertical"
             android:id="@+id/back_from_searchAddCourse_button"
-            android:background="@drawable/icon_back"/>
+            android:background="@drawable/ico_left_back"/>
 
         <EditText
             android:layout_width="wrap_content"

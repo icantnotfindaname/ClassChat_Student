@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Activity.Activity_AddTodo">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:padding="3dp"
+        android:background="#AA00D8A0"
+        android:layout_height="60dp">
+
+        <Button
+
+            android:layout_marginLeft="3dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/ico_left_back"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="添加待办"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:textSize="17sp"
+            android:textStyle="bold"/>
+
+        <View
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:layout_marginTop="17dp"
+        android:layout_height="50dp">
+
+        <TextView
+            android:layout_width="60dp"
+            android:text="标题"
+            android:textSize="17sp"
+            android:textColor="#00D8A0"
+            android:gravity="center"
+            android:layout_height="match_parent"/>
+        <EditText
+            android:layout_width="0dp"
+            android:id="@+id/get_todo_title"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:textColor="#000000"
+            android:gravity="center_vertical"
+            android:hint="填写待办标题"
+            android:textSize="17sp"
+            android:background="@null"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="17dp"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:layout_height="50dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="0.6"
+                android:orientation="horizontal"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/lishi"/>
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:id="@+id/get_todo_time"
+                    android:textSize="17sp"
+                    android:paddingLeft="5dp"
+                    android:hint="填写具体时间"
+                    android:textColor="#000000"
+                    android:gravity="center"
+                    android:background="@null"
+                    android:layout_height="match_parent"/>
+
+
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_height="50dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:background="@drawable/dingwei"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:id="@+id/get_todo_place"
+                android:layout_weight="1"
+                android:background="@null"
+                android:paddingLeft="5dp"
+                android:hint="填写地点"
+                android:textColor="#000000"
+                android:textSize="17sp"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:layout_height="50dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:background="@drawable/rili"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:textSize="17sp"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:text="第"
+                android:layout_height="match_parent"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:hint="起始节数"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:id="@+id/get_todo_start"
+                android:textSize="17sp"
+                android:textColor="#000000"
+                android:inputType="number"
+
+                android:layout_height="match_parent"/>
+
+            <TextView android:layout_width="wrap_content"
+                android:textSize="17sp"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:text="至"
+                android:layout_height="match_parent"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:hint="结束节数"
+                android:layout_marginLeft="5dp"
+                android:textColor="#000000"
+                android:gravity="center"
+                android:id="@+id/get_todoe_end"
+                android:textSize="17sp"
+                android:inputType="number"
+                android:layout_height="match_parent"/>
+            <TextView android:layout_width="wrap_content"
+                android:textSize="17sp"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:text="节"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:layout_height="50dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:background="@drawable/linggan"/>
+            <Switch
+                android:id="@+id/option_switch_isClock"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="start|center"
+                android:paddingRight="20dp"
+                android:text="开启闹钟提醒"
+                android:checked="true"
+                android:thumb="@drawable/thumb"
+                android:track="@drawable/switch_track"
+                android:textSize="17sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:padding="6dp">
+
+            <EditText
+                android:id="@+id/get_todo_details"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="top"
+                android:layout_margin="10dp"
+                android:background="#FFF"
+                android:gravity="left"
+                android:hint="内容详情"
+                android:textSize="17sp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="150dp"
+        android:orientation="vertical"
+        android:layout_marginTop="42dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center">
+
+        <Button
+            android:layout_width="match_parent"
+            android:textSize="17sp"
+            android:textColor="#FFFFFF"
+            android:id="@+id/add_todo_button"
+            android:text="+添加待办"
+            android:background="@drawable/green_bg"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+</LinearLayout>
