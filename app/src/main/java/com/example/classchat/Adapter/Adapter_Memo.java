@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.classchat.Activity.Activity_AddTodo;
 import com.example.classchat.Activity.Activity_Option;
 import com.example.classchat.Object.MySubject;
 import com.example.classchat.R;
@@ -58,7 +59,7 @@ public class Adapter_Memo extends RecyclerView.Adapter<Adapter_Memo.ViewHolder> 
                         //删除后复原
                         holder.add.setVisibility(View.VISIBLE);
                         holder.delete.setVisibility(View.GONE);
-                        //TODO 发送网络请求删除 参考my
+                        //TODO 发送网络请求删除
                     }
                 });
                 holder.title.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +76,7 @@ public class Adapter_Memo extends RecyclerView.Adapter<Adapter_Memo.ViewHolder> 
             @Override
             public void onClick(View v) {
                 //TODO 改切换活动
-                mContext.startActivity(new Intent(mContext, Activity_Option.class));
+                mContext.startActivity(new Intent(mContext, Activity_AddTodo.class));
             }
         });
 

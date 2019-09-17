@@ -540,7 +540,7 @@ public class Fragment_SelfInformationCenter extends Fragment {
         // 设置提示框的标题
         builder.setTitle("退出登录").
                 // 设置提示框的图标
-                        setIcon(R.mipmap.ic_launcher).
+                        setIcon(R.drawable.icon_logo).
                 // 设置要显示的信息
                         setMessage("确定要退出登录吗？").
                 // 设置确定按钮

@@ -111,7 +111,7 @@
                     android:background="@drawable/lishi" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dip"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -121,7 +121,7 @@
 
                 <EditText
                     android:id="@+id/edit_reminder_start"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_weight="0.5"
@@ -131,7 +131,7 @@
                     android:textSize="15sp" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dip"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -141,7 +141,7 @@
 
                 <EditText
                     android:id="@+id/edit_reminder_end"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_weight="0.5"
@@ -151,7 +151,7 @@
                     android:textSize="15sp" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
