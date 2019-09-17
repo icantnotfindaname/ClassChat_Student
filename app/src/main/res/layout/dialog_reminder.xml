@@ -115,7 +115,7 @@
                     android:layout_gravity="center"
                     android:id="@+id/reminder_modify"
                     android:layout_weight="1"
-                    android:background="#AA00D8A0"
+                    android:background="@drawable/green_bg"
                     android:textColor="#fff"
                     android:textSize="15sp"
                     android:text="修改" />
@@ -130,7 +130,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:background="#AA00D8A0"
+                    android:background="@drawable/green_bg"
                     android:textColor="#fff"
                     android:textSize="15sp"
                     android:text="删除" />

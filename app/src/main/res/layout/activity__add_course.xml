@@ -18,7 +18,7 @@ android:background="#FFFFFF">>
         android:layout_height="25dp"
         android:layout_gravity="center_vertical"
         android:id="@+id/back_from_addCourse_button"
-        android:background="@drawable/icon_back"/>
+        android:background="@drawable/ico_left_back"/>
 
 
     <TextView
@@ -249,7 +249,7 @@ android:background="#FFFFFF">>
 
     <Button
         android:layout_width="match_parent"
-        android:textSize="20sp"
+        android:textSize="17sp"
         android:textColor="#FFFFFF"
         android:id="@+id/add_button"
         android:text="+添加课程"
