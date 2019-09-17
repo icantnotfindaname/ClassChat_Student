@@ -219,7 +219,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="#AA00D8A0"
+            android:background="@drawable/green_bg"
             android:textColor="#fff"
             android:layout_marginBottom="10dp"
             android:text="保存"
