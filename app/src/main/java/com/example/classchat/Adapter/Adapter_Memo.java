@@ -11,8 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.classchat.Activity.Activity_AddTodo;
-import com.example.classchat.Activity.Activity_Option;
-import com.example.classchat.Object.MySubject;
+import com.example.classchat.Object.Object_TodoList;
 import com.example.classchat.R;
 
 import java.util.List;
@@ -20,15 +19,18 @@ import java.util.List;
 public class Adapter_Memo extends RecyclerView.Adapter<Adapter_Memo.ViewHolder> {
 
     private Context mContext;
-    private List<MySubject> itemList;
+    private List<Object_TodoList> todoList;
+
+    public Adapter_Memo(List<Object_TodoList> list){
+        todoList = list;
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private Button add, delete;
+        private Button delete;
         private TextView title;
 
         public ViewHolder(View view) {
             super(view);
-            add = view.findViewById(R.id.memo_add);
             delete = view.findViewById(R.id.memo_delete);
             title = view.findViewById(R.id.memo_title);
         }
@@ -46,50 +48,41 @@ public class Adapter_Memo extends RecyclerView.Adapter<Adapter_Memo.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        final MySubject item = itemList.get(position);
-        holder.title.setText(item.getName());
+        final Object_TodoList item = todoList.get(position);
+        holder.title.setText(item.getTitle());
         holder.title.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                holder.add.setVisibility(View.GONE);
                 holder.delete.setVisibility(View.VISIBLE);
                 holder.delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //删除后复原
-                        holder.add.setVisibility(View.VISIBLE);
                         holder.delete.setVisibility(View.GONE);
-                        //TODO 发送网络请求删除
+                        //TODO 删除（后端数据或本地）
+
                     }
                 });
                 holder.title.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        holder.add.setVisibility(View.VISIBLE);
                         holder.delete.setVisibility(View.GONE);
                     }
                 });
                 return true;
             }
         });
-        holder.add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO 改切换活动
-                mContext.startActivity(new Intent(mContext, Activity_AddTodo.class));
-            }
-        });
+
 
     }
 
 
     @Override
     public int getItemCount() {
-//        if(itemList !=null)
-//            return itemList.size();
-//        else
-//            return 0;
-        return 10;
+        if(todoList !=null)
+            return todoList.size();
+        else
+            return 0;
     }
 
 

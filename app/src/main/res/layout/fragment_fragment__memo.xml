@@ -1,41 +1,312 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:orientation="horizontal">
 
 
-            <TextView
-                android:id="@+id/tv_memo1"
-                android:layout_width="0dip"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:textAlignment="center"
-                android:textColor="@color/theme"
-                android:padding="5dp" />
+                <RelativeLayout
+                    android:layout_width="0dip"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/morning"/>
+                </RelativeLayout>
 
-            <View
-                android:layout_width="2dp"
-                android:background="@color/theme"
-                android:layout_height="match_parent"/>
+                <View
+                    android:layout_width="2dp"
+                    android:background="@color/theme"
+                    android:layout_height="match_parent"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_memo1"
-                android:layout_width="0dip"
-                android:layout_weight="1.5"
-                android:layout_height="match_parent"
-                android:padding="5dp" />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_memo1"
+                    android:layout_width="0dip"
+                    android:layout_weight="1.5"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:orientation="vertical"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/tv_memo2"
+                    android:layout_width="0dip"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textAlignment="center"
+                    android:textColor="@color/theme"
+                    android:padding="5dp" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:background="@color/theme"
+                    android:layout_height="match_parent"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_memo2"
+                    android:layout_width="0dip"
+                    android:layout_weight="1.5"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:orientation="vertical"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/tv_memo3"
+                    android:layout_width="0dip"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textAlignment="center"
+                    android:textColor="@color/theme"
+                    android:padding="5dp" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:background="@color/theme"
+                    android:layout_height="match_parent"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_memo3"
+                    android:layout_width="0dip"
+                    android:layout_weight="1.5"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:orientation="vertical"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:orientation="horizontal">
+
+
+                <RelativeLayout
+                    android:layout_width="0dip"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/noon"/>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="2dp"
+                    android:background="@color/theme"
+                    android:layout_height="match_parent"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_memo4"
+                    android:layout_width="0dip"
+                    android:layout_weight="1.5"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:orientation="vertical"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/tv_memo5"
+                    android:layout_width="0dip"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textAlignment="center"
+                    android:textColor="@color/theme"
+                    android:padding="5dp" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:background="@color/theme"
+                    android:layout_height="match_parent"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_memo5"
+                    android:layout_width="0dip"
+                    android:layout_weight="1.5"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:orientation="vertical"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/tv_memo6"
+                    android:layout_width="0dip"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textAlignment="center"
+                    android:textColor="@color/theme"
+                    android:padding="5dp" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:background="@color/theme"
+                    android:layout_height="match_parent"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_memo6"
+                    android:layout_width="0dip"
+                    android:layout_weight="1.5"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:orientation="vertical"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/tv_memo7"
+                    android:layout_width="0dip"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textAlignment="center"
+                    android:textColor="@color/theme"
+                    android:padding="5dp" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:background="@color/theme"
+                    android:layout_height="match_parent"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_memo7"
+                    android:layout_width="0dip"
+                    android:layout_weight="1.5"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:orientation="vertical"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/tv_memo8"
+                    android:layout_width="0dip"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textAlignment="center"
+                    android:textColor="@color/theme"
+                    android:padding="5dp" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:background="@color/theme"
+                    android:layout_height="match_parent"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_memo8"
+                    android:layout_width="0dip"
+                    android:layout_weight="1.5"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:orientation="vertical"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="0dip"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/night"/>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="2dp"
+                    android:background="@color/theme"
+                    android:layout_height="match_parent"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_memo9"
+                    android:layout_width="0dip"
+                    android:layout_weight="1.5"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:orientation="vertical"/>
+            </LinearLayout>
         </LinearLayout>
+    </ScrollView>
+
+    <com.nightonke.boommenu.BoomMenuButton
+        android:id="@+id/memo_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        app:bmb_normalColor="@color/theme"
+        app:bmb_dotRadius="0dp"
+        app:bmb_inFragment="true"
+        app:bmb_buttonEnum="simpleCircle"
+        app:bmb_piecePlaceEnum="piecePlace_dot_9_1"
+        app:bmb_buttonPlaceEnum="buttonPlace_sc_9_1">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/memo_add"/>
+    </com.nightonke.boommenu.BoomMenuButton>
 
 
-    </LinearLayout>
-</ScrollView>
+</RelativeLayout>
