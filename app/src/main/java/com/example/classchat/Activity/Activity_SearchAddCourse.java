@@ -130,6 +130,7 @@ public class Activity_SearchAddCourse extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String s = new String();
+                weeksnum=new ArrayList<>();
                 int end = 0;
                 for(int i=0;i<weeksChecked.length;i++){
                     if(weeksChecked[i])
