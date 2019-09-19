@@ -196,6 +196,39 @@
 
         </LinearLayout>
 
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:layout_height="50dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:background="@drawable/rili"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textSize="17sp"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:text="周数"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:layout_height="match_parent"
+                android:id="@+id/get_todo_week"
+                android:textColor="#000000"
+                android:textSize="17sp"
+                android:layout_marginLeft="3dp"
+                android:hint="第1-25周"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                />
+
+        </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_marginTop="8dp"
@@ -221,6 +254,8 @@
                 android:textSize="17sp" />
 
         </LinearLayout>
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
