@@ -4,13 +4,13 @@
     <item
         android:id="@+id/menu_forum"
         android:enabled="true"
-        android:icon="@drawable/ic_navigation_forum"
+        android:icon="@drawable/memo"
         app:showAsAction="ifRoom"
         android:title="待定" />
     <item
         android:id="@+id/menu_classtable"
         android:enabled="true"
-        android:icon="@drawable/ic_navigation_classtable"
+        android:icon="@drawable/classtable"
         app:showAsAction="ifRoom"
         android:title="@string/classtable" />
 <!--    <item-->
@@ -23,6 +23,6 @@
         android:id="@+id/menu_home"
         android:enabled="true"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_navigation_home"
+        android:icon="@drawable/home"
         android:title="@string/home" />
 </menu>

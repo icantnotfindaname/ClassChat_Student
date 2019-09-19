@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.classchat.Object.Course;
-import com.example.classchat.Object.MySubject;
 import com.example.classchat.R;
 
 import java.util.List;

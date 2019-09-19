@@ -2,7 +2,7 @@ package com.example.classchat.Object;
 
 import com.googlecode.mp4parser.srt.SrtParser;
 
-public class TodoList{
+public class Object_TodoList {
 
     private String id;
     private String title;
@@ -70,11 +70,11 @@ public class TodoList{
     }
 
 
-    public TodoList(){
+    public Object_TodoList(){
         // TODO Auto-generated constructor stub
     }
 
-    public TodoList(String id,String title,int classtime,String todotime,String todoplace,String details,boolean isClock){
+    public Object_TodoList(String id, String title, int classtime, String todotime, String todoplace, String details, boolean isClock){
         this.id = id;
         this.title = title;
         this.classtime = classtime;
