@@ -272,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         break;
 //                    case R.id.menu_market:
-//                        setFragmentPosition(2);
+//                        setFragmentPosition(3);
 //                        if (Build.VERSION.SDK_INT >= 21) {
 //                            Window window = getWindow();
 //                            //After LOLLIPOP not translucent status bar
