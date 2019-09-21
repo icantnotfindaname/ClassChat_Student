@@ -3,24 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-<!--    <LinearLayout-->
-<!--        android:id="@+id/ll_title"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="40dp"-->
-<!--        android:gravity="top"-->
-<!--        android:background="@color/theme">-->
-<!--    <Button-->
-
-<!--        android:id="@+id/memo_refresh"-->
-<!--        android:layout_width="30dp"-->
-<!--        android:layout_height="30dp"-->
-<!--        android:layout_marginLeft="5dp"-->
-<!--        android:layout_alignParentTop="true"-->
-<!--        android:background="@drawable/refresh"-->
-<!--        />-->
-<!--    </LinearLayout>-->
+    <LinearLayout
+        android:id="@+id/ll_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="top"
+        android:background="@color/theme">
+    <Button
+        android:id="@+id/memo_refresh"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="5dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/refresh" />
+    </LinearLayout>
     <ScrollView
-
+        android:layout_below="@+id/ll_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout

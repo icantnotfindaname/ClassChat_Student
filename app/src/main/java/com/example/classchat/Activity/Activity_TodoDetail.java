@@ -1,7 +1,9 @@
 package com.example.classchat.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.icu.util.LocaleData;
+import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import com.alibaba.fastjson.JSON;
 import com.example.classchat.Object.Object_TodoList;
 import com.example.classchat.R;
 import com.example.classchat.Util.Util_NetUtil;
+import com.example.classchat.Util.Util_ToastUtils;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -34,8 +37,13 @@ public class Activity_TodoDetail extends AppCompatActivity {
     private Object_TodoList memo;
     private EditText title, content;
     private Switch isClock;
-    private Boolean bisClock;
+//    private Boolean bisClock;
     private String userID;
+    private final static int SAVE_SUCCESS = 0;
+    private final static int SAVE_FAILED = 1;
+    private final static int DELETE_SUCCESS = 2;
+    private final static int DELETE_FAILED = 3;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,15 +51,16 @@ public class Activity_TodoDetail extends AppCompatActivity {
         Intent intent = getIntent();
         memo = JSON.parseObject(intent.getStringExtra("memo"), Object_TodoList.class);
         userID = memo.getUserID();
-        bisClock = memo.getClock();
+//        bisClock = memo.isClock();
+//        Log.e("isClock",bisClock+"");
         isClock = findViewById(R.id.option_switch_isClock);
-        isClock.setChecked(bisClock);
-        isClock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                bisClock = isChecked;
-            }
-        });
+//        isClock.setChecked(bisClock);
+//        isClock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                bisClock = isChecked;
+//            }
+//        });
         setContentView(R.layout.activity__todo_detail);
         title = findViewById(R.id.get_todo_title);
         title.setText(memo.getTodoTitle());
@@ -87,32 +96,29 @@ public class Activity_TodoDetail extends AppCompatActivity {
                                 .add("todoTitle", memo.getTodoTitle())
                                 .add("weekChosen", "")
                                 .add("dayChosen", "")
-                                .add("timeSlot", " ")
-                                .add("detailTime", "huikgiu")
-                                .add("isClock", bisClock+"")
-                                .add("content", content.getText().toString())
+                           //     .add("content", content.getText().toString())
                                 .build();   //构建请求体
 //                        //TODO
-//                        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/updatetodoitem", requestBody, new okhttp3.Callback() {
-//                            @Override
-//                            public void onResponse(Call call, Response response) throws IOException {
-//                                // 得到服务器返回的具体内容
-//                                boolean responseData = Boolean.parseBoolean(response.body().string());
-//                                Message message = new Message();
-//                                if (responseData) {
-//                                    message.what = SAVE_SUCCESS;
-//                                    handler.sendMessage(message);
-//                                } else {
-//                                    message.what = SAVE_FAILED;
-//                                    handler.sendMessage(message);
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-//                                // 在这里对异常情况进行处理
-//                            }
-//                        });
+                        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/deletetodoitem", requestBody, new okhttp3.Callback() {
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                // 得到服务器返回的具体内容
+                                boolean responseData = Boolean.parseBoolean(response.body().string());
+                                Message message = new Message();
+                                if (responseData) {
+                                    message.what = DELETE_SUCCESS;
+                                    handler.sendMessage(message);
+                                } else {
+                                    message.what = DELETE_FAILED;
+                                    handler.sendMessage(message);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                // 在这里对异常情况进行处理
+                            }
+                        });
                     }
                 });
 
@@ -122,7 +128,37 @@ public class Activity_TodoDetail extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         //TODO 删除
+                        RequestBody requestBody = new FormBody.Builder()
+                                .add("userID", userID)
+                                .add("todoTitle", memo.getTodoTitle())
+                                .add("weekChosen", "")
+                                .add("dayChosen", "")
+                                .add("timeSlot", " ")
+                                .add("detailTime", "huikgiu")
+                                .add("isClock", "")
+                                .add("content", content.getText().toString())
+                                .build();   //构建请求体
+//                        //TODO
+                        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/updatetodoitem", requestBody, new okhttp3.Callback() {
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                // 得到服务器返回的具体内容
+                                boolean responseData = Boolean.parseBoolean(response.body().string());
+                                Message message = new Message();
+                                if (responseData) {
+                                    message.what = SAVE_SUCCESS;
+                                    handler.sendMessage(message);
+                                } else {
+                                    message.what = SAVE_FAILED;
+                                    handler.sendMessage(message);
+                                }
+                            }
 
+                            @Override
+                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                // 在这里对异常情况进行处理
+                            }
+                        });
                     }
                 });
             }
@@ -130,4 +166,27 @@ public class Activity_TodoDetail extends AppCompatActivity {
         funcTitle = findViewById(R.id.memo_func_title);
         funcTitle.setText("待办详情");
     }
+
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SAVE_SUCCESS:
+                    Util_ToastUtils.showToast(Activity_TodoDetail.this, "修改成功！");
+                    finish();
+                    break;
+                case SAVE_FAILED:
+                case DELETE_FAILED:
+                    Util_ToastUtils.showToast(Activity_TodoDetail.this, "网络链接失败，重新试试？");
+                    break;
+                case DELETE_SUCCESS:
+                    Util_ToastUtils.showToast(Activity_TodoDetail.this, "删除成功！");
+                    finish();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 }
