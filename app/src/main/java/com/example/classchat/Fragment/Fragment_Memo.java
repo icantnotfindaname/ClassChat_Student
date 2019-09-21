@@ -117,6 +117,20 @@ public class Fragment_Memo extends Fragment {
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                todoLists.clear();
+                for(int i = 0; i < 9; ++i){
+                    todoLists.add(new ArrayList<Object_TodoList>());
+                }
+                List<RecyclerView> rvList = new ArrayList<>();
+                rvList.add(rv1);rvList.add(rv2);rvList.add(rv3);rvList.add(rv4);
+                rvList.add(rv5);rvList.add(rv6);rvList.add(rv7);rvList.add(rv8);rvList.add(rv9);
+
+                for(int i = 0; i < rvList.size(); ++i){
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                    rvList.get(i).setLayoutManager(layoutManager);
+                    rvList.get(i).setAdapter(new Adapter_Memo(getActivity(), (todoLists.get(i))));
+                }
                 getMemoFromWeb();
             }
         });
@@ -173,6 +187,7 @@ public class Fragment_Memo extends Fragment {
                 .add("daychosen", calendar.get(Calendar.DAY_OF_WEEK) +"")
                 .build();
         // 发送网络请求，联络信息
+        Log.e("week&day",week + "   "+calendar.get(Calendar.DAY_OF_WEEK) +"");
         Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/getusertodolist", requestBody, new okhttp3.Callback() {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
