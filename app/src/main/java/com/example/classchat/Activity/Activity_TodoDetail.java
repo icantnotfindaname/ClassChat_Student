@@ -78,21 +78,20 @@ public class Activity_TodoDetail extends AppCompatActivity {
                 edit.setVisibility(View.GONE);
                 save.setVisibility(View.VISIBLE);
                 content.setEnabled(true);
-//                save.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        //TODO 修改
-//                        RequestBody requestBody = new FormBody.Builder()
-//                                .add("userID", userID)
-//                                .add("todoTitle", memo.getTodoTitle())
-//                                .add("weekChosen", "")
-//                                .add("dayChosen", "")
-//                                .add("timeSlot", " ")
-//                                .add("detailTime", "huikgiu")
-//                                .add("isClock", bisClock+"")
-//                                .add("content", content.getText().toString())
-//                                .build();   //构建请求体
-//
+                save.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //TODO 修改
+                        RequestBody requestBody = new FormBody.Builder()
+                                .add("userID", userID)
+                                .add("todoTitle", memo.getTodoTitle())
+                                .add("weekChosen", "")
+                                .add("dayChosen", "")
+                                .add("timeSlot", " ")
+                                .add("detailTime", "huikgiu")
+                                .add("isClock", bisClock+"")
+                                .add("content", content.getText().toString())
+                                .build();   //构建请求体
 //                        //TODO
 //                        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/updatetodoitem", requestBody, new okhttp3.Callback() {
 //                            @Override
@@ -114,17 +113,18 @@ public class Activity_TodoDetail extends AppCompatActivity {
 //                                // 在这里对异常情况进行处理
 //                            }
 //                        });
-//                    }
-//                });
-//
-//                delete.setVisibility(View.VISIBLE);
-//                delete.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        //TODO 删除
-//
-//                    }
-//                });
+                    }
+                });
+
+
+                delete.setVisibility(View.VISIBLE);
+                delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //TODO 删除
+
+                    }
+                });
             }
         });
         funcTitle = findViewById(R.id.memo_func_title);
