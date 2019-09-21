@@ -5,24 +5,6 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-<!--    <Button-->
-<!--    android:id="@+id/memo_add"-->
-<!--    android:layout_width="20dp"-->
-<!--    android:layout_height="20dp"-->
-<!--    android:layout_weight="1"-->
-<!--    android:layout_margin="5dp"-->
-<!--    android:layout_gravity="center_vertical"-->
-<!--    android:background="@drawable/add_demo"/>-->
-    <Button
-        android:id="@+id/memo_delete"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_weight="1"
-        android:layout_margin="5dp"
-        android:layout_gravity="center_vertical"
-        android:background="@drawable/delete_memo"
-        android:visibility="gone"/>
-
     <TextView
         android:id="@+id/memo_title"
         android:layout_width="0dip"

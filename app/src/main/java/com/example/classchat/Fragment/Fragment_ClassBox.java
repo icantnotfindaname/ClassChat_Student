@@ -465,13 +465,13 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
      */
     private void initTimetableView() {
         //获取控件
-        mWeekView = (WeekView)getActivity().findViewById(R.id.id_weekview);
-        mTimetableView = (Activity_TimetableView)getActivity().findViewById(R.id.id_timetableView);
-        mBeginClassTime=Cache.with(myContext.getActivity())
+        mWeekView = getActivity().findViewById(R.id.id_weekview);
+        mTimetableView = getActivity().findViewById(R.id.id_timetableView);
+        mBeginClassTime = Cache.with(myContext.getActivity())
                 .path(getCacheDir(myContext.getActivity()))
                 .getCache("BeginClassTime",String.class);
         //若用户没有设置初始时间
-        if(mBeginClassTime==null||mBeginClassTime.length()<=0){
+        if(mBeginClassTime == null || mBeginClassTime.length() <= 0){
             Calendar calendar=Calendar.getInstance();
             mBeginClassTime=calendar.get(Calendar.YEAR)+"-" + (calendar.get(Calendar.MONTH)+1) +"-"+calendar.get(Calendar.DAY_OF_MONTH)+" 00:00:00";
         }
