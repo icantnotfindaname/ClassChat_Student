@@ -72,7 +72,7 @@ public class Fragment_Memo extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         add = view.findViewById(R.id.memo_add);
-      //  refresh = view.findViewById(R.id.memo_refresh);
+        refresh = view.findViewById(R.id.memo_refresh);
         rv1 = view.findViewById(R.id.rv_memo1);
         rv2 = view.findViewById(R.id.rv_memo2);
         rv3 = view.findViewById(R.id.rv_memo3);
@@ -114,12 +114,12 @@ public class Fragment_Memo extends Fragment {
             add.addBuilder(builder);
         }
 
-//        refresh.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                getMemoFromWeb();
-//            }
-//        });
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getMemoFromWeb();
+            }
+        });
 
         MainActivity mainActivity = (MainActivity)getActivity();
         userId = mainActivity.getId();
@@ -180,6 +180,7 @@ public class Fragment_Memo extends Fragment {
                 String responseData = response.body().string();
                 // 转化为具体的对象列表
                 jsonlist = JSON.parseArray(responseData, String.class);
+                Log.e("jsonlist",jsonlist.toString());
                 if(jsonlist.size() == 0){
                     message.what = RECEIVE_NULL;
                     handler.sendMessage(message);

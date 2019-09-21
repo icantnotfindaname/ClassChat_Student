@@ -8,13 +8,13 @@ public class Object_TodoList {
 
     private String userID, todoTitle, content, detailTime;
     private int dayChosen, weekChosen, timeSlot;
-    private Boolean clock;
+    private Boolean isClock;
 
     public Object_TodoList(){
         // TODO Auto-generated constructor stub
     }
 
-    public Object_TodoList(String userID, String todoTitle, String content, int dayChosen, int weekChosen, int timeSlot, String detailTime, boolean clock){
+    public Object_TodoList(String userID, String todoTitle, String content, int dayChosen, int weekChosen, int timeSlot, String detailTime, boolean isClock){
         this.userID = userID;
         this.todoTitle = todoTitle;
         this.detailTime = detailTime;
@@ -23,7 +23,7 @@ public class Object_TodoList {
         this.dayChosen = dayChosen;
         this.weekChosen = weekChosen;
         this.timeSlot = timeSlot;
-        this.clock = clock;
+        this.isClock = isClock;
     }
 
     public String getUserID() {
@@ -82,18 +82,18 @@ public class Object_TodoList {
         this.timeSlot = timeSlot;
     }
 
-    public Boolean getClock() {
-        return clock;
+    public Boolean isClock() {
+        return isClock;
     }
 
-    public void setClock(Boolean clock) {
-        this.clock = clock;
+    public void setClock(Boolean isClock) {
+        this.isClock = isClock;
     }
 
     @NonNull
     @Override
     public String toString() {
-        return todoTitle + content;
+        return todoTitle + content+isClock+detailTime+dayChosen+weekChosen+timeSlot;
 
     }
 }
