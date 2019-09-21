@@ -50,6 +50,7 @@ import static com.example.library_cache.disklrucache.Util.getCacheDir;
 
 public class Fragment_Memo extends Fragment {
 
+    //TODO 待办界面左侧获取当天课程，显示在xml的tv_memo中
     private static final String TAG = "Fragment_Memo";
     private RecyclerView rv1, rv2, rv3, rv4, rv5, rv6, rv7, rv8, rv9;
     private BoomMenuButton add;

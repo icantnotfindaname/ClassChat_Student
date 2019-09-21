@@ -43,7 +43,7 @@ public class Activity_TodoDetail extends AppCompatActivity {
     private final static int SAVE_FAILED = 1;
     private final static int DELETE_SUCCESS = 2;
     private final static int DELETE_FAILED = 3;
-
+    //TODO 时间选择 、timeSlot(待办的位置，如 早课前、第1~2节)在编辑时的显示
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,13 +92,13 @@ public class Activity_TodoDetail extends AppCompatActivity {
                 save.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //TODO 修改   注意：标题不修改
+                        //TODO 修改   注意：目前设计有缺陷只能改content、detailtime、timeSlot、isClock
                         final RequestBody requestBody = new FormBody.Builder()
                                 .add("userID", userID)
                                 .add("todotitle", memo.getTodoTitle())
-                                .add("weekChosen", "")
-                                .add("dayChosen", "")
-                                .add("timeSlot", " ")
+                                .add("weekChosen", "")//TODO 初始状态下原来选的周要勾
+                                .add("dayChosen", "")//TODO
+                                .add("timeSlot", " ")//TODO
                                 .add("detailTime", "huikgiu")
                                 .add("isClock", bisClock+"")
                                 .add("content", content.getText().toString())
@@ -137,11 +137,12 @@ public class Activity_TodoDetail extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         //TODO 删除
+                        Calendar calendar = Calendar.getInstance();
                         RequestBody requestBody = new FormBody.Builder()
                                 .add("userid", userID)
                                 .add("todotitle", memo.getTodoTitle())
-                                .add("weekchosen", "")
-                                .add("daychosen", "")
+                                .add("weekchosen", "")//TODO
+                                .add("daychosen", calendar.get(Calendar.DAY_OF_WEEK) +"")
                                 //     .add("content", content.getText().toString())
                                 .build();   //构建请求体
 //                        //TODO
