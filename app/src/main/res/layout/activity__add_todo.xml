@@ -117,13 +117,14 @@
                     android:layout_margin="10dp"
                     android:background="@drawable/lishi" />
 
-                <EditText
+                <TextView
                     android:layout_width="wrap_content"
                     android:id="@+id/get_todo_time"
                     android:textSize="17sp"
                     android:paddingLeft="5dp"
                     android:hint="填写具体时间"
                     android:textColor="#000000"
+                    android:clickable="true"
                     android:gravity="center"
                     android:background="@null"
                     android:layout_height="match_parent"/>
