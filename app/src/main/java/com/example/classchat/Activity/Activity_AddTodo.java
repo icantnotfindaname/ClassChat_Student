@@ -11,6 +11,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -51,9 +52,10 @@ public class Activity_AddTodo extends AppCompatActivity {
     Dialog timepicker_dialog;
     private TimePicker timePicker;
     private  NumberPicker dayPicker;
-    private int dayOfweek_, dayOfweek;
-    private int hour_, hour;
-    private int minute__, minute_;
+    private int dayOfweek_ = 1, dayOfweek;
+    private int hour_ = 0, hour;
+    private int minute__ = 0, minute_;
+    private Boolean timeChecked = false;
     private String[] weekdays = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期天"};
 
     //周数多选框
@@ -85,6 +87,8 @@ public class Activity_AddTodo extends AppCompatActivity {
         setWeek = findViewById(R.id.get_todo_week);
         isClock = findViewById(R.id.option_switch_isClock);
         setTime = findViewById(R.id.get_todo_time);
+
+
         isClock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -193,76 +197,79 @@ public class Activity_AddTodo extends AppCompatActivity {
         setTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                show_timePicker();
+            show_timePicker();
             }
         });
 
 
     }
 
-//    protected void show_timePicker(){
-//        LayoutInflater inflater=LayoutInflater.from(Activity_AddTodo.this);
-//        View myview =inflater.inflate(R.layout.dialog_time_choose,null);
-//        final android.support.v7.app.AlertDialog.Builder builder=new android.support.v7.app.AlertDialog.Builder(Activity_AddTodo.this);
-//
-//
-//        timePicker = findViewById(R.id.time_picker);
-//        dayPicker = findViewById(R.id.day_picker);
-//        picker_back = findViewById(R.id.back_from_pick);
-//        picker_save = findViewById(R.id.set_time);
-//
-//
-//        builder.setView(myview);
-//        timepicker_dialog = builder.create();
-//        timepicker_dialog.show();
-//
-//
-//        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-//            @Override
-//            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-//                hour_ = hourOfDay;
-//                minute__ = minute;
-//                Toast.makeText(Activity_AddTodo.this,hour+ ": "+minute_, Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//
-//        dayPicker.setDisplayedValues(weekdays);
-//        //设置最大最小值
-//        dayPicker.setMinValue(1);
-//        dayPicker.setMaxValue(weekdays.length);
-//        //设置默认的位置
-//        dayPicker.setValue(1);
-//        //这里设置为不循环显示，默认值为true
-//        dayPicker.setWrapSelectorWheel(true);
-//        //设置不可编辑
-//        dayPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-//        dayPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-//            @Override
-//            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-//                dayOfweek_ = newVal;
-//                Toast.makeText(Activity_AddTodo.this,newVal+ ": "+ weekdays[newVal - 1], Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        picker_back.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                timepicker_dialog.dismiss();
-//            }
-//        });
-//
-//        picker_save.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                 hour = hour_;
-//                 minute_ = minute__;
-//                 dayOfweek = dayOfweek_;
-//                 setTime.setText(weekdays[dayOfweek - 1]+ " "+ hour + ": " + minute_);
-//            }
-//        });
-//
-//    }
+    protected void show_timePicker(){
+        LayoutInflater inflater=LayoutInflater.from(Activity_AddTodo.this);
+        View myview =inflater.inflate(R.layout.dialog_time_choose,null);
+        final android.support.v7.app.AlertDialog.Builder builder=new android.support.v7.app.AlertDialog.Builder(Activity_AddTodo.this);
+
+        timePicker = myview.findViewById(R.id.time_picker);
+        dayPicker = myview.findViewById(R.id.day_picker);
+        picker_back = myview.findViewById(R.id.back_from_pick);
+        picker_save = myview.findViewById(R.id.set_time);
+
+
+
+        builder.setView(myview);
+        timepicker_dialog = builder.create();
+        timepicker_dialog.show();
+
+
+
+        dayPicker.setDisplayedValues(weekdays);
+        //设置最大最小值
+        dayPicker.setMinValue(1);
+        dayPicker.setMaxValue(weekdays.length);
+        //设置默认的位置
+        dayPicker.setValue(1);
+        //这里设置为不循环显示，默认值为true
+        dayPicker.setWrapSelectorWheel(true);
+        //设置不可编辑
+        dayPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        dayPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                dayOfweek_ = newVal;
+
+            }
+        });
+
+        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+            @Override
+            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+                hour_ = hourOfDay;
+                minute__ = minute;
+
+            }
+        });
+
+        picker_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timepicker_dialog.dismiss();
+            }
+        });
+
+        picker_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timeChecked = true;
+                 hour = hour_;
+                 minute_ = minute__;
+                 dayOfweek = dayOfweek_;
+                 if(minute_>9)  setTime.setText(weekdays[dayOfweek - 1]+ " "+ hour + ": " + minute_);
+                 else setTime.setText(weekdays[dayOfweek - 1]+ " "+ hour + ": 0" + minute_);
+                 timepicker_dialog.dismiss();
+            }
+        });
+
+    }
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
@@ -300,6 +307,18 @@ public class Activity_AddTodo extends AppCompatActivity {
                                     }
                                 }).show();
             }
+            else if(!timeChecked){
+                builder = new AlertDialog.Builder(Activity_AddTodo.this)
+                        .setTitle("温馨提示：")
+                        .setMessage("请填写时间哦！")
+                        .setNegativeButton("知道了",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int whichButton) {
+                                        builder.dismiss();
+                                    }
+                                }).show();
+            }
             else {
                 Log.e("id",userId);
                 Calendar calendar = Calendar.getInstance();
@@ -308,6 +327,8 @@ public class Activity_AddTodo extends AppCompatActivity {
                     RequestBody requestBody = new FormBody.Builder()
                             .add("userID", userId)
                             .add("todoTitle", title.getText().toString())
+                            .add("day chosen",Integer.toString(dayOfweek))
+                            .add("detailtime",Integer.toString(hour) + " " + Integer.toString(minute_))
                             .add("weekChosen", weeksnum.get(i) + "")
                             .add("dayChosen", calendar.get(Calendar.DAY_OF_WEEK) + "")
                             .add("timeSlot", timeslot+"")
