@@ -27,6 +27,7 @@ import com.example.classchat.Util.Util_NetUtil;
 import com.example.classchat.Util.Util_ToastUtils;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,8 +49,8 @@ public class Activity_AddTodo extends AppCompatActivity {
     private Boolean bisClock = true;
     private TextView setTime;
 
-    //时间选择属性
-    Dialog timepicker_dialog;
+    //时间选择
+    private Dialog timepicker_dialog;
     private TimePicker timePicker;
     private  NumberPicker dayPicker;
     private int dayOfweek_ = 1, dayOfweek;
@@ -88,7 +89,6 @@ public class Activity_AddTodo extends AppCompatActivity {
         isClock = findViewById(R.id.option_switch_isClock);
         setTime = findViewById(R.id.get_todo_time);
 
-
         isClock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -123,10 +123,6 @@ public class Activity_AddTodo extends AppCompatActivity {
                 finish();
             }
         });
-
-
-
-
 
         //周数多选框
         mutilChoicebuilder = new AlertDialog.Builder(this);
@@ -181,12 +177,14 @@ public class Activity_AddTodo extends AppCompatActivity {
 
             }
         });
+
         mutilChoicebuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
             }
         });
+
         setWeek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -263,8 +261,8 @@ public class Activity_AddTodo extends AppCompatActivity {
                  hour = hour_;
                  minute_ = minute__;
                  dayOfweek = dayOfweek_;
-                 if(minute_>9)  setTime.setText(weekdays[dayOfweek - 1]+ " "+ hour + ": " + minute_);
-                 else setTime.setText(weekdays[dayOfweek - 1]+ " "+ hour + ": 0" + minute_);
+                 if(minute_ > 9)  setTime.setText(weekdays[dayOfweek - 1]+ "   " + hour + " : " + minute_);
+                 else setTime.setText(weekdays[dayOfweek - 1]+ "     "+ hour + " : 0" + minute_);
                  timepicker_dialog.dismiss();
             }
         });
@@ -321,20 +319,21 @@ public class Activity_AddTodo extends AppCompatActivity {
             }
             else {
                 Log.e("id",userId);
-                Calendar calendar = Calendar.getInstance();
-                Date d = new Date(System.currentTimeMillis());
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
+                Date date = new Date(System.currentTimeMillis());
+                String todoItemId=simpleDateFormat.format(date);
+
                 for(int i = 0;i < weeksnum.size();i ++){
                     RequestBody requestBody = new FormBody.Builder()
                             .add("userID", userId)
                             .add("todoTitle", title.getText().toString())
-                            .add("day chosen",Integer.toString(dayOfweek))
-                            .add("detailtime",Integer.toString(hour) + " " + Integer.toString(minute_))
                             .add("weekChosen", weeksnum.get(i) + "")
-                            .add("dayChosen", calendar.get(Calendar.DAY_OF_WEEK) + "")
+                            .add("dayChosen", dayOfweek + "")
                             .add("timeSlot", timeslot+"")
-                            .add("detailTime", "huikgiu")
+                            .add("detailTime", hour + " " + minute_)
                             .add("isClock", bisClock+"")
                             .add("content", content.getText().toString())
+//                            .add("todoItemId", todoItemId)
                             .build();   //构建请求体
 
                     //TODO

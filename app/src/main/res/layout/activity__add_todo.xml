@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:layout_margin="5dp"
+            android:layout_marginTop="10dp"
             android:textAlignment="center"
             android:maxLines="1"
             android:textSize="17sp"/>
@@ -118,10 +118,11 @@
                     android:background="@drawable/lishi" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:id="@+id/get_todo_time"
                     android:textSize="17sp"
                     android:paddingLeft="5dp"
+                    android:textAlignment="center"
                     android:hint="填写具体时间"
                     android:textColor="#000000"
                     android:clickable="true"
