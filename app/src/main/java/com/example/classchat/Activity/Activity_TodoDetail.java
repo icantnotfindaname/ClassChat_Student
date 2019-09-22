@@ -32,36 +32,31 @@ import okhttp3.Response;
 
 public class Activity_TodoDetail extends AppCompatActivity {
 
-    private TextView funcTitle;
+    private TextView funcTitle, timeSlot;
     private Button back, edit, delete, save;
     private Object_TodoList memo;
     private EditText title, content;
     private Switch isClock;
-//    private Boolean bisClock;
+    private Boolean bisClock;
     private String userID;
     private final static int SAVE_SUCCESS = 0;
     private final static int SAVE_FAILED = 1;
     private final static int DELETE_SUCCESS = 2;
     private final static int DELETE_FAILED = 3;
-
+    //TODO 时间选择 、timeSlot(待办的位置，如 早课前、第1~2节)在编辑时的显示
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity__todo_detail);
         Intent intent = getIntent();
         memo = JSON.parseObject(intent.getStringExtra("memo"), Object_TodoList.class);
         userID = memo.getUserID();
-//        bisClock = memo.isClock();
-//        Log.e("isClock",bisClock+"");
+        bisClock = memo.isClock();
+        Log.e("isClock",bisClock+"");
         isClock = findViewById(R.id.option_switch_isClock);
-//        isClock.setChecked(bisClock);
-//        isClock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                bisClock = isChecked;
-//            }
-//        });
-        setContentView(R.layout.activity__todo_detail);
+        isClock.setChecked(bisClock);
+        isClock.setEnabled(false);
         title = findViewById(R.id.get_todo_title);
         title.setText(memo.getTodoTitle());
         title.setEnabled(false);
@@ -87,29 +82,40 @@ public class Activity_TodoDetail extends AppCompatActivity {
                 edit.setVisibility(View.GONE);
                 save.setVisibility(View.VISIBLE);
                 content.setEnabled(true);
+                isClock.setEnabled(true);
+                isClock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        bisClock = isChecked;
+                    }
+                });
                 save.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //TODO 修改
-                        RequestBody requestBody = new FormBody.Builder()
+                        //TODO 修改   注意：目前设计有缺陷只能改content、detailtime、timeSlot、isClock
+                        final RequestBody requestBody = new FormBody.Builder()
                                 .add("userID", userID)
-                                .add("todoTitle", memo.getTodoTitle())
-                                .add("weekChosen", "")
-                                .add("dayChosen", "")
-                           //     .add("content", content.getText().toString())
+                                .add("todotitle", memo.getTodoTitle())
+                                .add("weekChosen", "")//TODO 初始状态下原来选的周要勾
+                                .add("dayChosen", "")//TODO
+                                .add("timeSlot", " ")//TODO
+                                .add("detailTime", "huikgiu")
+                                .add("isClock", bisClock+"")
+                                .add("content", content.getText().toString())
                                 .build();   //构建请求体
 //                        //TODO
-                        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/deletetodoitem", requestBody, new okhttp3.Callback() {
+                        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/updatetodoitem", requestBody, new okhttp3.Callback() {
                             @Override
                             public void onResponse(Call call, Response response) throws IOException {
                                 // 得到服务器返回的具体内容
                                 boolean responseData = Boolean.parseBoolean(response.body().string());
+                                Log.e("up",responseData+"");
                                 Message message = new Message();
                                 if (responseData) {
-                                    message.what = DELETE_SUCCESS;
+                                    message.what = SAVE_SUCCESS;
                                     handler.sendMessage(message);
                                 } else {
-                                    message.what = DELETE_FAILED;
+                                    message.what = SAVE_FAILED;
                                     handler.sendMessage(message);
                                 }
                             }
@@ -119,6 +125,9 @@ public class Activity_TodoDetail extends AppCompatActivity {
                                 // 在这里对异常情况进行处理
                             }
                         });
+
+
+
                     }
                 });
 
@@ -128,28 +137,27 @@ public class Activity_TodoDetail extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         //TODO 删除
+                        Calendar calendar = Calendar.getInstance();
                         RequestBody requestBody = new FormBody.Builder()
-                                .add("userID", userID)
-                                .add("todoTitle", memo.getTodoTitle())
-                                .add("weekChosen", "")
-                                .add("dayChosen", "")
-                                .add("timeSlot", " ")
-                                .add("detailTime", "huikgiu")
-                                .add("isClock", "")
-                                .add("content", content.getText().toString())
+                                .add("userid", userID)
+                                .add("todotitle", memo.getTodoTitle())
+                                .add("weekchosen", "")//TODO
+                                .add("daychosen", calendar.get(Calendar.DAY_OF_WEEK) +"")
+                                //     .add("content", content.getText().toString())
                                 .build();   //构建请求体
 //                        //TODO
-                        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/updatetodoitem", requestBody, new okhttp3.Callback() {
+                        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/deletetodoitem", requestBody, new okhttp3.Callback() {
                             @Override
                             public void onResponse(Call call, Response response) throws IOException {
                                 // 得到服务器返回的具体内容
                                 boolean responseData = Boolean.parseBoolean(response.body().string());
+                                Log.e("del",responseData+"");
                                 Message message = new Message();
                                 if (responseData) {
-                                    message.what = SAVE_SUCCESS;
+                                    message.what = DELETE_SUCCESS;
                                     handler.sendMessage(message);
                                 } else {
-                                    message.what = SAVE_FAILED;
+                                    message.what = DELETE_FAILED;
                                     handler.sendMessage(message);
                                 }
                             }
