@@ -190,7 +190,7 @@
                 android:layout_height="match_parent"
                 android:gravity="start|center"
                 android:paddingRight="20dp"
-                android:text="开启闹钟提醒"
+                android:text="开启消息提醒"
                 android:checked="true"
                 android:thumb="@drawable/thumb"
                 android:track="@drawable/switch_track"

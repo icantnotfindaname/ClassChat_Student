@@ -40,13 +40,13 @@ import okhttp3.Response;
 
 public class Activity_TodoDetail extends AppCompatActivity {
 
-    private TextView funcTitle, setTimeSlot, setTime, setWeek;
+    private TextView setTimeSlot, setTime, setWeek;
     private Button back, edit, delete, save, picker_back, picker_save;
     private Object_TodoList memo;
     private EditText title, content;
     private Switch isClock;
     private Boolean bisClock;
-    private String userID;
+    private String userID, todoID;
     private final static int SAVE_SUCCESS = 0;
     private final static int SAVE_FAILED = 1;
     private final static int DELETE_SUCCESS = 2;
@@ -68,10 +68,10 @@ public class Activity_TodoDetail extends AppCompatActivity {
     //周数多选框
     private AlertDialog.Builder mutilChoicebuilder;
     //配合周数多选框的数组
-    private final String[] weeks= new String[]{"第1周","第2周","第3周","第4周","第5周","第6周","第7周","第8周","第9周","第10周","第11周","第12周","第13周","第14周","第15周","第16周","第17周","第18周","第19周","第20周","第21周","第22周","第23周","第24周","第25周"};
-    private boolean[] weeksChecked = new boolean[]{false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false};
+    private final String[] weeks = new String[]{"第1周","第2周","第3周","第4周","第5周","第6周","第7周","第8周","第9周","第10周","第11周","第12周","第13周","第14周","第15周","第16周","第17周","第18周","第19周","第20周","第21周","第22周","第23周","第24周","第25周"};
+    private boolean[] weeksChecked = new boolean[25];
     //周数数组
-    List<Integer> weeksnum=new ArrayList<>();
+    List<Integer> weeksnum = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +80,24 @@ public class Activity_TodoDetail extends AppCompatActivity {
         Intent intent = getIntent();
         memo = JSON.parseObject(intent.getStringExtra("memo"), Object_TodoList.class);
         userID = memo.getUserID();
+        todoID = (memo.getWeekChosen().get(0) < 10)? userID + "0" + memo.getWeekChosen().get(0) + memo.getDayChosen(): userID + memo.getWeekChosen().get(0) + memo.getDayChosen();
+
         bisClock = memo.isClock();
+
+        //初始化已选周数列表
+        for(int i = 0; i < 25; ++ i){
+            weeksChecked[i] = false;
+        }
+        for(int i = 0; i < memo.getWeekChosen().size(); ++i){
+            weeksChecked[memo.getWeekChosen().get(i) - 1] = true;
+        }
+
         setTimeSlot = findViewById(R.id.memo_timeslot);
         timeslot = memo.getTimeSlot();
         setTimeSlotText(timeslot);
         setTime = findViewById(R.id.get_todo_time);
         setWeek = findViewById(R.id.get_todo_week);
+        setWeek.setEnabled(false);
         isClock = findViewById(R.id.option_switch_isClock);
         isClock.setChecked(bisClock);
         isClock.setEnabled(false);
@@ -98,7 +110,6 @@ public class Activity_TodoDetail extends AppCompatActivity {
         back = findViewById(R.id.memo_edit_back);
         delete = findViewById(R.id.memo_delete);
         save = findViewById(R.id.add_todo_button);
-        save.setText("保存修改");
         save.setVisibility(View.GONE);
         edit = findViewById(R.id.memo_edit);
         edit.setVisibility(View.VISIBLE);
@@ -108,13 +119,81 @@ public class Activity_TodoDetail extends AppCompatActivity {
                 finish();
             }
         });
+        delete.setOnClickListener(new View.OnClickListener() {
+            //TODO 删除模式选择提示
+            //TODO 删除确认
+            @Override
+            public void onClick(View v) {
+                //TODO 删除
+                final int[] choice = new int[1];
+                new AlertDialog.Builder(Activity_TodoDetail.this)//
+                        .setTitle("删除")
+                        .setSingleChoiceItems(
+                                new CharSequence[] { "仅删除本周", "删除所有周" },0,
+                                new DialogInterface.OnClickListener() {// 设置条目
+                                    public void onClick(DialogInterface dialog, int which) {}})
+                        .setPositiveButton(
+                                "确定",//
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        choice[0] = which;
+                                        dialog.dismiss();
+                                    }
+                                }
+                        )
+                        .show();
+
+                RequestBody requestBody = new FormBody.Builder()
+                        .add("todoID", todoID)
+                        .add("todoItemID", memo.getTodoItemID())
+                        .build();   //构建请求体
+
+                String address;
+
+                switch(choice[0]){
+                    case 0:
+                        address = "http://106.12.105.160:8081/deletetodoitem";
+                        break;
+                    case 1:
+                        //todo
+                        address = "http://106.12.105.160:8081/";
+                        break;
+                    default:
+                        address = "http://106.12.105.160:8081/deletetodoitem";
+                        break;
+                }
+
+                Util_NetUtil.sendOKHTTPRequest(address, requestBody, new okhttp3.Callback() {
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        // 得到服务器返回的具体内容
+                        boolean responseData = Boolean.parseBoolean(response.body().string());
+                        Message message = new Message();
+                        if (responseData) {
+                            message.what = DELETE_SUCCESS;
+                            handler.sendMessage(message);
+                        } else {
+                            message.what = DELETE_FAILED;
+                            handler.sendMessage(message);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        // 在这里对异常情况进行处理
+                    }
+                });
+            }
+        });
+
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edit.setVisibility(View.GONE);
                 save.setVisibility(View.VISIBLE);
                 content.setEnabled(true);
                 isClock.setEnabled(true);
+                title.setEnabled(true);
                 isClock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -206,17 +285,16 @@ public class Activity_TodoDetail extends AppCompatActivity {
                 save.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //TODO 修改
                         final RequestBody requestBody = new FormBody.Builder()
                                 .add("userID", userID)
-                                .add("todotitle", memo.getTodoTitle())
-                                .add("weekChosen", "")//TODO 初始状态下原来选的周要勾
-                                .add("dayChosen", dayOfweek + "")//TODO
-                                .add("setTimeSlot", timeslot + "")//TODO
+                                .add("todoTitle", title.getText().toString())
+                                .add("weekChosen", weeksnum + "")
+                                .add("dayChosen", dayOfweek + "")
+                                .add("setTimeSlot", timeslot + "")
                                 .add("detailTime", hour + " " + minute_)
                                 .add("isClock", bisClock + "")
                                 .add("content", content.getText().toString())
-//                                .add("todoItemId", memo.getTodoItemId())
+                                .add("todoItemID", memo.getTodoItemID())
                                 .build();   //构建请求体
 //                        //TODO
                         Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/updatetodoitem", requestBody, new okhttp3.Callback() {
@@ -224,7 +302,6 @@ public class Activity_TodoDetail extends AppCompatActivity {
                             public void onResponse(Call call, Response response) throws IOException {
                                 // 得到服务器返回的具体内容
                                 boolean responseData = Boolean.parseBoolean(response.body().string());
-                                Log.e("up",responseData+"");
                                 Message message = new Message();
                                 if (responseData) {
                                     message.what = SAVE_SUCCESS;
@@ -240,54 +317,22 @@ public class Activity_TodoDetail extends AppCompatActivity {
                                 // 在这里对异常情况进行处理
                             }
                         });
-
-
-
                     }
                 });
 
-
-                delete.setVisibility(View.VISIBLE);
-                delete.setOnClickListener(new View.OnClickListener() {
+//                再次点击取消编辑模式
+                edit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //TODO 删除
-                        Calendar calendar = Calendar.getInstance();
-                        RequestBody requestBody = new FormBody.Builder()
-                                .add("userid", userID)
-                                .add("todotitle", memo.getTodoTitle())
-                                .add("weekchosen", "")//TODO
-                                .add("daychosen", calendar.get(Calendar.DAY_OF_WEEK) +"")
-                                //     .add("content", content.getText().toString())
-                                .build();   //构建请求体
-//                        //TODO
-                        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/deletetodoitem", requestBody, new okhttp3.Callback() {
-                            @Override
-                            public void onResponse(Call call, Response response) throws IOException {
-                                // 得到服务器返回的具体内容
-                                boolean responseData = Boolean.parseBoolean(response.body().string());
-                                Log.e("del",responseData+"");
-                                Message message = new Message();
-                                if (responseData) {
-                                    message.what = DELETE_SUCCESS;
-                                    handler.sendMessage(message);
-                                } else {
-                                    message.what = DELETE_FAILED;
-                                    handler.sendMessage(message);
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                                // 在这里对异常情况进行处理
-                            }
-                        });
+                        save.setVisibility(View.GONE);
+                        content.setEnabled(false);
+                        isClock.setEnabled(false);
+                        title.setEnabled(false);
+                        setWeek.setEnabled(false);
                     }
                 });
             }
         });
-        funcTitle = findViewById(R.id.memo_func_title);
-        funcTitle.setText("待办详情");
     }
 
     private void setTimeSlotText(int timeslot) {
@@ -359,6 +404,7 @@ public class Activity_TodoDetail extends AppCompatActivity {
             }
         });
     }
+
     protected void show_timePicker(){
         LayoutInflater inflater=LayoutInflater.from(Activity_TodoDetail.this);
         View myview =inflater.inflate(R.layout.dialog_time_choose,null);
@@ -421,7 +467,6 @@ public class Activity_TodoDetail extends AppCompatActivity {
 
     }
 
-
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         @Override
@@ -444,4 +489,7 @@ public class Activity_TodoDetail extends AppCompatActivity {
             }
         }
     };
+
+
+
 }

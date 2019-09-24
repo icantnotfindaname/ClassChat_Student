@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -53,7 +54,8 @@ public class Activity_AddTodo extends AppCompatActivity {
     private Dialog timepicker_dialog;
     private TimePicker timePicker;
     private  NumberPicker dayPicker;
-    private int dayOfweek_ = 1, dayOfweek;
+    private Calendar calendar = Calendar.getInstance();
+    private int dayOfweek_ = 1, dayOfweek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
     private int hour_ = 0, hour;
     private int minute__ = 0, minute_;
     private Boolean timeChecked = false;
@@ -225,7 +227,8 @@ public class Activity_AddTodo extends AppCompatActivity {
         dayPicker.setMinValue(1);
         dayPicker.setMaxValue(weekdays.length);
         //设置默认的位置
-        dayPicker.setValue(1);
+
+        dayPicker.setValue(dayOfweek);
         //这里设置为不循环显示，默认值为true
         dayPicker.setWrapSelectorWheel(true);
         //设置不可编辑
@@ -261,7 +264,9 @@ public class Activity_AddTodo extends AppCompatActivity {
                  hour = hour_;
                  minute_ = minute__;
                  dayOfweek = dayOfweek_;
-                 if(minute_ > 9)  setTime.setText(weekdays[dayOfweek - 1]+ "   " + hour + " : " + minute_);
+                Log.e("day", dayOfweek+"");
+                Log.e("weekdays[]", weekdays[dayOfweek - 1]);
+                if(minute_ > 9)  setTime.setText(weekdays[dayOfweek - 1]+ "   " + hour + " : " + minute_);
                  else setTime.setText(weekdays[dayOfweek - 1]+ "     "+ hour + " : 0" + minute_);
                  timepicker_dialog.dismiss();
             }
@@ -278,6 +283,7 @@ public class Activity_AddTodo extends AppCompatActivity {
                     count++;
                     if(count == weeksnum.size()){
                         Util_ToastUtils.showToast(Activity_AddTodo.this, "保存成功！");
+                        Log.e("save", "保存");
                         finish();
                     }
                     break;
@@ -318,47 +324,42 @@ public class Activity_AddTodo extends AppCompatActivity {
                                 }).show();
             }
             else {
-                Log.e("id",userId);
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
                 Date date = new Date(System.currentTimeMillis());
-                String todoItemId=simpleDateFormat.format(date);
+                String todoItemId = simpleDateFormat.format(date);
 
-                for(int i = 0;i < weeksnum.size();i ++){
-                    RequestBody requestBody = new FormBody.Builder()
-                            .add("userID", userId)
-                            .add("todoTitle", title.getText().toString())
-                            .add("weekChosen", weeksnum.get(i) + "")
-                            .add("dayChosen", dayOfweek + "")
-                            .add("timeSlot", timeslot+"")
-                            .add("detailTime", hour + " " + minute_)
-                            .add("isClock", bisClock+"")
-                            .add("content", content.getText().toString())
-//                            .add("todoItemId", todoItemId)
-                            .build();   //构建请求体
-
-                    //TODO
-                    Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/addnewitem", requestBody, new okhttp3.Callback() {
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            // 得到服务器返回的具体内容
-                            boolean responseData = Boolean.parseBoolean(response.body().string());
-                            Message message = new Message();
-                            if (responseData) {
-                                message.what = SAVE_SUCCESS;
-                                handler.sendMessage(message);
-                            } else {
-                                message.what = SAVE_FAILED;
-                                handler.sendMessage(message);
-                            }
+                RequestBody requestBody = new FormBody.Builder()
+                        .add("userID", userId)
+                        .add("todoTitle", title.getText().toString())
+                        .add("weekChosen", weeksnum + "")
+                        .add("dayChosen", dayOfweek + "")
+                        .add("timeSlot", timeslot+"")
+                        .add("detailTime", hour + " " + minute_)
+                        .add("isClock", bisClock+"")
+                        .add("content", content.getText().toString())
+                        .add("todoItemID", todoItemId)
+                        .build();   //构建请求体
+                //TODO
+                Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/addnewitem", requestBody, new okhttp3.Callback() {
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        // 得到服务器返回的具体内容
+                        boolean responseData = Boolean.parseBoolean(response.body().string());
+                        Message message = new Message();
+                        if (responseData) {
+                            message.what = SAVE_SUCCESS;
+                            handler.sendMessage(message);
+                        } else {
+                            message.what = SAVE_FAILED;
+                            handler.sendMessage(message);
                         }
+                    }
 
-                        @Override
-                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                            // 在这里对异常情况进行处理
-                        }
-                    });
-                }
-
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        // 在这里对异常情况进行处理
+                    }
+                });
             }
         }
     }

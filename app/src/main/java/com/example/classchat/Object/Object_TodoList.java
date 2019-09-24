@@ -4,17 +4,25 @@ import android.support.annotation.NonNull;
 
 import com.googlecode.mp4parser.srt.SrtParser;
 
+import java.util.List;
+
 public class Object_TodoList {
 
-    private String userID, todoTitle, content, detailTime;
-    private int dayChosen, weekChosen, timeSlot;
+    private String userID;
+    private String todoTitle;
+    private String content;
+
+    private String todoItemID;
+    private String detailTime;
+    private int dayChosen, timeSlot;
+    List<Integer> weekChosen;
     private Boolean isClock;
 
     public Object_TodoList(){
         // TODO Auto-generated constructor stub
     }
 
-    public Object_TodoList(String userID, String todoTitle, String content, int dayChosen, int weekChosen, int timeSlot, String detailTime, boolean isClock){
+    public Object_TodoList(String userID, String todoTitle, List<Integer> weekChosen, int dayChosen, int timeSlot, String detailTime, boolean isClock, String content, String todoItemID){
         this.userID = userID;
         this.todoTitle = todoTitle;
         this.detailTime = detailTime;
@@ -24,6 +32,7 @@ public class Object_TodoList {
         this.weekChosen = weekChosen;
         this.timeSlot = timeSlot;
         this.isClock = isClock;
+        this.todoItemID = todoItemID;
     }
 
     public String getUserID() {
@@ -66,11 +75,11 @@ public class Object_TodoList {
         this.dayChosen = dayChosen;
     }
 
-    public int getWeekChosen() {
+    public List<Integer> getWeekChosen() {
         return weekChosen;
     }
 
-    public void setWeekChosen(int weekChosen) {
+    public void setWeekChosen(List<Integer> weekChosen) {
         this.weekChosen = weekChosen;
     }
 
@@ -90,6 +99,14 @@ public class Object_TodoList {
         this.isClock = isClock;
     }
 
+
+    public String getTodoItemID() {
+        return todoItemID;
+    }
+
+    public void setTodoItemID(String todoItemID) {
+        this.todoItemID = todoItemID;
+    }
     @NonNull
     @Override
     public String toString() {
