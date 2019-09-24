@@ -314,8 +314,8 @@ public class Fragment_Memo extends Fragment {
         //构建requestbody
         RequestBody requestBody = new FormBody.Builder()
                 .add("userID", userId)
-                .add("weekchosen", week + "")
-                .add("daychosen", getWeekdayString(calendar.get(Calendar.DAY_OF_WEEK) + distanceDay))
+                .add("weekChosen", week + "")
+                .add("dayChosen", getWeekdayString(calendar.get(Calendar.DAY_OF_WEEK) + distanceDay))
                 .build();
         // 发送网络请求，联络信息
         Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/getusertodolist", requestBody, new okhttp3.Callback() {

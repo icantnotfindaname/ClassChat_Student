@@ -152,12 +152,9 @@ public class Activity_TodoDetail extends AppCompatActivity {
                 String address;
 
                 switch(choice[0]){
-                    case 0:
-                        address = "http://106.12.105.160:8081/deletetodoitem";
-                        break;
                     case 1:
                         //todo
-                        address = "http://106.12.105.160:8081/";
+                        address = "http://106.12.105.160:8081/deletesametodoitem";
                         break;
                     default:
                         address = "http://106.12.105.160:8081/deletetodoitem";

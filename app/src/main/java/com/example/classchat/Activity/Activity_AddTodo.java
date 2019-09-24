@@ -331,7 +331,7 @@ public class Activity_AddTodo extends AppCompatActivity {
                 RequestBody requestBody = new FormBody.Builder()
                         .add("userID", userId)
                         .add("todoTitle", title.getText().toString())
-                        .add("weekChosen", weeksnum + "")
+                        .add("weekList", weeksnum + "")
                         .add("dayChosen", dayOfweek + "")
                         .add("timeSlot", timeslot+"")
                         .add("detailTime", hour + " " + minute_)
