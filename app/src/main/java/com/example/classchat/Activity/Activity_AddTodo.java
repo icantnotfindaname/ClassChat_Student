@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,6 +28,7 @@ import com.example.classchat.Util.Util_NetUtil;
 import com.example.classchat.Util.Util_ToastUtils;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,11 +50,12 @@ public class Activity_AddTodo extends AppCompatActivity {
     private Boolean bisClock = true;
     private TextView setTime;
 
-    //时间选择属性
-    Dialog timepicker_dialog;
+    //时间选择
+    private Dialog timepicker_dialog;
     private TimePicker timePicker;
     private  NumberPicker dayPicker;
-    private int dayOfweek_ = 1, dayOfweek;
+    private Calendar calendar = Calendar.getInstance();
+    private int dayOfweek_ = 1, dayOfweek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
     private int hour_ = 0, hour;
     private int minute__ = 0, minute_;
     private Boolean timeChecked = false;
@@ -88,7 +91,6 @@ public class Activity_AddTodo extends AppCompatActivity {
         isClock = findViewById(R.id.option_switch_isClock);
         setTime = findViewById(R.id.get_todo_time);
 
-
         isClock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -123,10 +125,6 @@ public class Activity_AddTodo extends AppCompatActivity {
                 finish();
             }
         });
-
-
-
-
 
         //周数多选框
         mutilChoicebuilder = new AlertDialog.Builder(this);
@@ -181,12 +179,14 @@ public class Activity_AddTodo extends AppCompatActivity {
 
             }
         });
+
         mutilChoicebuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
             }
         });
+
         setWeek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -227,7 +227,8 @@ public class Activity_AddTodo extends AppCompatActivity {
         dayPicker.setMinValue(1);
         dayPicker.setMaxValue(weekdays.length);
         //设置默认的位置
-        dayPicker.setValue(1);
+
+        dayPicker.setValue(dayOfweek);
         //这里设置为不循环显示，默认值为true
         dayPicker.setWrapSelectorWheel(true);
         //设置不可编辑
@@ -263,8 +264,10 @@ public class Activity_AddTodo extends AppCompatActivity {
                  hour = hour_;
                  minute_ = minute__;
                  dayOfweek = dayOfweek_;
-                 if(minute_>9)  setTime.setText(weekdays[dayOfweek - 1]+ " "+ hour + ": " + minute_);
-                 else setTime.setText(weekdays[dayOfweek - 1]+ " "+ hour + ": 0" + minute_);
+                Log.e("day", dayOfweek+"");
+                Log.e("weekdays[]", weekdays[dayOfweek - 1]);
+                if(minute_ > 9)  setTime.setText(weekdays[dayOfweek - 1]+ "   " + hour + " : " + minute_);
+                 else setTime.setText(weekdays[dayOfweek - 1]+ "     "+ hour + " : 0" + minute_);
                  timepicker_dialog.dismiss();
             }
         });
@@ -280,6 +283,7 @@ public class Activity_AddTodo extends AppCompatActivity {
                     count++;
                     if(count == weeksnum.size()){
                         Util_ToastUtils.showToast(Activity_AddTodo.this, "保存成功！");
+                        Log.e("save", "保存");
                         finish();
                     }
                     break;
@@ -320,46 +324,50 @@ public class Activity_AddTodo extends AppCompatActivity {
                                 }).show();
             }
             else {
-                Log.e("id",userId);
-                Calendar calendar = Calendar.getInstance();
-                Date d = new Date(System.currentTimeMillis());
-                for(int i = 0;i < weeksnum.size();i ++){
-                    RequestBody requestBody = new FormBody.Builder()
-                            .add("userID", userId)
-                            .add("todoTitle", title.getText().toString())
-                            .add("day chosen",Integer.toString(dayOfweek))
-                            .add("detailtime",Integer.toString(hour) + " " + Integer.toString(minute_))
-                            .add("weekChosen", weeksnum.get(i) + "")
-                            .add("dayChosen", calendar.get(Calendar.DAY_OF_WEEK) + "")
-                            .add("timeSlot", timeslot+"")
-                            .add("detailTime", "huikgiu")
-                            .add("isClock", bisClock+"")
-                            .add("content", content.getText().toString())
-                            .build();   //构建请求体
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
+                Date date = new Date(System.currentTimeMillis());
+                String todoItemId = simpleDateFormat.format(date);
 
-                    //TODO
-                    Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/addnewitem", requestBody, new okhttp3.Callback() {
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            // 得到服务器返回的具体内容
-                            boolean responseData = Boolean.parseBoolean(response.body().string());
-                            Message message = new Message();
-                            if (responseData) {
-                                message.what = SAVE_SUCCESS;
-                                handler.sendMessage(message);
-                            } else {
-                                message.what = SAVE_FAILED;
-                                handler.sendMessage(message);
-                            }
-                        }
+                String weekString = "";
+                for(int i =0 ;i < weeksnum.size(); ++i){
+                    if( i != weeksnum.size() - 1)
+                        weekString += (weeksnum.get(i) +"a");
+                    else weekString += (weeksnum.get(i) +"");
 
-                        @Override
-                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                            // 在这里对异常情况进行处理
-                        }
-                    });
                 }
+                Log.e("weekList", weekString);
+                RequestBody requestBody = new FormBody.Builder()
+                        .add("userID", userId)
+                        .add("todoTitle", title.getText().toString())
+                        .add("weekList", weekString)
+                        .add("dayChosen", dayOfweek + "")
+                        .add("timeSlot", timeslot+"")
+                        .add("detailTime", hour + " " + minute_)
+                        .add("isClock", bisClock+"")
+                        .add("content", content.getText().toString())
+                        .add("todoItemID", todoItemId)
+                        .build();   //构建请求体
+                //TODO
+                Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/addnewitem", requestBody, new okhttp3.Callback() {
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        // 得到服务器返回的具体内容
+                        boolean responseData = Boolean.parseBoolean(response.body().string());
+                        Message message = new Message();
+                        if (responseData) {
+                            message.what = SAVE_SUCCESS;
+                            handler.sendMessage(message);
+                        } else {
+                            message.what = SAVE_FAILED;
+                            handler.sendMessage(message);
+                        }
+                    }
 
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        // 在这里对异常情况进行处理
+                    }
+                });
             }
         }
     }

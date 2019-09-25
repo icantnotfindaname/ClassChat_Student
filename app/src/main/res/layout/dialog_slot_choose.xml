@@ -2,33 +2,29 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp">
 
-     <TextView
-      android:layout_width="wrap_content"
-      android:layout_gravity="center_horizontal"
-      android:gravity="center"
-      android:text="设 置 时 间"
-      android:textSize="18dp"
-      android:layout_height="40dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="设 置 时 间 时 间 段"
+        android:textSize="18dp"
+        android:layout_height="40dp"/>
 
     <LinearLayout
-      android:layout_gravity="center_horizontal"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content">
-      <NumberPicker
-          android:layout_width="wrap_content"
-          android:id="@+id/day_picker"
-          android:layout_gravity="center_vertical"
-          android:layout_height="wrap_content">
-      </NumberPicker>
-      <TimePicker
-          android:layout_width="wrap_content"
-          android:id="@+id/time_picker"
-          android:timePickerMode="spinner"
-          android:layout_height="wrap_content">
-      </TimePicker>
+        android:layout_gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <NumberPicker
+            android:layout_width="match_parent"
+            android:id="@+id/slot_picker"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content">
+        </NumberPicker>
+
     </LinearLayout>
 
     <LinearLayout
@@ -43,7 +39,7 @@
         <Button
             android:layout_width="wrap_content"
             android:textSize="16dp"
-            android:id="@+id/set_time"
+            android:id="@+id/set_slot"
             android:layout_gravity="center_vertical"
             android:text="确 定"
             android:background="@drawable/green_bg"
@@ -56,7 +52,7 @@
         <Button
             android:layout_width="wrap_content"
             android:textSize="16dp"
-            android:id="@+id/back_from_pick"
+            android:id="@+id/back_from_pick_slot"
             android:background="@drawable/green_bg"
             android:textColor="#fff"
             android:layout_gravity="center_vertical"
@@ -66,7 +62,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"/>
-     </LinearLayout>
+    </LinearLayout>
 
 
 
