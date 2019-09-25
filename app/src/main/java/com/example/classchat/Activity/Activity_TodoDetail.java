@@ -324,6 +324,7 @@ public class Activity_TodoDetail extends AppCompatActivity {
                     title.setEnabled(false);
                     setWeek.setEnabled(false);
                     setTime.setEnabled(false);
+                    setTimeSlot.setEnabled(false);
                 }
             }
         });
