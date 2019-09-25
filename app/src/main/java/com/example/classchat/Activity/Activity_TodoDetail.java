@@ -100,6 +100,7 @@ public class Activity_TodoDetail extends AppCompatActivity {
 
         setTimeSlot = findViewById(R.id.memo_timeslot);
         timeslot = memo.getTimeSlot();
+        dayOfweek = memo.getDayChosen();
         setTimeSlotText(timeslot);
         setTime = findViewById(R.id.get_todo_time);
         setTime.setEnabled(false);
@@ -141,31 +142,6 @@ public class Activity_TodoDetail extends AppCompatActivity {
             public void onClick(View v) {
                 //TODO 删除
                 final int[] choice = new int[1];
-//                new AlertDialog.Builder(Activity_TodoDetail.this)//
-//                        .setTitle("删除")
-//                        .setSingleChoiceItems(
-//                                new CharSequence[] { "仅删除本周", "删除所有周" },0,
-//                                new DialogInterface.OnClickListener() {
-//                                    public void onClick(DialogInterface dialog, int which) {
-//                                        Log.e("www","ssss");
-//                                    }})
-//                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {//添加取消
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int i) {
-//                                dialog.dismiss();
-//                            }
-//                        })
-//                        .setPositiveButton(
-//                                "确定",//
-//                                new DialogInterface.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(DialogInterface dialog, int which) {
-//                                        choice[0] = which;
-//                                        dialog.dismiss();
-//                                    }
-//                                }
-//                        )
-//                        .show();
                 final int[] index = new int[1];
                 builder = new AlertDialog.Builder(Activity_TodoDetail.this)
                         .setTitle("删除")
@@ -441,7 +417,7 @@ public class Activity_TodoDetail extends AppCompatActivity {
         timeSlotPicker.setMinValue(0);
         timeSlotPicker.setMaxValue(slotPickerList.length - 1);
         //设置默认的位置
-        timeSlotPicker.setValue(memo.getTimeSlot());
+        timeSlotPicker.setValue(timeslot);
         //设置不可编辑
         timeSlotPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
         timeSlotPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
@@ -488,7 +464,7 @@ public class Activity_TodoDetail extends AppCompatActivity {
         dayPicker.setMinValue(1);
         dayPicker.setMaxValue(weekdays.length);
         //设置默认的位置
-        dayPicker.setValue(1);
+        dayPicker.setValue(dayOfweek);
         //设置不可编辑
         dayPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
         dayPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {

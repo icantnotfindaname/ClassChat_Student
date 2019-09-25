@@ -69,10 +69,21 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical">
                     <ImageView
+                        android:id="@+id/memo_morning"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:background="@drawable/morning"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/memo_morning"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:text="早课前"
+                        android:textSize="12sp"
+                        android:textColor="@color/theme"/>
                 </RelativeLayout>
 
                 <View
@@ -192,10 +203,21 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical">
                     <ImageView
+                        android:id="@+id/memo_noon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:background="@drawable/noon"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/memo_noon"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:text="午 休"
+                        android:textSize="12sp"
+                        android:textColor="@color/theme"/>
                 </RelativeLayout>
 
                 <View
@@ -406,10 +428,22 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical">
                     <ImageView
+                        android:id="@+id/memo_night"
+                        android:padding="3dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:background="@drawable/night"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/memo_night"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:text="午 休"
+                        android:textSize="12sp"
+                        android:textColor="@color/theme"/>
                 </RelativeLayout>
 
                 <View
