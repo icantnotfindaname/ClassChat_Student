@@ -328,10 +328,18 @@ public class Activity_AddTodo extends AppCompatActivity {
                 Date date = new Date(System.currentTimeMillis());
                 String todoItemId = simpleDateFormat.format(date);
 
+                String weekString = "";
+                for(int i =0 ;i < weeksnum.size(); ++i){
+                    if( i != weeksnum.size() - 1)
+                        weekString += (weeksnum.get(i) +"a");
+                    else weekString += (weeksnum.get(i) +"");
+
+                }
+                Log.e("weekList", weekString);
                 RequestBody requestBody = new FormBody.Builder()
                         .add("userID", userId)
                         .add("todoTitle", title.getText().toString())
-                        .add("weekList", weeksnum + "")
+                        .add("weekList", weekString)
                         .add("dayChosen", dayOfweek + "")
                         .add("timeSlot", timeslot+"")
                         .add("detailTime", hour + " " + minute_)

@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private String sendGroupId;
 
     List<Fragment> mFragments;
-    AlertDialog builder=null;
+    AlertDialog builder = null;
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
@@ -143,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int whichButton) {
-
                                     System.exit(0);
                                 }
                             })

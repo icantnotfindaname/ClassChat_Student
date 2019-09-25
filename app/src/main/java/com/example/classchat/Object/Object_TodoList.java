@@ -15,7 +15,7 @@ public class Object_TodoList {
     private String todoItemID;
     private String detailTime;
     private int dayChosen, timeSlot;
-    List<Integer> weekChosen;
+    private List<Integer> weekChosen;
     private Boolean isClock;
 
     public Object_TodoList(){

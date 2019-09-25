@@ -73,6 +73,12 @@ public class Activity_TodoDetail extends AppCompatActivity {
     //周数数组
     List<Integer> weeksnum = new ArrayList<>();
 
+    //记录编辑状态flag,0未编辑，1编辑
+    private static int editting = 0;
+
+    //删除模式选择
+    private AlertDialog builder=null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,7 +102,18 @@ public class Activity_TodoDetail extends AppCompatActivity {
         timeslot = memo.getTimeSlot();
         setTimeSlotText(timeslot);
         setTime = findViewById(R.id.get_todo_time);
+        setTime.setEnabled(false);
+
+        String[]detailTime = (memo.getDetailTime() + "").split(" ");
+        String hr = detailTime[0];
+        String min = detailTime[1];
+        if(Integer.parseInt(min) > 9)
+            setTime.setText(weekdays[memo.getDayChosen() - 1]+ "     " + hr + " : " + min);
+        else
+            setTime.setText(weekdays[memo.getDayChosen() - 1]+ "     "+ hr + " : 0" + min);
+
         setWeek = findViewById(R.id.get_todo_week);
+        setWeek.setText(setWeekTextView());
         setWeek.setEnabled(false);
         isClock = findViewById(R.id.option_switch_isClock);
         isClock.setChecked(bisClock);
@@ -120,216 +137,266 @@ public class Activity_TodoDetail extends AppCompatActivity {
             }
         });
         delete.setOnClickListener(new View.OnClickListener() {
-            //TODO 删除模式选择提示
-            //TODO 删除确认
             @Override
             public void onClick(View v) {
                 //TODO 删除
                 final int[] choice = new int[1];
-                new AlertDialog.Builder(Activity_TodoDetail.this)//
+//                new AlertDialog.Builder(Activity_TodoDetail.this)//
+//                        .setTitle("删除")
+//                        .setSingleChoiceItems(
+//                                new CharSequence[] { "仅删除本周", "删除所有周" },0,
+//                                new DialogInterface.OnClickListener() {
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        Log.e("www","ssss");
+//                                    }})
+//                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {//添加取消
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int i) {
+//                                dialog.dismiss();
+//                            }
+//                        })
+//                        .setPositiveButton(
+//                                "确定",//
+//                                new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        choice[0] = which;
+//                                        dialog.dismiss();
+//                                    }
+//                                }
+//                        )
+//                        .show();
+                final int[] index = new int[1];
+                builder = new AlertDialog.Builder(Activity_TodoDetail.this)
                         .setTitle("删除")
-                        .setSingleChoiceItems(
-                                new CharSequence[] { "仅删除本周", "删除所有周" },0,
-                                new DialogInterface.OnClickListener() {// 设置条目
-                                    public void onClick(DialogInterface dialog, int which) {}})
-                        .setPositiveButton(
-                                "确定",//
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        choice[0] = which;
-                                        dialog.dismiss();
-                                    }
+                        .setSingleChoiceItems(new CharSequence[] { "仅删除本周", "删除所有周" }, 0, new DialogInterface.OnClickListener() {//添加单选框
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                index[0] = i;
+                            }
+                        })
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {//添加"Yes"按钮
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                choice[0] = index[0];
+
+                                RequestBody requestBody = new FormBody.Builder()
+                                        .add("todoID", todoID)
+                                        .add("todoItemID", memo.getTodoItemID())
+                                        .build();   //构建请求体
+
+                                String address;
+
+                                switch(choice[0]){
+                                    case 1:
+                                        //todo
+                                        address = "http://106.12.105.160:8081/deletesametodoitem";
+                                        break;
+                                    default:
+                                        address = "http://106.12.105.160:8081/deletetodoitem";
+                                        break;
                                 }
-                        )
-                        .show();
 
-                RequestBody requestBody = new FormBody.Builder()
-                        .add("todoID", todoID)
-                        .add("todoItemID", memo.getTodoItemID())
-                        .build();   //构建请求体
+                                Util_NetUtil.sendOKHTTPRequest(address, requestBody, new okhttp3.Callback() {
+                                    @Override
+                                    public void onResponse(Call call, Response response) throws IOException {
+                                        // 得到服务器返回的具体内容
+                                        boolean responseData = Boolean.parseBoolean(response.body().string());
+                                        Message message = new Message();
+                                        if (responseData) {
+                                            message.what = DELETE_SUCCESS;
+                                            handler.sendMessage(message);
+                                        } else {
+                                            message.what = DELETE_FAILED;
+                                            handler.sendMessage(message);
+                                        }
+                                    }
 
-                String address;
+                                    @Override
+                                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                        // 在这里对异常情况进行处理
+                                    }
+                                });
 
-                switch(choice[0]){
-                    case 1:
-                        //todo
-                        address = "http://106.12.105.160:8081/deletesametodoitem";
-                        break;
-                    default:
-                        address = "http://106.12.105.160:8081/deletetodoitem";
-                        break;
-                }
+                                builder.dismiss();
 
-                Util_NetUtil.sendOKHTTPRequest(address, requestBody, new okhttp3.Callback() {
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        // 得到服务器返回的具体内容
-                        boolean responseData = Boolean.parseBoolean(response.body().string());
-                        Message message = new Message();
-                        if (responseData) {
-                            message.what = DELETE_SUCCESS;
-                            handler.sendMessage(message);
-                        } else {
-                            message.what = DELETE_FAILED;
-                            handler.sendMessage(message);
-                        }
-                    }
+                            }
+                        })
 
-                    @Override
-                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                        // 在这里对异常情况进行处理
-                    }
-                });
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {//添加取消
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                builder.dismiss();
+                            }
+                        }).show();
             }
         });
 
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                save.setVisibility(View.VISIBLE);
-                content.setEnabled(true);
-                isClock.setEnabled(true);
-                title.setEnabled(true);
-                isClock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        bisClock = isChecked;
-                    }
-                });
-                //周数多选框
-                mutilChoicebuilder = new AlertDialog.Builder(Activity_TodoDetail.this);
-                mutilChoicebuilder.setTitle("选择周数");
-                mutilChoicebuilder.setMultiChoiceItems(weeks, weeksChecked, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) { }
-                });
-                mutilChoicebuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String s = new String();
-                        weeksnum=new ArrayList<>();
-                        int end = 0;
-                        for(int i = 0;i < weeksChecked.length;i ++){
-                            if(weeksChecked[i])
-                                weeksnum.add(i + 1);
+                if(editting == 0){
+                    editting ++;
+                    save.setVisibility(View.VISIBLE);
+                    content.setEnabled(true);
+                    isClock.setEnabled(true);
+                    title.setEnabled(true);
+                    setWeek.setEnabled(true);
+                    setTime.setEnabled(true);
+                    isClock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            bisClock = isChecked;
                         }
+                    });
+                    //周数多选框
+                    mutilChoicebuilder = new AlertDialog.Builder(Activity_TodoDetail.this);
+                    mutilChoicebuilder.setTitle("选择周数");
+                    mutilChoicebuilder.setMultiChoiceItems(weeks, weeksChecked, new DialogInterface.OnMultiChoiceClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which, boolean isChecked) { }
+                    });
+                    mutilChoicebuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-                        for(int i = 0; i < weeksChecked.length; i ++)
-                        {
-                            if (weeksChecked[i])
-                            {
+                            if (weeksnum.size() > 0){
+                                setWeek.setText(setWeekTextView());
+                            }else{
+                                //没有选择
+                                Toast.makeText(Activity_TodoDetail.this, "未选择周数!", Toast.LENGTH_SHORT).show();
+                            }
 
-                                int start = i + 1;
-                                for(int j = i + 1;j <= weeksChecked.length; ++ j) {
-                                    if (j == weeksChecked.length && weeksChecked[j - 1]) {
-                                        end = weeksChecked.length;
-                                        i = weeksChecked.length - 1;
-                                        break;
-                                    } else if (!weeksChecked[j]) {
-                                        end = j;
-                                        i = j;
-                                        break;
+                        }
+                    });
+
+                    mutilChoicebuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+
+                    setWeek.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mutilChoicebuilder.show();
+                        }
+                    });
+
+                    setTime.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            show_timePicker();
+                        }
+                    });
+
+                    setTimeSlot.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showTimeSlotPicker();
+                        }
+                    });
+
+                    save.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String newWeekString = setWeekString(weeksnum);
+                            String oldWeekString = setWeekString(memo.getWeekChosen());
+
+                            final RequestBody requestBody = new FormBody.Builder()
+                                    .add("userID", userID)
+                                    .add("todoTitle", title.getText().toString())
+                                    .add("newWeekList", newWeekString)
+                                    .add("oldWeekList", oldWeekString)
+                                    .add("dayChosen", dayOfweek + "")
+                                    .add("timeSlot", timeslot + "")
+                                    .add("detailTime", hour + " " + minute_)
+                                    .add("isClock", bisClock + "")
+                                    .add("content", content.getText().toString())
+                                    .add("todoItemID", memo.getTodoItemID())
+                                    .build();   //构建请求体
+//                        //TODO
+                            Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/updatetodoitem", requestBody, new okhttp3.Callback() {
+                                @Override
+                                public void onResponse(Call call, Response response) throws IOException {
+                                    // 得到服务器返回的具体内容
+                                    boolean responseData = Boolean.parseBoolean(response.body().string());
+                                    Message message = new Message();
+                                    if (responseData) {
+                                        message.what = SAVE_SUCCESS;
+                                        handler.sendMessage(message);
+                                    } else {
+                                        message.what = SAVE_FAILED;
+                                        handler.sendMessage(message);
                                     }
                                 }
-                                if(start==end)
-                                    s += "第" + start + "周 ";
-                                else
-                                    s += "第" + start + "~" + end + "周 ";
 
-                            }
-
-                        }
-                        if (weeksnum.size() > 0){
-                            setWeek.setText(s);
-                        }else{
-                            //没有选择
-                            Toast.makeText(Activity_TodoDetail.this, "未选择周数!", Toast.LENGTH_SHORT).show();
-                        }
-
-
-                    }
-                });
-
-                mutilChoicebuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-
-                setWeek.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mutilChoicebuilder.show();
-                    }
-                });
-
-                setTime.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        show_timePicker();
-                    }
-                });
-
-                setTimeSlot.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showTimeSlotPicker();
-                    }
-                });
-
-                save.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final RequestBody requestBody = new FormBody.Builder()
-                                .add("userID", userID)
-                                .add("todoTitle", title.getText().toString())
-                                .add("weekChosen", weeksnum + "")
-                                .add("dayChosen", dayOfweek + "")
-                                .add("setTimeSlot", timeslot + "")
-                                .add("detailTime", hour + " " + minute_)
-                                .add("isClock", bisClock + "")
-                                .add("content", content.getText().toString())
-                                .add("todoItemID", memo.getTodoItemID())
-                                .build();   //构建请求体
-//                        //TODO
-                        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/updatetodoitem", requestBody, new okhttp3.Callback() {
-                            @Override
-                            public void onResponse(Call call, Response response) throws IOException {
-                                // 得到服务器返回的具体内容
-                                boolean responseData = Boolean.parseBoolean(response.body().string());
-                                Message message = new Message();
-                                if (responseData) {
-                                    message.what = SAVE_SUCCESS;
-                                    handler.sendMessage(message);
-                                } else {
-                                    message.what = SAVE_FAILED;
-                                    handler.sendMessage(message);
+                                @Override
+                                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                    // 在这里对异常情况进行处理
                                 }
-                            }
-
-                            @Override
-                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                                // 在这里对异常情况进行处理
-                            }
-                        });
-                    }
-                });
-
-//                再次点击取消编辑模式
-                edit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        save.setVisibility(View.GONE);
-                        content.setEnabled(false);
-                        isClock.setEnabled(false);
-                        title.setEnabled(false);
-                        setWeek.setEnabled(false);
-                    }
-                });
+                            });
+                        }
+                    });
+                }
+                else {
+                    editting --;
+                    save.setVisibility(View.GONE);
+                    content.setEnabled(false);
+                    isClock.setEnabled(false);
+                    title.setEnabled(false);
+                    setWeek.setEnabled(false);
+                    setTime.setEnabled(false);
+                }
             }
         });
+    }
+
+    private String setWeekTextView(){
+        String s = new String();
+        weeksnum = new ArrayList<>();
+        int end = 0;
+        for(int i = 0;i < weeksChecked.length;i ++){
+            if(weeksChecked[i])
+                weeksnum.add(i + 1);
+        }
+
+        for(int i = 0; i < weeksChecked.length; i ++)
+        {
+            if (weeksChecked[i])
+            {
+
+                int start = i + 1;
+                for(int j = i + 1;j <= weeksChecked.length; ++ j) {
+                    if (j == weeksChecked.length && weeksChecked[j - 1]) {
+                        end = weeksChecked.length;
+                        i = weeksChecked.length - 1;
+                        break;
+                    } else if (!weeksChecked[j]) {
+                        end = j;
+                        i = j;
+                        break;
+                    }
+                }
+                if(start==end)
+                    s += "第" + start + "周 ";
+                else
+                    s += "第" + start + "~" + end + "周 ";
+
+            }
+        }
+        return s;
+    }
+
+    private String setWeekString(List<Integer> wl){
+        String str = "";
+        for(int i =0 ;i < wl.size(); ++i){
+            if( i != wl.size() - 1)
+                str += (wl.get(i) +"a");
+            else str += (wl.get(i) +"");
+        }
+        return str;
     }
 
     private void setTimeSlotText(int timeslot) {
@@ -455,7 +522,7 @@ public class Activity_TodoDetail extends AppCompatActivity {
                 minute_ = minute__;
                 dayOfweek = dayOfweek_;
                 if(minute_ > 9)
-                    setTime.setText(weekdays[dayOfweek - 1]+ "   " + hour + " : " + minute_);
+                    setTime.setText(weekdays[dayOfweek - 1]+ "     " + hour + " : " + minute_);
                 else
                     setTime.setText(weekdays[dayOfweek - 1]+ "     "+ hour + " : 0" + minute_);
                 timepicker_dialog.dismiss();

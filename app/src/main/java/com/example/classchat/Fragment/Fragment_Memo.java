@@ -310,6 +310,7 @@ public class Fragment_Memo extends Fragment {
         }
         int week = ScheduleSupport.timeTransfrom(mBeginClassTime);
 
+        Log.e("week&day", week + " "+getWeekdayString(calendar.get(Calendar.DAY_OF_WEEK) + distanceDay));
         final Message message = new Message();
         //构建requestbody
         RequestBody requestBody = new FormBody.Builder()
