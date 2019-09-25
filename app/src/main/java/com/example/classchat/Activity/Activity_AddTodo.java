@@ -6,10 +6,12 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.nfc.Tag;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -195,6 +197,7 @@ public class Activity_AddTodo extends AppCompatActivity {
         });
 
         setTime.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
             show_timePicker();
@@ -204,6 +207,7 @@ public class Activity_AddTodo extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     protected void show_timePicker(){
         LayoutInflater inflater=LayoutInflater.from(Activity_AddTodo.this);
         View myview =inflater.inflate(R.layout.dialog_time_choose,null);
@@ -220,7 +224,8 @@ public class Activity_AddTodo extends AppCompatActivity {
         timepicker_dialog = builder.create();
         timepicker_dialog.show();
 
-
+        hour_ = timePicker.getHour();
+        minute__ = timePicker.getMinute();
 
         dayPicker.setDisplayedValues(weekdays);
         //设置最大最小值
@@ -232,6 +237,7 @@ public class Activity_AddTodo extends AppCompatActivity {
         //这里设置为不循环显示，默认值为true
         dayPicker.setWrapSelectorWheel(true);
         //设置不可编辑
+        dayOfweek_ = dayPicker.getValue();
         dayPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
         dayPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
