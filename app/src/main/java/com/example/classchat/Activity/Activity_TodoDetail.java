@@ -221,6 +221,7 @@ public class Activity_TodoDetail extends AppCompatActivity {
                     title.setEnabled(true);
                     setWeek.setEnabled(true);
                     setTime.setEnabled(true);
+                    setTimeSlot.setEnabled(true);
                     isClock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

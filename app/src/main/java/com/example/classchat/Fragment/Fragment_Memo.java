@@ -72,7 +72,6 @@ public class Fragment_Memo extends Fragment {
     private Calendar calendar = Calendar.getInstance();
 
     private final static int SUCCESS = 0;
-    private final static int RECEIVE_NULL = 1;
 
     private static boolean isFirst = true;
 
@@ -305,9 +304,6 @@ public class Fragment_Memo extends Fragment {
                         rvList.get(i).setAdapter(new Adapter_Memo(getActivity(), (todoLists.get(i))));
                     }
                     break;
-                case RECEIVE_NULL:
-                    Util_ToastUtils.showToast(getContext(), "还没有任务呢，快去添加吧！");
-                    break;
                 default:
                     break;
             }
@@ -341,18 +337,12 @@ public class Fragment_Memo extends Fragment {
                 String responseData = response.body().string();
                 // 转化为具体的对象列表
                 jsonlist = JSON.parseArray(responseData, String.class);
-                if(jsonlist.size() == 0){
-                    message.what = RECEIVE_NULL;
-                    handler.sendMessage(message);
-                }
-                else {
+                if(jsonlist.size() != 0){
                     for (int i = 0; i < jsonlist.size(); i++) {
                         Object_TodoList o = JSON.parseObject(jsonlist.get(i), Object_TodoList.class);
                         int j = o.getTimeSlot();
                         todoLists.get(j).add(o);
                     }
-                    Log.e("jsonlistsize", jsonlist.size()+"");
-                    Log.e("todolistsget",todoLists.toString());
                     // 发送收到成功的信息
                     //由getQuery()按需处理后载入布局
                     message.what = SUCCESS;
