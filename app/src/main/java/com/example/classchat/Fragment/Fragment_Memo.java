@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.example.classchat.Activity.Activity_AddTodo;
+import com.example.classchat.Activity.Activity_AllTodo;
 import com.example.classchat.Activity.MainActivity;
 import com.example.classchat.Adapter.Adapter_Memo;
 import com.example.classchat.Object.MySubject;
@@ -56,8 +57,6 @@ import okhttp3.Response;
 
 public class Fragment_Memo extends Fragment {
 
-    //TODO 待办界面左侧获取当天课程，显示在xml的tv_memo中
-    private static final String TAG = "Fragment_Memo";
     private RecyclerView rv1, rv2, rv3, rv4, rv5, rv6, rv7, rv8, rv9;
     private TextView tv1,tv2,tv3,tv4,tv5,tv6;
     private BoomMenuButton add;
@@ -66,7 +65,7 @@ public class Fragment_Memo extends Fragment {
     private String userId;
     private List<String> jsonlist;
 
-    private Button prev, next;
+    private Button prev, next, seeAll;
     private static int checkcount = 4;//可看前后七天计数
     private TextView dateTitle, dayTitle;
     private Calendar calendar = Calendar.getInstance();
@@ -93,6 +92,7 @@ public class Fragment_Memo extends Fragment {
         add = view.findViewById(R.id.memo_add);
         prev = view.findViewById(R.id.memo_prev);
         next = view.findViewById(R.id.memo_next);
+        seeAll = view.findViewById(R.id.memo_see_all);
         dateTitle = view.findViewById(R.id.memo_title_date);
         dateTitle.setText(getDate(0));
         dateTitle.setOnClickListener(new View.OnClickListener() {
@@ -123,6 +123,17 @@ public class Fragment_Memo extends Fragment {
         for(int i = 0; i < 9; ++i){
             todoLists.add(new ArrayList<Object_TodoList>());
         }
+
+        seeAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), Activity_AllTodo.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("userId", userId);
+                intent.putExtras(bundle);
+                getActivity().startActivity(intent);
+            }
+        });
 
         next.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,7 +168,6 @@ public class Fragment_Memo extends Fragment {
         add.setButtonEnum(ButtonEnum.TextInsideCircle);
         add.setPiecePlaceEnum(PiecePlaceEnum.DOT_9_1);
         add.setButtonPlaceEnum(ButtonPlaceEnum.SC_9_1);
-        add.setDraggable(true);//可拖动
         //设置菜单各按钮
         for (int i = 0; i < add.getPiecePlaceEnum().pieceNumber(); i++) {
             TextInsideCircleButton.Builder builder = new TextInsideCircleButton.Builder()

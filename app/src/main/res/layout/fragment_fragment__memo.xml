@@ -90,7 +90,8 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="10dp"
                             android:text="早课前"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
                             android:textColor="@color/theme"/>
                     </RelativeLayout>
 
@@ -142,6 +143,8 @@
                             android:layout_toRightOf="@id/iv_memo_1"
                             android:textAlignment="center"
                             android:textColor="@color/theme"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
                             android:padding="5dp" />
                     </RelativeLayout>
 
@@ -193,6 +196,8 @@
                             android:layout_centerInParent="true"
                             android:textAlignment="center"
                             android:textColor="@color/theme"
+                            android:textStyle="bold"
+                            android:textSize="15sp"
                             android:padding="5dp" />
                     </RelativeLayout>
 
@@ -240,7 +245,8 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="10dp"
                             android:text="午 休"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
                             android:textColor="@color/theme"/>
                     </RelativeLayout>
 
@@ -293,6 +299,8 @@
                             android:layout_toRightOf="@id/iv_memo_3"
                             android:textAlignment="center"
                             android:textColor="@color/theme"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
                             android:padding="5dp" />
                     </RelativeLayout>
 
@@ -345,6 +353,8 @@
                             android:layout_toRightOf="@id/iv_memo_4"
                             android:textAlignment="center"
                             android:textColor="@color/theme"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
                             android:padding="5dp" />
                     </RelativeLayout>
 
@@ -397,6 +407,8 @@
                             android:layout_toRightOf="@id/iv_memo_5"
                             android:textAlignment="center"
                             android:textColor="@color/theme"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
                             android:padding="5dp" />
                     </RelativeLayout>
 
@@ -449,6 +461,8 @@
                             android:layout_toRightOf="@id/iv_memo_6"
                             android:textAlignment="center"
                             android:textColor="@color/theme"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
                             android:padding="5dp" />
                     </RelativeLayout>
 
@@ -496,7 +510,8 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="10dp"
                             android:text="晚课后"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
                             android:textColor="@color/theme"/>
                     </RelativeLayout>
 
@@ -518,12 +533,14 @@
         android:id="@+id/memo_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
         app:bmb_normalColor="@color/theme"
         app:bmb_dotRadius="0dp"
         app:bmb_inFragment="true"
         app:bmb_buttonEnum="simpleCircle"
+        app:bmb_shadowEffect="false"
         app:bmb_piecePlaceEnum="piecePlace_dot_9_1"
         app:bmb_buttonPlaceEnum="buttonPlace_sc_9_1">
         <ImageView
@@ -533,5 +550,31 @@
             android:background="@drawable/memo_add"/>
     </com.nightonke.boommenu.BoomMenuButton>
 
+    <RelativeLayout
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_circle"
+        android:layout_alignParentLeft="true"
+        android:layout_above="@id/memo_add">
+        <Button
+            android:id="@+id/memo_see_all"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/all_list"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/memo_see_all"
+            android:text="查看所有"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:textColor="#fff"/>
+    </RelativeLayout>
 
 </RelativeLayout>
