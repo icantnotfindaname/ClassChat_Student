@@ -57,408 +57,460 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:orientation="horizontal">
+                android:layout_margin="10dp"
+                app:cardBackgroundColor="#F8FCF3"
+                app:cardCornerRadius="10dp"
+                android:clickable="true"
+                app:cardElevation="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:orientation="horizontal">
 
 
-                <RelativeLayout
-                    android:layout_width="0dip"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical">
-                    <ImageView
-                        android:id="@+id/memo_morning"
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="0dip"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/morning"/>
+                        android:layout_gravity="center_vertical">
+                        <ImageView
+                            android:id="@+id/memo_morning"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/morning"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/memo_morning"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="10dp"
-                        android:text="早课前"
-                        android:textSize="12sp"
-                        android:textColor="@color/theme"/>
-                </RelativeLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/memo_morning"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="10dp"
+                            android:text="早课前"
+                            android:textSize="12sp"
+                            android:textColor="@color/theme"/>
+                    </RelativeLayout>
 
-                <View
-                    android:layout_width="2dp"
-                    android:background="@color/theme"
-                    android:layout_height="match_parent"/>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_memo1"
+                        android:layout_width="0dip"
+                        android:layout_weight="1.5"
+                        android:layout_height="match_parent"
+                        android:padding="5dp"
+                        android:orientation="vertical"/>
+                </LinearLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_memo1"
-                    android:layout_width="0dip"
-                    android:layout_weight="1.5"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:orientation="vertical"/>
-            </LinearLayout>
+            </android.support.v7.widget.CardView>
 
-
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:orientation="horizontal">
+                android:layout_margin="10dp"
+                app:cardBackgroundColor="#F8FCF3"
+                android:clickable="true"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:orientation="horizontal">
 
-                <RelativeLayout
-                    android:layout_width="0dip"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical">
-
-                    <ImageView
-                        android:layout_marginLeft="5dp"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:background="@drawable/memo_no_1"/>
-
-                    <TextView
-                        android:id="@+id/tv_memo2"
-                        android:layout_width="match_parent"
+                    <RelativeLayout
+                        android:layout_width="0dip"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:textAlignment="center"
-                        android:textColor="@color/theme"
-                        android:padding="5dp" />
-                </RelativeLayout>
+                        android:layout_gravity="center_vertical">
 
+                        <ImageView
+                            android:id="@+id/iv_memo_1"
+                            android:layout_marginLeft="5dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:background="@drawable/memo_no_1"/>
 
-                <View
-                    android:layout_width="2dp"
-                    android:background="@color/theme"
-                    android:layout_height="match_parent"/>
+                        <TextView
+                            android:id="@+id/tv_memo2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_toRightOf="@id/iv_memo_1"
+                            android:textAlignment="center"
+                            android:textColor="@color/theme"
+                            android:padding="5dp" />
+                    </RelativeLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_memo2"
-                    android:layout_width="0dip"
-                    android:layout_weight="1.5"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:orientation="vertical"/>
-            </LinearLayout>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_memo2"
+                        android:layout_width="0dip"
+                        android:layout_weight="1.5"
+                        android:layout_height="match_parent"
+                        android:padding="5dp"
+                        android:orientation="vertical"/>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:orientation="horizontal">
+                android:layout_margin="10dp"
+                app:cardBackgroundColor="#F8FCF3"
+                android:clickable="true"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:orientation="horizontal">
 
 
-                <RelativeLayout
-                    android:layout_width="0dip"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical">
-
-                    <ImageView
-                        android:layout_marginLeft="5dp"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:background="@drawable/memo_no_2"/>
-
-                    <TextView
-                        android:id="@+id/tv_memo3"
-                        android:layout_width="match_parent"
+                    <RelativeLayout
+                        android:layout_width="0dip"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:textAlignment="center"
-                        android:textColor="@color/theme"
-                        android:padding="5dp" />
-                </RelativeLayout>
+                        android:layout_gravity="center_vertical">
 
-                <View
-                    android:layout_width="2dp"
-                    android:background="@color/theme"
-                    android:layout_height="match_parent"/>
+                        <ImageView
+                            android:id="@+id/iv_memo_2"
+                            android:layout_marginLeft="5dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:background="@drawable/memo_no_2"/>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_memo3"
-                    android:layout_width="0dip"
-                    android:layout_weight="1.5"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:orientation="vertical"/>
-            </LinearLayout>
+                        <TextView
+                            android:id="@+id/tv_memo3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@id/iv_memo_2"
+                            android:layout_centerInParent="true"
+                            android:textAlignment="center"
+                            android:textColor="@color/theme"
+                            android:padding="5dp" />
+                    </RelativeLayout>
 
-            <LinearLayout
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_memo3"
+                        android:layout_width="0dip"
+                        android:layout_weight="1.5"
+                        android:layout_height="match_parent"
+                        android:padding="5dp"
+                        android:orientation="vertical"/>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:orientation="horizontal">
+                android:layout_margin="10dp"
+                app:cardBackgroundColor="#F8FCF3"
+                android:clickable="true"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:orientation="horizontal">
 
 
-                <RelativeLayout
-                    android:layout_width="0dip"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical">
-                    <ImageView
-                        android:id="@+id/memo_noon"
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="0dip"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/noon"/>
+                        android:layout_gravity="center_vertical">
+                        <ImageView
+                            android:id="@+id/memo_noon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/noon"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/memo_noon"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="10dp"
-                        android:text="午 休"
-                        android:textSize="12sp"
-                        android:textColor="@color/theme"/>
-                </RelativeLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/memo_noon"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="10dp"
+                            android:text="午 休"
+                            android:textSize="12sp"
+                            android:textColor="@color/theme"/>
+                    </RelativeLayout>
 
-                <View
-                    android:layout_width="2dp"
-                    android:background="@color/theme"
-                    android:layout_height="match_parent"/>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_memo4"
+                        android:layout_width="0dip"
+                        android:layout_weight="1.5"
+                        android:layout_height="match_parent"
+                        android:padding="5dp"
+                        android:orientation="vertical"/>
+                </LinearLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_memo4"
-                    android:layout_width="0dip"
-                    android:layout_weight="1.5"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:orientation="vertical"/>
-            </LinearLayout>
+            </android.support.v7.widget.CardView>
 
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:orientation="horizontal">
+                android:layout_margin="10dp"
+                app:cardBackgroundColor="#F8FCF3"
+                android:clickable="true"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:orientation="horizontal">
 
 
-                <RelativeLayout
-                    android:layout_width="0dip"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical">
-
-                    <ImageView
-                        android:layout_marginLeft="5dp"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:background="@drawable/memo_no_3"/>
-
-                    <TextView
-                        android:id="@+id/tv_memo5"
-                        android:layout_width="match_parent"
+                    <RelativeLayout
+                        android:layout_width="0dip"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:textAlignment="center"
-                        android:textColor="@color/theme"
-                        android:padding="5dp" />
-                </RelativeLayout>
+                        android:layout_gravity="center_vertical">
 
+                        <ImageView
+                            android:id="@+id/iv_memo_3"
+                            android:layout_marginLeft="5dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:background="@drawable/memo_no_3"/>
 
-                <View
-                    android:layout_width="2dp"
-                    android:background="@color/theme"
-                    android:layout_height="match_parent"/>
+                        <TextView
+                            android:id="@+id/tv_memo5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_toRightOf="@id/iv_memo_3"
+                            android:textAlignment="center"
+                            android:textColor="@color/theme"
+                            android:padding="5dp" />
+                    </RelativeLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_memo5"
-                    android:layout_width="0dip"
-                    android:layout_weight="1.5"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:orientation="vertical"/>
-            </LinearLayout>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_memo5"
+                        android:layout_width="0dip"
+                        android:layout_weight="1.5"
+                        android:layout_height="match_parent"
+                        android:padding="5dp"
+                        android:orientation="vertical"/>
+                </LinearLayout>
 
-            <LinearLayout
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:orientation="horizontal">
+                android:layout_margin="10dp"
+                app:cardBackgroundColor="#F8FCF3"
+                android:clickable="true"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:orientation="horizontal">
 
 
-                <RelativeLayout
-                    android:layout_width="0dip"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical">
-
-                    <ImageView
-                        android:layout_marginLeft="5dp"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:background="@drawable/memo_no_4"/>
-
-                    <TextView
-                        android:id="@+id/tv_memo6"
-                        android:layout_width="match_parent"
+                    <RelativeLayout
+                        android:layout_width="0dip"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:textAlignment="center"
-                        android:textColor="@color/theme"
-                        android:padding="5dp" />
-                </RelativeLayout>
+                        android:layout_gravity="center_vertical">
 
+                        <ImageView
+                            android:id="@+id/iv_memo_4"
+                            android:layout_marginLeft="5dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:background="@drawable/memo_no_4"/>
 
-                <View
-                    android:layout_width="2dp"
-                    android:background="@color/theme"
-                    android:layout_height="match_parent"/>
+                        <TextView
+                            android:id="@+id/tv_memo6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_toRightOf="@id/iv_memo_4"
+                            android:textAlignment="center"
+                            android:textColor="@color/theme"
+                            android:padding="5dp" />
+                    </RelativeLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_memo6"
-                    android:layout_width="0dip"
-                    android:layout_weight="1.5"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:orientation="vertical"/>
-            </LinearLayout>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_memo6"
+                        android:layout_width="0dip"
+                        android:layout_weight="1.5"
+                        android:layout_height="match_parent"
+                        android:padding="5dp"
+                        android:orientation="vertical"/>
+                </LinearLayout>
 
-            <LinearLayout
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:orientation="horizontal">
+                android:layout_margin="10dp"
+                app:cardBackgroundColor="#F8FCF3"
+                android:clickable="true"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:orientation="horizontal">
 
 
-                <RelativeLayout
-                    android:layout_width="0dip"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="20dp"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:background="@drawable/memo_no_5"/>
-
-                    <TextView
-                        android:id="@+id/tv_memo7"
-                        android:layout_width="match_parent"
+                    <RelativeLayout
+                        android:layout_width="0dip"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:textAlignment="center"
-                        android:textColor="@color/theme"
-                        android:padding="5dp" />
-                </RelativeLayout>
+                        android:layout_gravity="center_vertical">
 
+                        <ImageView
+                            android:id="@+id/iv_memo_5"
+                            android:layout_marginLeft="5dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:background="@drawable/memo_no_5"/>
 
-                <View
-                    android:layout_width="2dp"
-                    android:background="@color/theme"
-                    android:layout_height="match_parent"/>
+                        <TextView
+                            android:id="@+id/tv_memo7"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_toRightOf="@id/iv_memo_5"
+                            android:textAlignment="center"
+                            android:textColor="@color/theme"
+                            android:padding="5dp" />
+                    </RelativeLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_memo7"
-                    android:layout_width="0dip"
-                    android:layout_weight="1.5"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:orientation="vertical"/>
-            </LinearLayout>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_memo7"
+                        android:layout_width="0dip"
+                        android:layout_weight="1.5"
+                        android:layout_height="match_parent"
+                        android:padding="5dp"
+                        android:orientation="vertical"/>
+                </LinearLayout>
 
-            <LinearLayout
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:orientation="horizontal">
+                android:layout_margin="10dp"
+                app:cardBackgroundColor="#F8FCF3"
+                android:clickable="true"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:orientation="horizontal">
 
 
-                <RelativeLayout
-                    android:layout_width="0dip"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical">
-
-                    <ImageView
-                        android:layout_marginLeft="5dp"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:background="@drawable/memo_no_6"/>
-
-                    <TextView
-                        android:id="@+id/tv_memo8"
-                        android:layout_width="match_parent"
+                    <RelativeLayout
+                        android:layout_width="0dip"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:textAlignment="center"
-                        android:textColor="@color/theme"
-                        android:padding="5dp" />
-                </RelativeLayout>
+                        android:layout_gravity="center_vertical">
 
+                        <ImageView
+                            android:id="@+id/iv_memo_6"
+                            android:layout_marginLeft="5dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:background="@drawable/memo_no_6"/>
 
-                <View
-                    android:layout_width="2dp"
-                    android:background="@color/theme"
-                    android:layout_height="match_parent"/>
+                        <TextView
+                            android:id="@+id/tv_memo8"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_toRightOf="@id/iv_memo_6"
+                            android:textAlignment="center"
+                            android:textColor="@color/theme"
+                            android:padding="5dp" />
+                    </RelativeLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_memo8"
-                    android:layout_width="0dip"
-                    android:layout_weight="1.5"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:orientation="vertical"/>
-            </LinearLayout>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_memo8"
+                        android:layout_width="0dip"
+                        android:layout_weight="1.5"
+                        android:layout_height="match_parent"
+                        android:padding="5dp"
+                        android:orientation="vertical"/>
+                </LinearLayout>
 
-            <LinearLayout
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:orientation="horizontal">
+                android:layout_margin="10dp"
+                app:cardBackgroundColor="#F8FCF3"
+                android:clickable="true"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:orientation="horizontal">
 
-                <RelativeLayout
-                    android:layout_width="0dip"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical">
-                    <ImageView
-                        android:id="@+id/memo_night"
-                        android:padding="3dp"
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="0dip"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/night"/>
+                        android:layout_gravity="center_vertical">
+                        <ImageView
+                            android:id="@+id/memo_night"
+                            android:padding="3dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/night"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/memo_night"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="10dp"
-                        android:text="午 休"
-                        android:textSize="12sp"
-                        android:textColor="@color/theme"/>
-                </RelativeLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/memo_night"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="10dp"
+                            android:text="晚课后"
+                            android:textSize="12sp"
+                            android:textColor="@color/theme"/>
+                    </RelativeLayout>
 
-                <View
-                    android:layout_width="2dp"
-                    android:background="@color/theme"
-                    android:layout_height="match_parent"/>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_memo9"
+                        android:layout_width="0dip"
+                        android:layout_weight="1.5"
+                        android:layout_height="match_parent"
+                        android:padding="5dp"
+                        android:orientation="vertical"/>
+                </LinearLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_memo9"
-                    android:layout_width="0dip"
-                    android:layout_weight="1.5"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:orientation="vertical"/>
-            </LinearLayout>
+            </android.support.v7.widget.CardView>
+
         </LinearLayout>
     </ScrollView>
 
