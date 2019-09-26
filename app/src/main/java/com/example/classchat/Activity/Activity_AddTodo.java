@@ -74,7 +74,6 @@ public class Activity_AddTodo extends AppCompatActivity {
     private String userId;
     private final static int SAVE_SUCCESS = 0;
     private final static int SAVE_FAILED = 1;
-    private static int count = 0;
     private int timeslot;
 
     @Override
@@ -286,12 +285,8 @@ public class Activity_AddTodo extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SAVE_SUCCESS:
-                    count++;
-                    if(count == weeksnum.size()){
-                        Util_ToastUtils.showToast(Activity_AddTodo.this, "保存成功！");
-                        Log.e("save", "保存");
-                        finish();
-                    }
+                    Util_ToastUtils.showToast(Activity_AddTodo.this, "保存成功！");
+                    finish();
                     break;
                 case SAVE_FAILED:
                     Util_ToastUtils.showToast(Activity_AddTodo.this, "网络链接失败，重新试试？");
