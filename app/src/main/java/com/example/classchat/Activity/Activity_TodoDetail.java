@@ -13,8 +13,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -76,7 +79,7 @@ public class Activity_TodoDetail extends AppCompatActivity {
     List<Integer> weeksnum = new ArrayList<>();
 
     //记录编辑状态flag,0未编辑，1编辑
-    private static int editting = 0;
+    private int editting = 0;
 
     //删除模式选择
     private AlertDialog builder=null;
@@ -85,6 +88,16 @@ public class Activity_TodoDetail extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__todo_detail);
+
+        //沉浸式状态栏
+        if(Build.VERSION.SDK_INT >= 21) {
+            Window window = getWindow();
+            //After LOLLIPOP not translucent status bar
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //Then call setStatusBarColor.
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.theme));
+        }
         Intent intent = getIntent();
         memo = JSON.parseObject(intent.getStringExtra("memo"), Object_TodoList.class);
         userID = memo.getUserID();
@@ -221,6 +234,7 @@ public class Activity_TodoDetail extends AppCompatActivity {
                     title.setEnabled(true);
                     setWeek.setEnabled(true);
                     setTime.setEnabled(true);
+                    setTimeSlot.setEnabled(true);
                     isClock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -327,6 +341,7 @@ public class Activity_TodoDetail extends AppCompatActivity {
                     title.setEnabled(false);
                     setWeek.setEnabled(false);
                     setTime.setEnabled(false);
+                    setTimeSlot.setEnabled(false);
                 }
             }
         });

@@ -254,8 +254,8 @@
 
         <RelativeLayout android:layout_width="match_parent"
             android:orientation="horizontal"
-            android:layout_marginTop="42dp"
-            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center">
 
             <Button
@@ -266,6 +266,7 @@
                 android:textSize="17sp"
                 android:textColor="#FFFFFF"
                 android:text="保存修改"
+                android:layout_marginBottom="20dp"
                 android:layout_centerInParent="true"
                 android:background="@drawable/green_bg" />
         </RelativeLayout>

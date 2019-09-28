@@ -1,9 +1,11 @@
 package com.example.classchat.Fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -18,11 +20,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-
 import com.alibaba.fastjson.JSON;
 import com.example.classchat.Activity.Activity_AddTodo;
+import com.example.classchat.Activity.Activity_AllTodo;
 import com.example.classchat.Activity.MainActivity;
 import com.example.classchat.Adapter.Adapter_Memo;
+import com.example.classchat.Object.MySubject;
 import com.example.classchat.Object.Object_TodoList;
 import com.example.classchat.R;
 import com.example.classchat.Util.Util_NetUtil;
@@ -36,6 +39,7 @@ import com.nightonke.boommenu.BoomMenuButton;
 import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -46,32 +50,35 @@ import java.util.Date;
 import java.util.List;
 
 import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static com.example.library_cache.disklrucache.Util.getCacheDir;
-
 public class Fragment_Memo extends Fragment {
 
-    //TODO 待办界面左侧获取当天课程，显示在xml的tv_memo中
-    private static final String TAG = "Fragment_Memo";
     private RecyclerView rv1, rv2, rv3, rv4, rv5, rv6, rv7, rv8, rv9;
+    private TextView tv1,tv2,tv3,tv4,tv5,tv6;
     private BoomMenuButton add;
     private List<List<Object_TodoList>> todoLists = new ArrayList<>();
     private String mBeginClassTime = "";
     private String userId;
     private List<String> jsonlist;
 
-    private Button prev, next;
+    private Button prev, next, seeAll;
     private static int checkcount = 4;//可看前后七天计数
     private TextView dateTitle, dayTitle;
     private Calendar calendar = Calendar.getInstance();
 
     private final static int SUCCESS = 0;
-    private final static int RECEIVE_NULL = 1;
 
     private static boolean isFirst = true;
+
+    //缓存+课程 -- 左侧栏相关
+    private String mClassBox = "";
+    private List<MySubject> mySubjects = new ArrayList<>();
+    // 搞一个自己的变量
+    Fragment_Memo myContext = this;
 
     private static int[] imageResources = new int[]{
             R.drawable.morning, R.drawable.memo_1, R.drawable.memo_2,
@@ -85,6 +92,7 @@ public class Fragment_Memo extends Fragment {
         add = view.findViewById(R.id.memo_add);
         prev = view.findViewById(R.id.memo_prev);
         next = view.findViewById(R.id.memo_next);
+        seeAll = view.findViewById(R.id.memo_see_all);
         dateTitle = view.findViewById(R.id.memo_title_date);
         dateTitle.setText(getDate(0));
         dateTitle.setOnClickListener(new View.OnClickListener() {
@@ -104,11 +112,28 @@ public class Fragment_Memo extends Fragment {
         rv7 = view.findViewById(R.id.rv_memo7);
         rv8 = view.findViewById(R.id.rv_memo8);
         rv9 = view.findViewById(R.id.rv_memo9);
+        tv1 = view.findViewById(R.id.tv_memo2);
+        tv2 = view.findViewById(R.id.tv_memo3);
+        tv3 = view.findViewById(R.id.tv_memo5);
+        tv4 = view.findViewById(R.id.tv_memo6);
+        tv5 = view.findViewById(R.id.tv_memo7);
+        tv6 = view.findViewById(R.id.tv_memo8);
 
         //初始化todolist
         for(int i = 0; i < 9; ++i){
             todoLists.add(new ArrayList<Object_TodoList>());
         }
+
+        seeAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), Activity_AllTodo.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("userId", userId);
+                intent.putExtras(bundle);
+                getActivity().startActivity(intent);
+            }
+        });
 
         next.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,7 +168,6 @@ public class Fragment_Memo extends Fragment {
         add.setButtonEnum(ButtonEnum.TextInsideCircle);
         add.setPiecePlaceEnum(PiecePlaceEnum.DOT_9_1);
         add.setButtonPlaceEnum(ButtonPlaceEnum.SC_9_1);
-        add.setDraggable(true);//可拖动
         //设置菜单各按钮
         for (int i = 0; i < add.getPiecePlaceEnum().pieceNumber(); i++) {
             TextInsideCircleButton.Builder builder = new TextInsideCircleButton.Builder()
@@ -290,9 +314,6 @@ public class Fragment_Memo extends Fragment {
                         rvList.get(i).setAdapter(new Adapter_Memo(getActivity(), (todoLists.get(i))));
                     }
                     break;
-                case RECEIVE_NULL:
-                    Util_ToastUtils.showToast(getContext(), "还没有任务呢，快去添加吧！");
-                    break;
                 default:
                     break;
             }
@@ -309,14 +330,14 @@ public class Fragment_Memo extends Fragment {
             mBeginClassTime = getDate(distanceDay) + " 00:00:00";
         }
         int week = ScheduleSupport.timeTransfrom(mBeginClassTime);
+        int day = calendar.get(Calendar.DAY_OF_WEEK) + distanceDay;
 
-        Log.e("week&day", week + " "+getWeekdayString(calendar.get(Calendar.DAY_OF_WEEK) + distanceDay));
         final Message message = new Message();
         //构建requestbody
         RequestBody requestBody = new FormBody.Builder()
                 .add("userID", userId)
                 .add("weekChosen", week + "")
-                .add("dayChosen", getWeekdayString(calendar.get(Calendar.DAY_OF_WEEK) + distanceDay))
+                .add("dayChosen", getWeekdayString(day))
                 .build();
         // 发送网络请求，联络信息
         Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/getusertodolist", requestBody, new okhttp3.Callback() {
@@ -326,18 +347,12 @@ public class Fragment_Memo extends Fragment {
                 String responseData = response.body().string();
                 // 转化为具体的对象列表
                 jsonlist = JSON.parseArray(responseData, String.class);
-                if(jsonlist.size() == 0){
-                    message.what = RECEIVE_NULL;
-                    handler.sendMessage(message);
-                }
-                else {
+                if(jsonlist.size() != 0){
                     for (int i = 0; i < jsonlist.size(); i++) {
                         Object_TodoList o = JSON.parseObject(jsonlist.get(i), Object_TodoList.class);
                         int j = o.getTimeSlot();
                         todoLists.get(j).add(o);
                     }
-                    Log.e("jsonlistsize", jsonlist.size()+"");
-                    Log.e("todolistsget",todoLists.toString());
                     // 发送收到成功的信息
                     //由getQuery()按需处理后载入布局
                     message.what = SUCCESS;
@@ -349,6 +364,7 @@ public class Fragment_Memo extends Fragment {
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
             }
         });
+        initClassData( week , day - 1 );
     }
 
 
@@ -363,5 +379,127 @@ public class Fragment_Memo extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
+    public void initClassData(final int thisweek, final int thisday){
+        Log.d("init", "initClassData");
+        mClassBox = Cache.with(this.getActivity())
+                .path(getCacheDir(this.getActivity()))
+                .getCache("classBox", String.class);
+
+        //TODO 添加memo
+        if (mClassBox == null||mClassBox.length() <= 0){
+            //TODO  mClassBoxData=接收的json字符串
+            // 请求网络方法，获取数据
+            System.out.println(userId);
+            RequestBody requestBody = new FormBody.Builder()
+                    .add("userId", userId)
+                    .build();
+            Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/getallcourse/student", requestBody,new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    // 得到服务器返回的具体内容
+                    String responseData = response.body().string();
+                    System.out.println(responseData);
+                    mClassBox = responseData;
+                    // 转化为具体的对象列表
+                    List<String> tempjsonlist = JSON.parseArray(responseData, String.class);
+                    mySubjects.clear();
+                    for(String s : tempjsonlist) {
+                        MySubject mySubject = JSON.parseObject(s, MySubject.class);
+                        if( mySubject.getDay() == thisday ){
+                            for( int week : mySubject.getWeekList() ){
+                                if ( thisweek == week ){
+                                    mySubjects.add(mySubject);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    //获得数据后存入缓存
+                    Cache.with(myContext.getActivity())
+                            .path(getCacheDir(myContext.getActivity()))
+                            .remove("classBox");
+
+                    Cache.with(myContext.getActivity())
+                            .path(getCacheDir(myContext.getActivity()))
+                            .saveCache("classBox", mClassBox);
+
+                }
+            });
+        } else {
+            // 转化为具体的对象列表
+            List<String> tempjsonlist = JSON.parseArray(mClassBox, String.class);
+            mySubjects.clear();
+            for(String s : tempjsonlist) {
+                MySubject mySubject = JSON.parseObject(s, MySubject.class);
+                if( mySubject.getDay() == thisday ){
+                    for( int week : mySubject.getWeekList() ){
+                        if ( thisweek == week ){
+                            mySubjects.add(mySubject);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        //初始化
+        tv1.setText("");
+        tv2.setText("");
+        tv3.setText("");
+        tv4.setText("");
+        tv5.setText("");
+        tv6.setText("");
+
+        for ( MySubject tempSubject : mySubjects ){
+            switch ( tempSubject.getStart() ){
+                case 1: case 2:
+                    tv1.setText(tempSubject.getName());
+                    Log.d("SubjectName", tempSubject.getName());
+                    break;
+                case 3: case 4:
+                    tv2.setText(tempSubject.getName());
+                    Log.d("SubjectName", tempSubject.getName());
+                    break;
+                case 5: case 6:
+                    tv3.setText(tempSubject.getName());
+                    Log.d("SubjectName", tempSubject.getName());
+                    break;
+                case 7: case 8:
+                    tv4.setText(tempSubject.getName());
+                    Log.d("SubjectName", tempSubject.getName());
+                    break;
+                case 9: case 10:
+                    tv5.setText(tempSubject.getName());
+                    Log.d("SubjectName", tempSubject.getName());
+                    break;
+                case 11:case 12:
+                    tv6.setText(tempSubject.getName());
+                    Log.d("SubjectName", tempSubject.getName());
+                    break;
+                default:
+                    break;
+            }
+
+        }
+    }
+
+    /*
+     * 获得缓存地址
+     * */
+    public String getCacheDir(Context context) {
+        String cachePath;
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+                || !Environment.isExternalStorageRemovable()) {
+            cachePath = context.getExternalCacheDir().getPath();
+        } else {
+            cachePath = context.getCacheDir().getPath();
+        }
+        return cachePath;
+    }
 
 }

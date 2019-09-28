@@ -6,7 +6,7 @@
         android:enabled="true"
         android:icon="@drawable/memo"
         app:showAsAction="ifRoom"
-        android:title="待定" />
+        android:title="备忘" />
     <item
         android:id="@+id/menu_classtable"
         android:enabled="true"

@@ -16,6 +16,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -74,13 +76,23 @@ public class Activity_AddTodo extends AppCompatActivity {
     private String userId;
     private final static int SAVE_SUCCESS = 0;
     private final static int SAVE_FAILED = 1;
-    private static int count = 0;
     private int timeslot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__add_todo);
+
+        //沉浸式状态栏
+        if (Build.VERSION.SDK_INT >= 21) {
+            Window window = getWindow();
+            //After LOLLIPOP not translucent status bar
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //Then call setStatusBarColor.
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.theme));
+        }
+
         Intent intent = getIntent();
         timeslot = Integer.parseInt(intent.getStringExtra("timeslot"));
         userId = intent.getStringExtra("userId");
@@ -286,12 +298,8 @@ public class Activity_AddTodo extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SAVE_SUCCESS:
-                    count++;
-                    if(count == weeksnum.size()){
-                        Util_ToastUtils.showToast(Activity_AddTodo.this, "保存成功！");
-                        Log.e("save", "保存");
-                        finish();
-                    }
+                    Util_ToastUtils.showToast(Activity_AddTodo.this, "保存成功！");
+                    finish();
                     break;
                 case SAVE_FAILED:
                     Util_ToastUtils.showToast(Activity_AddTodo.this, "网络链接失败，重新试试？");
