@@ -101,6 +101,7 @@ public class Fragment_Memo extends Fragment {
             }
         });
         dayTitle = view.findViewById(R.id.memo_title_day);
+        Log.e("initCalendar",calendar.get(Calendar.DAY_OF_WEEK)+"");
         dayTitle.setText(getWeekday(calendar.get(Calendar.DAY_OF_WEEK)));
         rv1 = view.findViewById(R.id.rv_memo1);
         rv2 = view.findViewById(R.id.rv_memo2);
@@ -145,6 +146,7 @@ public class Fragment_Memo extends Fragment {
                     next.setVisibility(View.GONE);
                 dateTitle.setText(getDate(checkcount - 4));
                 calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) +  (checkcount - 4));
+                Log.e("nextCalendar",calendar.get(Calendar.DAY_OF_WEEK)+"");
                 dayTitle.setText(getWeekday(calendar.get(Calendar.DAY_OF_WEEK)));
                 refresh(checkcount - 4);
             }
@@ -161,6 +163,7 @@ public class Fragment_Memo extends Fragment {
                     next.setVisibility(View.VISIBLE);
                 dateTitle.setText(getDate(checkcount - 4));
                 calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) +  (checkcount - 4));
+                Log.e("prevCalendar",calendar.get(Calendar.DAY_OF_WEEK)+"");
                 dayTitle.setText(getWeekday(calendar.get(Calendar.DAY_OF_WEEK)));
                 refresh(checkcount - 4);
             }
@@ -232,8 +235,8 @@ public class Fragment_Memo extends Fragment {
         }
     }
 
-    private String getWeekdayString(int week){
-        switch (week){
+    private String getWeekdayString(int day){
+        switch (day){
             case 1:
                 return "7";
             case 2:
@@ -319,7 +322,6 @@ public class Fragment_Memo extends Fragment {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             long start = sdf.parse(startTime).getTime();
-            calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) +  (checkcount - 4));
             long end = new Date().getTime();
             Log.e("calendar.getTime", calendar.getTime()+"");
             long seconds = (end - start) / 1000;
@@ -340,9 +342,9 @@ public class Fragment_Memo extends Fragment {
         if(mBeginClassTime == null || mBeginClassTime.length() <= 0){
             mBeginClassTime = getDate(distanceDay) + " 00:00:00";
         }
-        int week = timeTransfrom(mBeginClassTime);
+        int week = ScheduleSupport.timeTransfrom(mBeginClassTime);
         Log.e("week", week + "");
-        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) +  distanceDay);
+        Log.e("distanceDay", distanceDay + "");
         int day = calendar.get(Calendar.DAY_OF_WEEK);
         Log.e("day", day + "");
         Log.e("getWeekdayString(day)", getWeekdayString(day) + "");
