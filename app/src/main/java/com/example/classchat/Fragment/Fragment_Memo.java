@@ -318,12 +318,12 @@ public class Fragment_Memo extends Fragment {
         }
     };
 
+    //日切换同步周切换
     private int timeTransfrom(String startTime) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             long start = sdf.parse(startTime).getTime();
-            long end = new Date().getTime();
-            Log.e("calendar.getTime", calendar.getTime()+"");
+            long end = sdf.parse(calendar.get(Calendar.YEAR) + "-" + getDate(checkcount - 4) + " 00:00:00").getTime();
             long seconds = (end - start) / 1000;
             long day = seconds / (24 * 3600);
             int week = (int) (Math.floor(day / 7) + 1);
@@ -342,12 +342,8 @@ public class Fragment_Memo extends Fragment {
         if(mBeginClassTime == null || mBeginClassTime.length() <= 0){
             mBeginClassTime = getDate(distanceDay) + " 00:00:00";
         }
-        int week = ScheduleSupport.timeTransfrom(mBeginClassTime);
-        Log.e("week", week + "");
-        Log.e("distanceDay", distanceDay + "");
+        int week = timeTransfrom(mBeginClassTime);
         int day = calendar.get(Calendar.DAY_OF_WEEK);
-        Log.e("day", day + "");
-        Log.e("getWeekdayString(day)", getWeekdayString(day) + "");
         final Message message = new Message();
         //构建requestbody
         RequestBody requestBody = new FormBody.Builder()
@@ -396,7 +392,6 @@ public class Fragment_Memo extends Fragment {
     }
 
     public void initClassData(final int thisweek, final int thisday){
-        Log.d("init", "initClassData");
         mClassBox = Cache.with(this.getActivity())
                 .path(getCacheDir(this.getActivity()))
                 .getCache("classBox", String.class);
