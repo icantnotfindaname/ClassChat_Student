@@ -124,10 +124,6 @@ public class Activity_MyCourse extends AppCompatActivity {
                 handler.sendMessage(message);
 
             }
-
-
-
-
         });
     }
 }
