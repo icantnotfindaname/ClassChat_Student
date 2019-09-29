@@ -3,51 +3,102 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <RelativeLayout
-        android:id="@+id/ll_title"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:gravity="top"
-        android:background="@color/theme">
-    <Button
-        android:id="@+id/memo_prev"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_margin="5dp"
-        android:layout_marginLeft="10dp"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/ico_left_back" />
+        android:orientation="horizontal"
+        android:id="@+id/ll_title"
+        android:background="@color/theme"
+        android:layout_height="60dp">
+        <LinearLayout
+            android:id="@+id/today_weather"
+            android:layout_width="0dp"
+            android:clickable="true"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/wea_img"
+                android:layout_gravity="center_vertical"
+                android:layout_height="30dp" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="5dp"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/wea_disc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:textColor="#fff"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
 
-    <TextView
-        android:id="@+id/memo_title_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:textColor="#fff"
-        android:textStyle="bold"
-        android:textSize="20sp"/>
+                <TextView
+                    android:id="@+id/wea_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/wea_disc"
+                    android:layout_alignStart="@+id/wea_disc"
+                    android:layout_alignLeft="@+id/wea_disc"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginLeft="0dp"
+                    android:textAlignment="center"
+                    android:textColor="#fff"
+                    android:textSize="10sp" />
+            </RelativeLayout>
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/memo_title_day"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/memo_title_date"
-        android:textAlignment="center"
-        android:textColor="#fff"
-        android:layout_centerInParent="true"
-        android:textSize="10sp"/>
-    <Button
-        android:id="@+id/memo_next"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginRight="10dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/ico_right_back"/>
+        <Button
+            android:layout_width="30dp"
+            android:id="@+id/memo_prev"
+            android:layout_height="30dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/ico_left_back" />
 
-    </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/memo_title_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:text="04-05"
+                android:textColor="#fff"
+                android:textStyle="bold"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/memo_title_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/memo_title_date"
+                android:textAlignment="center"
+                android:textColor="#fff"
+                android:text="Sat"
+                android:layout_centerInParent="true"
+                android:textSize="10sp"/>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/memo_next"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/ico_right_back"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
     <ScrollView
         android:layout_below="@+id/ll_title"
         android:layout_width="match_parent"

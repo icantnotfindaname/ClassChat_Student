@@ -1,32 +1,48 @@
 package com.example.classchat.Fragment;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Rect;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONException;
 import com.example.classchat.Activity.Activity_AddTodo;
 import com.example.classchat.Activity.Activity_AllTodo;
 import com.example.classchat.Activity.MainActivity;
 import com.example.classchat.Adapter.Adapter_Memo;
 import com.example.classchat.Object.MySubject;
 import com.example.classchat.Object.Object_TodoList;
+import com.example.classchat.Object.WeatherContainer;
 import com.example.classchat.R;
 import com.example.classchat.Util.Util_NetUtil;
 import com.example.classchat.Util.Util_ToastUtils;
@@ -40,6 +56,8 @@ import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -52,10 +70,33 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class Fragment_Memo extends Fragment {
+
+    Dialog wea_dialog;
+    private LinearLayout today_wea;
+    private TextView weather;
+    private TextView wea_C;
+    private ImageView wea_img;
+    private double latitude = 0.0;
+    private double longitude = 0.0;
+    private List<WeatherContainer> weatherContainers = new ArrayList<>();
+
+
+    private final static String url_head_1 = "https://www.tianqiapi.com/api/?version=v1&appid=[89921899]&appsecret=[89921899]&city=";
+    private final static String url_head_2 = "http://api.map.baidu.com/geocoder?output=json&ak=esNPFDwwsXWtsQfw4NMNmur1&location=";
+
+    private String city_name ;
+    private String location_;
+
+    public static final int LOCATION_CODE = 301;
+    private LocationManager locationManager;
+    private String locationProvider = null;
+
 
     private RecyclerView rv1, rv2, rv3, rv4, rv5, rv6, rv7, rv8, rv9;
     private TextView tv1,tv2,tv3,tv4,tv5,tv6;
@@ -71,6 +112,8 @@ public class Fragment_Memo extends Fragment {
     private Calendar calendar = Calendar.getInstance();
 
     private final static int SUCCESS = 0;
+    private final static int LOCATION = 3;
+    private final static int WEATHER= 4;
 
     private static boolean isFirst = true;
 
@@ -118,6 +161,10 @@ public class Fragment_Memo extends Fragment {
         tv4 = view.findViewById(R.id.tv_memo6);
         tv5 = view.findViewById(R.id.tv_memo7);
         tv6 = view.findViewById(R.id.tv_memo8);
+        weather = view.findViewById(R.id.wea_disc);
+        wea_C = view.findViewById(R.id.wea_num);
+        wea_img = view.findViewById(R.id.wea_img);
+        today_wea = view.findViewById(R.id.today_weather);
 
         //初始化todolist
         for(int i = 0; i < 9; ++i){
@@ -164,6 +211,7 @@ public class Fragment_Memo extends Fragment {
             }
         });
 
+
         assert add != null;
         add.setButtonEnum(ButtonEnum.TextInsideCircle);
         add.setPiecePlaceEnum(PiecePlaceEnum.DOT_9_1);
@@ -190,6 +238,125 @@ public class Fragment_Memo extends Fragment {
         MainActivity mainActivity = (MainActivity)getActivity();
         userId = mainActivity.getId();
         getMemoFromWeb(0);
+
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+        } else {
+            LocationListener locationListener = new LocationListener() {
+
+                // Provider的状态在可用、暂时不可用和无服务三个状态直接切换时触发此函数
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+
+                // Provider被enable时触发此函数，比如GPS被打开
+                @Override
+                public void onProviderEnabled(String provider) {
+
+                }
+
+                // Provider被disable时触发此函数，比如GPS被关闭
+                @Override
+                public void onProviderDisabled(String provider) {
+
+                }
+
+                //当坐标改变时触发此函数，如果Provider传进相同的坐标，它就不会被触发
+                @Override
+                public void onLocationChanged(Location location) {
+                    if (location != null) {
+                        Log.e("Map", "Location changed : Lat: "
+                                + location.getLatitude() + " Lng: "
+                                + location.getLongitude());
+                    }
+                }
+            };
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if(location != null){
+                latitude = location.getLatitude(); //经度
+                longitude = location.getLongitude(); //纬度
+            }
+        }
+        location_ = String.valueOf(latitude)+","+String.valueOf(longitude);
+        Log.e("城市",url_head_2 + location_);
+
+        sendOKHTTPRequest(url_head_2 + location_  , new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                // 得到服务器返回的具体内容
+
+                String responseData = response.body().string();
+                Log.e("城市",responseData);
+
+                String city = "";
+                String district = "";
+                JSONObject one = null;
+                JSONObject two = null;
+
+
+                try {
+                    one = new JSONObject(responseData.toString()).getJSONObject("result");
+                    two = one.getJSONObject("addressComponent");
+                } catch (org.json.JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.e("城市",two.toString());
+
+                try {
+
+                    city = deleteString0(two.get("city").toString(),'市');
+                    district =deleteString0( two.get("district").toString(),'区');
+                } catch (org.json.JSONException e) {
+                    Log.e("城市","城市地区获取失败");
+                }
+
+                Message message = new Message();
+                message.what = LOCATION;
+                if(!district.equals("")){
+                    city_name = district;
+                    handler.sendMessage(message);
+                }
+                else if(!city.equals("")){
+                    city_name = city;
+                    handler.sendMessage(message);
+                }
+
+
+            }
+        });
+
     }
 
     public static String getDate(int distanceDay) {
@@ -314,6 +481,82 @@ public class Fragment_Memo extends Fragment {
                         rvList.get(i).setAdapter(new Adapter_Memo(getActivity(), (todoLists.get(i))));
                     }
                     break;
+                case LOCATION:
+                    sendOKHTTPRequest(url_head_1+city_name, new okhttp3.Callback() {
+                        @Override
+                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            // 得到服务器返回的具体内容
+                            String responseData = response.body().string();
+                            Log.e("啊啊啊啊",responseData);
+                            JSONArray first = null;
+                            String wea;
+                            String high;
+                            String low;
+                            String date;
+                            String wea_img;
+                            try {
+                                first = new JSONObject(responseData.toString()).getJSONArray("data");
+                            } catch (org.json.JSONException e) {
+                                Log.e("天气数组","获得数组失败");
+                            }
+                            try {
+                                for(int i = 0; i < 5; i++){
+                                    JSONObject day = ((JSONArray) first).getJSONObject(i);
+                                    Log.e("天气数组",day.toString());
+                                    date = day.get("day").toString();
+                                    wea = day.get("wea").toString();
+                                    high = day.get("tem1").toString();
+                                    low = day.get("tem2").toString();
+                                    wea_img = day.get("wea_img").toString();
+                                    weatherContainers.add(new WeatherContainer(wea,high, low,date,wea_img));
+
+                                }
+                                Log.d("Size", "onResponse: " + weatherContainers.size());
+                                Log.e("天气数组",weatherContainers.get(0).getWea()+ weatherContainers.get(0).getLow() + weatherContainers.get(0).getHigh());
+
+                                Message message = new Message();
+                                message.what = WEATHER;
+                                handler.sendMessage(message);
+                            } catch (org.json.JSONException e) {
+                                Log.e("天气数组","获得数组单个赋值失败");
+                            }
+                        }
+                    });
+                    break;
+                case WEATHER:
+                    weather.setText(weatherContainers.get(0).getWea());
+                    wea_C.setText(weatherContainers.get(0).getLow()+"~"+weatherContainers.get(0).getHigh());
+                    if(weatherContainers.get(0).getWea_img().equals("qing"))
+                    wea_img.setBackgroundResource(R.drawable.qing);
+                    else if(weatherContainers.get(0).getWea_img().equals("xue"))
+                        wea_img.setBackgroundResource(R.drawable.xue);
+                    else if(weatherContainers.get(0).getWea_img().equals("lei"))
+                        wea_img.setBackgroundResource(R.drawable.lei);
+                    else if(weatherContainers.get(0).getWea_img().equals("shachen"))
+                        wea_img.setBackgroundResource(R.drawable.shachen);
+                    else if(weatherContainers.get(0).getWea_img().equals("wu"))
+                        wea_img.setBackgroundResource(R.drawable.wu);
+                    else if(weatherContainers.get(0).getWea_img().equals("bingbao"))
+                        wea_img.setBackgroundResource(R.drawable.yu);
+                    else if(weatherContainers.get(0).getWea_img().equals("yun"))
+                        wea_img.setBackgroundResource(R.drawable.yun);
+                    else if(weatherContainers.get(0).getWea_img().equals("yu"))
+                        wea_img.setBackgroundResource(R.drawable.yu);
+                    else if(weatherContainers.get(0).getWea_img().equals("yin"))
+                        wea_img.setBackgroundResource(R.drawable.yin);
+                    today_wea.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            show_wea_dialog();
+                        }
+                    });
+                    break;
+
                 default:
                     break;
             }
@@ -501,5 +744,126 @@ public class Fragment_Memo extends Fragment {
         }
         return cachePath;
     }
+    public static void sendOKHTTPRequest(String address, okhttp3.RequestBody requestBody, okhttp3.Callback callback) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(address)
+                .post(requestBody)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    // 带有Requestbody的get请求
+    public static void sendOKHTTPRequest(String address, okhttp3.Callback callback) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(address)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+    public static String deleteString0(String str, char delChar){
+        String delStr = "";
+        for (int i = 0; i < str.length(); i++) {
+            if(str.charAt(i) != delChar){
+                delStr += str.charAt(i);
+            }
+        }
+        return delStr;
+    }
+
+    private TextView wea_disc1,wea_disc2,wea_disc3,wea_disc4,wea_disc5;
+    private TextView wea_num1, wea_num2,wea_num3,wea_num4,wea_num5;
+    private ImageView wea_img1,wea_img2,wea_img3,wea_img4,wea_img5;
+    private TextView wea_date1,wea_date2,wea_date3,wea_date4,wea_date5;
+    private TextView city;
+    private Button back_wea;
+    protected void show_wea_dialog(){
+        LayoutInflater inflater=LayoutInflater.from(this.getActivity());
+        View myview =inflater.inflate(R.layout.dialog_weather_detail,null);
+        final AlertDialog.Builder builder=new AlertDialog.Builder(this.getActivity());
+
+        city = myview.findViewById(R.id.city_name);
+        wea_date1 = myview.findViewById(R.id.wea_date1);
+        wea_date2 = myview.findViewById(R.id.wea_date2);
+        wea_date3 = myview.findViewById(R.id.wea_date3);
+        wea_date4 = myview.findViewById(R.id.wea_date4);
+        wea_date5 = myview.findViewById(R.id.wea_date5);
+        wea_disc1 = myview.findViewById(R.id.wea_disc1);
+        wea_disc2 = myview.findViewById(R.id.wea_disc2);
+        wea_disc3 = myview.findViewById(R.id.wea_disc3);
+        wea_disc4 = myview.findViewById(R.id.wea_disc4);
+        wea_disc5 = myview.findViewById(R.id.wea_disc5);
+        wea_img1 = myview.findViewById(R.id.wea_img1);
+        wea_img2 = myview.findViewById(R.id.wea_img2);
+        wea_img3 = myview.findViewById(R.id.wea_img3);
+        wea_img4 = myview.findViewById(R.id.wea_img4);
+        wea_img5 = myview.findViewById(R.id.wea_img5);
+        wea_num1 = myview.findViewById(R.id.wea_num1);
+        wea_num2 = myview.findViewById(R.id.wea_num2);
+        wea_num3 = myview.findViewById(R.id.wea_num3);
+        wea_num4 = myview.findViewById(R.id.wea_num4);
+        wea_num5 = myview.findViewById(R.id.wea_num5);
+        back_wea = myview.findViewById(R.id.back_from_wea);
+
+        city.setText(city_name);
+        wea_date1.setText(weatherContainers.get(0).getDate());
+        wea_date2.setText(weatherContainers.get(1).getDate());
+        wea_date3.setText(weatherContainers.get(2).getDate());
+        wea_date4.setText(weatherContainers.get(3).getDate());
+        wea_date5.setText(weatherContainers.get(4).getDate());
+
+        wea_disc1.setText(weatherContainers.get(0).getWea());
+        wea_disc2.setText(weatherContainers.get(1).getWea());
+        wea_disc3.setText(weatherContainers.get(2).getWea());
+        wea_disc4.setText(weatherContainers.get(3).getWea());
+        wea_disc5.setText(weatherContainers.get(4).getWea());
+
+        wea_num1.setText(weatherContainers.get(0).getLow()+"~"+weatherContainers.get(0).getHigh());
+        wea_num2.setText(weatherContainers.get(1).getLow()+"~"+weatherContainers.get(1).getHigh());
+        wea_num3.setText(weatherContainers.get(2).getLow()+"~"+weatherContainers.get(2).getHigh());
+        wea_num4.setText(weatherContainers.get(3).getLow()+"~"+weatherContainers.get(3).getHigh());
+        wea_num5.setText(weatherContainers.get(4).getLow()+"~"+weatherContainers.get(4).getHigh());
+
+        setRecource(weatherContainers.get(0).getWea_img(),wea_img1);
+        setRecource(weatherContainers.get(1).getWea_img(),wea_img2);
+        setRecource(weatherContainers.get(2).getWea_img(),wea_img3);
+        setRecource(weatherContainers.get(3).getWea_img(),wea_img4);
+        setRecource(weatherContainers.get(4).getWea_img(),wea_img5);
+
+
+        builder.setView(myview);
+        wea_dialog=builder.create();
+        wea_dialog.show();
+
+         back_wea.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 wea_dialog.dismiss();
+             }
+         });
+
+         }
+
+         private void setRecource(String wea,ImageView a){
+             if(wea.equals("qing"))
+                 a.setBackgroundResource(R.drawable.qing_);
+             else if(wea.equals("xue"))
+                 a.setBackgroundResource(R.drawable.xue_);
+             else if(wea.equals("lei"))
+                 a.setBackgroundResource(R.drawable.lei_);
+             else if(wea.equals("shachen"))
+                 a.setBackgroundResource(R.drawable.shachen_);
+             else if(wea.equals("wu"))
+                 a.setBackgroundResource(R.drawable.wu_);
+             else if(wea.equals("bingbao"))
+                 a.setBackgroundResource(R.drawable.bingbao_);
+             else if(wea.equals("yun"))
+                 a.setBackgroundResource(R.drawable.yun_);
+             else if(wea.equals("yu"))
+                 a.setBackgroundResource(R.drawable.yu_);
+             else if(wea.equals("yin"))
+                 a.setBackgroundResource(R.drawable.yin_);
+
+         }
 
 }
