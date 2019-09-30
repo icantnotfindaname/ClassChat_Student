@@ -45,7 +45,6 @@ import com.example.classchat.Object.Object_TodoList;
 import com.example.classchat.Object.WeatherContainer;
 import com.example.classchat.R;
 import com.example.classchat.Util.Util_NetUtil;
-import com.example.library_activity_timetable.model.ScheduleSupport;
 import com.example.library_cache.Cache;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
@@ -144,7 +143,6 @@ public class Fragment_Memo extends Fragment {
             }
         });
         dayTitle = view.findViewById(R.id.memo_title_day);
-        Log.e("initCalendar",calendar.get(Calendar.DAY_OF_WEEK)+"");
         dayTitle.setText(getWeekday(calendar.get(Calendar.DAY_OF_WEEK)));
         rv1 = view.findViewById(R.id.rv_memo1);
         rv2 = view.findViewById(R.id.rv_memo2);
