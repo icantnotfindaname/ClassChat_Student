@@ -28,7 +28,7 @@
     </LinearLayout>
 
     <ImageButton
-        android:layout_margin="2dp"
+        android:layout_marginRight="10dp"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_centerVertical="true"
@@ -40,7 +40,7 @@
     <ImageButton
         android:id="@+id/id_more"
         android:text="功能"
-        android:layout_margin="2dp"
+        android:layout_marginRight="8dp"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_width="25dp"

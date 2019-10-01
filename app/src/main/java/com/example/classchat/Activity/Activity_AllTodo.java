@@ -17,7 +17,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.alibaba.fastjson.JSON;
-import com.example.classchat.Adapter.Adapter_Memo;
+import com.example.classchat.Adapter.Adapter_See_All_Memo;
 import com.example.classchat.Object.Object_TodoList;
 import com.example.classchat.R;
 import com.example.classchat.Util.Util_NetUtil;
@@ -39,6 +39,7 @@ public class Activity_AllTodo extends AppCompatActivity {
     private RecyclerView rv;
     private List<Object_TodoList> todoLists;
     private List<String> jsonlist;
+    private Adapter_See_All_Memo adapter_all_todo;
     private static final int GETSUCCESS = 1;
     private static final int GETNULL = 0;
     private boolean isFirst = true;
@@ -82,7 +83,7 @@ public class Activity_AllTodo extends AppCompatActivity {
                     LinearLayoutManager layoutManager = new LinearLayoutManager(Activity_AllTodo.this);
                     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                     rv.setLayoutManager(layoutManager);
-                    Adapter_Memo adapter_all_todo = new Adapter_Memo(Activity_AllTodo.this, todoLists);
+                    adapter_all_todo = new Adapter_See_All_Memo(Activity_AllTodo.this, todoLists);
                     rv.setAdapter(adapter_all_todo);
                     adapter_all_todo.notifyDataSetChanged();
                     break;
@@ -96,8 +97,12 @@ public class Activity_AllTodo extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.e("onResume","onResume");
         if(isFirst) isFirst = false;
-        else initData();
+        else {
+            initData();
+            adapter_all_todo.notifyDataSetChanged();
+        }
     }
 
     private void initData() {
