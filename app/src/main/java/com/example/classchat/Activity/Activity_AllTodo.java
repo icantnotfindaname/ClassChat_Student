@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.alibaba.fastjson.JSON;
 import com.example.classchat.Adapter.Adapter_See_All_Memo;
@@ -37,6 +38,7 @@ public class Activity_AllTodo extends AppCompatActivity {
     private String userID;
     private ImageView back;
     private RecyclerView rv;
+    private LinearLayout empty;
     private List<Object_TodoList> todoLists;
     private List<String> jsonlist;
     private Adapter_See_All_Memo adapter_all_todo;
@@ -62,6 +64,7 @@ public class Activity_AllTodo extends AppCompatActivity {
 
         back = findViewById(R.id.iv_all_todo_back);
         rv = findViewById(R.id.rv_todo);
+        empty = findViewById(R.id.ll_when_null);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +92,7 @@ public class Activity_AllTodo extends AppCompatActivity {
                     break;
                 case GETNULL:
                     Util_ToastUtils.showToast(Activity_AllTodo.this, "暂时没有添加任务");
+                    empty.setVisibility(View.VISIBLE);
                     break;
             }
         }

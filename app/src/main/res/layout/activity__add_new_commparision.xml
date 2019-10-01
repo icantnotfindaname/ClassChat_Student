@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.Activity_AddNewCommparision"
+    android:orientation="vertical">
+
+    <LinearLayout
+        style="@style/top_nav"
+        android:layout_marginBottom="3dp"
+        android:id="@+id/title">
+
+        <ImageView
+            android:id="@+id/iv_compare_back"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.15"
+            android:src="@drawable/ico_left_back"
+            android:padding="8dp"
+            android:onClick="back"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:text="添加对比"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.15"
+            android:padding="8dp" />
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:layout_marginTop="17dp"
+        android:layout_height="50dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+        <TextView
+            android:layout_width="60dp"
+            android:height="60dp"
+            android:text="标题"
+            android:textSize="15sp"
+            android:textColor="#00D8A0"
+            android:gravity="center"
+            android:layout_height="match_parent"/>
+        <EditText
+            android:layout_width="0dp"
+            android:id="@+id/get_todo_title"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:textColor="#000000"
+            android:gravity="center_vertical"
+            android:textAlignment="center"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:hint="填写活动标题"
+            android:textSize="17sp"
+            android:background="@null"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:layout_height="50dp">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:background="@drawable/rili"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textSize="17sp"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:text="周数"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:id="@+id/get_compare_week"
+            android:layout_width="0dp"
+            android:layout_weight="4"
+            android:layout_height="match_parent"
+            android:textColor="#000000"
+            android:textSize="17sp"
+            android:layout_marginLeft="3dp"
+            android:textAlignment="center"
+            android:hint="  请选择周数"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:onClick="pickWeek"
+            />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"/>
+
+    <Button
+        android:id="@+id/add_when_null"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:background="@drawable/scan"
+        android:visibility="gone"
+        android:onClick="add"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_when_not_null"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+        <Button
+            android:id="@+id/go_on"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="继续"
+            android:textColor="@color/theme"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/bg_radius_register_btn"
+            android:onClick="add"/>
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="保存"
+            android:textColor="@color/theme"
+            android:layout_centerInParent="true"
+            android:background="@drawable/bg_radius_register_btn"
+            android:onClick="save"/>
+
+        <Button
+            android:id="@+id/finish"
+            android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="完成"
+            android:textColor="@color/theme"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_radius_register_btn"
+            android:onClick="finishAdd"/>
+    </RelativeLayout>
+
+
+
+
+
+
+</LinearLayout>

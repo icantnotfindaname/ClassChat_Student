@@ -52,6 +52,7 @@ import com.baidu.location.LocationClientOption;
 import com.example.classchat.Activity.Activity_AddCourse;
 import com.example.classchat.Activity.Activity_AddSearchCourse;
 import com.example.classchat.Activity.Activity_AutoPullCourseFromWeb;
+import com.example.classchat.Activity.Activity_CompareTable;
 import com.example.classchat.Activity.Activity_CourseNote;
 import com.example.classchat.Activity.MainActivity;
 import com.example.classchat.Object.MySubject;
@@ -201,6 +202,9 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
     private static final int SIGN_IN_FAILED = 6;
     private static final int UPDATE_TABLE = 7;
 
+    //扫一扫模式选择
+    private AlertDialog builder = null;
+
     /*
     设置handler接收网络线程的信号并处理
      */
@@ -302,31 +306,42 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
             @Override
             public void onClick(View v) {
                 // TODO 这里面写扫一扫的逻辑
-                if (!isAuthentation) {
-                    Toast.makeText(getContext(), "请先实名认证！", Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent intent = new Intent(getContext(), CaptureActivity.class);
-                    /*ZxingConfig是配置类
-                     *可以设置是否显示底部布局，闪光灯，相册，
-                     * 是否播放提示音  震动
-                     * 设置扫描框颜色等
-                     * 也可以不传这个参数
-                     * */
-                    ZxingConfig config = new ZxingConfig();
-                    config.setPlayBeep(true);//是否播放扫描声音 默认为true
-                    config.setShake(true);//是否震动  默认为true
-                    config.setDecodeBarCode(true);//是否扫描条形码 默认为true
-                    config.setReactColor(R.color.colorAccent);//设置扫描框四个角的颜色 默认为白色
-                    config.setFrameLineColor(R.color.colorAccent);//设置扫描框边框颜色 默认无色
-                    config.setScanLineColor(R.color.colorAccent);//设置扫描线的颜色 默认白色
-                    config.setFullScreenScan(true);//是否全屏扫描  默认为true  设为false则只会在扫描框中扫描
-                    intent.putExtra(Constant.INTENT_ZXING_CONFIG, config);
-                    startActivityForResult(intent, SCAN_TABLE);
-                }
+                final int[] choice = new int[1];
+                final int[] index = new int[1];
+                builder = new AlertDialog.Builder(getContext())
+                        .setTitle("选择模式")
+                        .setSingleChoiceItems(new CharSequence[] { "导入课表", "对比课表" }, 0, new DialogInterface.OnClickListener() {//添加单选框
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                index[0] = i;
+                            }
+                        })
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {//添加"Yes"按钮
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                choice[0] = index[0];
+                                switch(choice[0]){
+                                    case 1:
+                                        startActivity(new Intent(getContext(), Activity_CompareTable.class));
+                                        break;
+                                    default:
+                                        importTable();
+                                        break;
+                                }
+                                builder.dismiss();
+                            }
+                        })
+
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {//添加取消
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                builder.dismiss();
+                            }
+                        }).show();
+
+
             }
         });
-
-
 
         titleTextView = getActivity().findViewById(R.id.id_title);
         layout = getActivity().findViewById(R.id.id_layout);
@@ -356,6 +371,31 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
         initClassBoxData();
 
         initTimetableView();
+    }
+
+
+    public static void importTable(){
+        if (!isAuthentation) {
+            Toast.makeText(getContext(), "请先实名认证！", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(getContext(), CaptureActivity.class);
+            /*ZxingConfig是配置类
+             *可以设置是否显示底部布局，闪光灯，相册，
+             * 是否播放提示音  震动
+             * 设置扫描框颜色等
+             * 也可以不传这个参数
+             * */
+            ZxingConfig config = new ZxingConfig();
+            config.setPlayBeep(true);//是否播放扫描声音 默认为true
+            config.setShake(true);//是否震动  默认为true
+            config.setDecodeBarCode(true);//是否扫描条形码 默认为true
+            config.setReactColor(R.color.theme);//设置扫描框四个角的颜色 默认为白色
+            config.setFrameLineColor(R.color.theme);//设置扫描框边框颜色 默认无色
+            config.setScanLineColor(R.color.theme);//设置扫描线的颜色 默认白色
+            config.setFullScreenScan(true);//是否全屏扫描  默认为true  设为false则只会在扫描框中扫描
+            intent.putExtra(Constant.INTENT_ZXING_CONFIG, config);
+            startActivityForResult(intent, SCAN_TABLE);
+        }
     }
 
     /**
@@ -1568,6 +1608,7 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                 if (resultCode == RESULT_OK) {
                     if (data != null) {
                         String content = data.getStringExtra(Constant.CODED_CONTENT);
+                        Log.e("content", content);
 
                         Util_NetUtil.sendOKHTTPRequest(content, new Callback() {
                             @Override

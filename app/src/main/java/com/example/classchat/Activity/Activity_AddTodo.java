@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -66,7 +65,7 @@ public class Activity_AddTodo extends AppCompatActivity {
     private String[] weekdays = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期天"};
 
     //周数多选框
-    private AlertDialog.Builder mutilChoicebuilder;
+    private AlertDialog.Builder multiChoiceBuilder;
     //配合周数多选框的数组
     private final String[] weeks= new String[]{"第1周","第2周","第3周","第4周","第5周","第6周","第7周","第8周","第9周","第10周","第11周","第12周","第13周","第14周","第15周","第16周","第17周","第18周","第19周","第20周","第21周","第22周","第23周","第24周","第25周"};
     private boolean[] weeksChecked = new boolean[]{false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false};
@@ -141,13 +140,13 @@ public class Activity_AddTodo extends AppCompatActivity {
         });
 
         //周数多选框
-        mutilChoicebuilder = new AlertDialog.Builder(this);
-        mutilChoicebuilder.setTitle("选择周数");
-        mutilChoicebuilder.setMultiChoiceItems(weeks, weeksChecked, new DialogInterface.OnMultiChoiceClickListener() {
+        multiChoiceBuilder = new AlertDialog.Builder(this);
+        multiChoiceBuilder.setTitle("选择周数");
+        multiChoiceBuilder.setMultiChoiceItems(weeks, weeksChecked, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) { }
         });
-        mutilChoicebuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        multiChoiceBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String s = new String();
@@ -194,7 +193,7 @@ public class Activity_AddTodo extends AppCompatActivity {
             }
         });
 
-        mutilChoicebuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+        multiChoiceBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -204,7 +203,7 @@ public class Activity_AddTodo extends AppCompatActivity {
         setWeek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mutilChoicebuilder.show();
+                multiChoiceBuilder.show();
             }
         });
 
@@ -230,8 +229,6 @@ public class Activity_AddTodo extends AppCompatActivity {
         picker_back = myview.findViewById(R.id.back_from_pick);
         picker_save = myview.findViewById(R.id.set_time);
 
-
-
         builder.setView(myview);
         timepicker_dialog = builder.create();
         timepicker_dialog.show();
@@ -244,7 +241,6 @@ public class Activity_AddTodo extends AppCompatActivity {
         dayPicker.setMinValue(1);
         dayPicker.setMaxValue(weekdays.length);
         //设置默认的位置
-
         dayPicker.setValue(dayOfweek);
         //这里设置为不循环显示，默认值为true
         dayPicker.setWrapSelectorWheel(true);
