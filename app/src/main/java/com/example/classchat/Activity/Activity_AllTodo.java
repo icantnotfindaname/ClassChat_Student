@@ -122,22 +122,29 @@ public class Activity_AllTodo extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 // 得到服务器返回的具体内容
                 String responseData = response.body().string();
-                // 转化为具体的对象列表
-                jsonlist = JSON.parseArray(responseData, String.class);
-                if(jsonlist.size() != 0){
-                    for (int i = 0; i < jsonlist.size(); i++) {
-                        Object_TodoList o = JSON.parseObject(jsonlist.get(i), Object_TodoList.class);
-                        todoLists.add(o);
-                    }
-                    // 发送收到成功的信息
-                    //由getQuery()按需处理后载入布局
-                    message.what = GETSUCCESS;
-                    handler.sendMessage(message);
-                }
-                else {
+                if(responseData.equals("None")){
                     message.what = GETNULL;
                     handler.sendMessage(message);
                 }
+                else{
+                    // 转化为具体的对象列表
+                    jsonlist = JSON.parseArray(responseData, String.class);
+                    if(jsonlist.size() != 0){
+                        for (int i = 0; i < jsonlist.size(); i++) {
+                            Object_TodoList o = JSON.parseObject(jsonlist.get(i), Object_TodoList.class);
+                            todoLists.add(o);
+                        }
+                        // 发送收到成功的信息
+                        //由getQuery()按需处理后载入布局
+                        message.what = GETSUCCESS;
+                        handler.sendMessage(message);
+                    }
+                    else {
+                        message.what = GETNULL;
+                        handler.sendMessage(message);
+                    }
+                }
+
             }
 
             @Override

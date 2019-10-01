@@ -51,7 +51,6 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.example.classchat.Activity.Activity_AddCourse;
 import com.example.classchat.Activity.Activity_AddSearchCourse;
 import com.example.classchat.Activity.Activity_AutoPullCourseFromWeb;
 import com.example.classchat.Activity.Activity_CompareTable;
@@ -76,7 +75,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -379,7 +377,7 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
     }
 
 
-    public static void importTable(){
+    private void importTable(){
         if (!isAuthentation) {
             Toast.makeText(getContext(), "请先实名认证！", Toast.LENGTH_SHORT).show();
         } else {
@@ -1644,13 +1642,10 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                 if (resultCode == RESULT_OK) {
                     if (data != null) {
                         String content = data.getStringExtra(Constant.CODED_CONTENT);
-                        Log.e("content", content);
 
                         Util_NetUtil.sendOKHTTPRequest(content, new Callback() {
                             @Override
-                            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
-                            }
+                            public void onFailure(@NotNull Call call, @NotNull IOException e) {}
 
                             @Override
                             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {

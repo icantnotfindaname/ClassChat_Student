@@ -104,7 +104,7 @@ public class Fragment_Memo extends Fragment {
     private String userId;
     private List<String> jsonlist;
 
-    private Button prev, next, seeAll;
+    private Button prev, next, prevNull, nextNull, seeAll;
     private static int checkcount = 4;//可看前后七天计数
     private TextView dateTitle, dayTitle;
     private Calendar calendar = Calendar.getInstance();
@@ -133,6 +133,8 @@ public class Fragment_Memo extends Fragment {
         add = view.findViewById(R.id.memo_add);
         prev = view.findViewById(R.id.memo_prev);
         next = view.findViewById(R.id.memo_next);
+        prevNull = view.findViewById(R.id.memo_prev_null);
+        nextNull = view.findViewById(R.id.memo_next_null);
         seeAll = view.findViewById(R.id.memo_see_all);
         dateTitle = view.findViewById(R.id.memo_title_date);
         dateTitle.setText(getDate(0));
@@ -185,10 +187,14 @@ public class Fragment_Memo extends Fragment {
             public void onClick(View v) {
                 checkcount ++;
                 calendar = Calendar.getInstance();
-                if(checkcount == 2)
+                if(checkcount == 2){
                     prev.setVisibility(View.VISIBLE);
-                if(checkcount == 7)
+                    prevNull.setVisibility(View.GONE);
+                }
+                if(checkcount == 7){
                     next.setVisibility(View.GONE);
+                    nextNull.setVisibility(View.VISIBLE);
+                }
                 dateTitle.setText(getDate(checkcount - 4));
                 calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) +  (checkcount - 4));
                 Log.e("nextCalendar",calendar.get(Calendar.DAY_OF_WEEK)+"");
@@ -202,10 +208,14 @@ public class Fragment_Memo extends Fragment {
             public void onClick(View v) {
                 checkcount --;
                 calendar = Calendar.getInstance();
-                if(checkcount == 1)
+                if(checkcount == 1){
                     prev.setVisibility(View.GONE);
-                if(checkcount == 6)
+                    prevNull.setVisibility(View.VISIBLE);
+                }
+                if(checkcount == 6){
                     next.setVisibility(View.VISIBLE);
+                    nextNull.setVisibility(View.GONE);
+                }
                 dateTitle.setText(getDate(checkcount - 4));
                 calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) +  (checkcount - 4));
                 Log.e("prevCalendar",calendar.get(Calendar.DAY_OF_WEEK)+"");

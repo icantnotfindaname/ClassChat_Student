@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activity.Activity_AddNewCommparision"></activity>
+        <activity android:name=".Activity.Activity_AddNewComparision"></activity>
         <activity android:name=".Activity.Activity_CompareTable" />
         <activity android:name=".Activity.Activity_AllTodo" />
         <activity android:name=".Activity.TestAlarm" />

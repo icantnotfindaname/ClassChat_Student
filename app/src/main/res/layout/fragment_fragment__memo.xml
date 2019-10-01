@@ -59,6 +59,14 @@
             android:layout_marginRight="10dp"
             android:layout_gravity="center_vertical"
             android:background="@drawable/ico_left_back" />
+        <Button
+            android:id="@+id/memo_prev_null"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
+            android:background="@null"
+            android:visibility="gone"/>
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -93,6 +101,14 @@
             android:layout_marginLeft="10dp"
             android:layout_gravity="center_vertical"
             android:background="@drawable/ico_right_back"/>
+        <Button
+            android:id="@+id/memo_next_null"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
+            android:background="@null"
+            android:visibility="gone"/>
         <View
             android:layout_width="0dp"
             android:layout_weight="1"
