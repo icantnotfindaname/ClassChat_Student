@@ -6,48 +6,66 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@color/theme"
         android:text="修改昵称"
         android:gravity="center"
+        android:layout_height="40dp"
+        android:background="@color/theme"
         android:textColor="#ffffff"
-        android:textSize="20dp"/>
+        android:textSize="14sp"/>
 
     <EditText
          android:id="@+id/modify_name"
          android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
-         android:hint="请输入昵称："
+
+         android:hint="昵称"
+         android:background="#fff"
          android:textColor="#000000"
-         android:textSize="25dp"/>
+         android:textSize="18dp"/>
 
     <LinearLayout
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="6dp"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="100"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"/>
 
         <Button
             android:id="@+id/cancel_modify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:background="@drawable/green_bg"
+            android:textColor="#ffffff"
+            android:textSize="14sp"
             android:text="取消"
-            android:textColor="#000000" />
+             />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"            />
 
         <Button
             android:id="@+id/confirm_modify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
             android:text="确定"
-            android:textColor="#000000" />
+            android:background="@drawable/green_bg"
+            android:textColor="#ffffff"
+            android:textSize="17sp"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"/>
     </LinearLayout>
 
 

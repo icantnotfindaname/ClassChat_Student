@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu   xmlns:android="http://schemas.android.com/apk/res/android"
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
@@ -13,25 +14,26 @@
         android:title="导入课表"
         app:showAsAction="always" />
     <item
+        android:id="@+id/menu_export_classes"
+        android:icon="@drawable/icon_purple_round5"
+        android:title="导出课表"
+        app:showAsAction="always" />
+    <group android:id="@+id/group_menu_2"
+        android:checkableBehavior="all">
+    <item
         android:id="@+id/menu_shownotthisweek"
         android:icon="@drawable/icon_purple_round2"
         android:title="显示非本周课程"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/menu_hidenotthisweek"
-        android:icon="@drawable/icon_purple_round3"
-        android:title="隐藏非本周课程"
         app:showAsAction="always" />
     <item
         android:id="@+id/menu_showweekend"
         android:icon="@drawable/icon_purple_round4"
         android:title="显示周末"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/menu_hideweekend"
-        android:icon="@drawable/icon_purple_round5"
-        android:title="隐藏周末"
-        app:showAsAction="always" />
+    </group>
+
+
+
     <!--<item-->
         <!--android:id="@+id/menu_scan"-->
         <!--android:icon="@drawable/icon_purple_round6"-->

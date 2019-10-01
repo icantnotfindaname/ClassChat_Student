@@ -39,76 +39,16 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#fff">
-        <Switch
-            android:id="@+id/option_switch_newMessage"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:gravity="start|center"
-            android:text="        接收新消息提醒"
-            android:textColor="@color/theme"
-            android:padding="8dp"
-            android:layout_alignParentRight="true"
-            android:checked="true"
-            android:layout_marginRight="10dp"
-            android:background="#fff"
-            android:thumb="@drawable/thumb"
-            android:track="@drawable/switch_track"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_marginTop="15dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:id="@+id/sign_out"
+        android:layout_marginTop="50dp"
         android:background="#fff"
-        android:orientation="vertical">
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_marginTop="25dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#fff">
-        <Switch
-
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:gravity="start|center"
-            android:text="        声音"
-            android:textColor="@color/theme"
-            android:padding="8dp"
-            android:layout_alignParentRight="true"
-            android:checked="true"
-            android:layout_marginRight="10dp"
-            android:background="#fff"
-            android:thumb="@drawable/thumb"
-            android:track="@drawable/switch_track"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#fff">
-        <Switch
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:gravity="start|center"
-            android:text="        振动"
-            android:textColor="@color/theme"
-            android:padding="8dp"
-            android:layout_alignParentRight="true"
-            android:checked="true"
-            android:layout_marginRight="10dp"
-            android:background="#fff"
-            android:thumb="@drawable/thumb"
-            android:track="@drawable/switch_track"
-            android:textSize="14sp" />
-    </LinearLayout>
-
+        android:gravity="center"
+        android:text="退出登录"
+        android:textSize="14sp"
+        android:padding="8dp"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

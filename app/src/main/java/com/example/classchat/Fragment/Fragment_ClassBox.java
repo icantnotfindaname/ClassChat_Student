@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -40,6 +41,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,6 +100,9 @@ import static io.rong.imkit.RongIM.connect;
 
 
 public class Fragment_ClassBox extends Fragment implements OnClickListener {
+
+    private Boolean isShowNoThisWeek = false;
+    private Boolean isShowWeekend = true;
 
     private AlertDialog.Builder alertBuilder;
 
@@ -561,17 +566,7 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                 .callback(new ISchedule.OnItemLongClickListener() {
                     @Override
                     public void onLongClick(View v, int day, int start) {
-                        Log.d(TAG, "onLongClick: + " + mClassBoxData);
-                        Resources r = getContext().getResources();
-                        Bitmap bmp = BitmapFactory.decodeResource(r, R.drawable.icon_logo);
-                        Bitmap bitmap = CodeCreator.createQRCode("http://106.12.105.160:8081/getallcourse/student?userId=" + userId, 700, 700, bmp);
-                        LayoutInflater inflater=LayoutInflater.from(getContext());
-                        View xxview=inflater.inflate(R.layout.fragment_qrcodeshowdialog,null);
-                        final AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
-                        qrcode = xxview.findViewById(R.id.iv_qrcode);
-                        qrcode.setImageBitmap(bitmap);
-                        builder.setView(xxview);
-                        builder.create().show();
+
                     }
                 })
                 //旗标布局点击监听
@@ -1008,6 +1003,7 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
     /**
      * 显示便签对话框
      */
+    private ScrollView detail_container;
     private EditText reminder_title;
     private EditText reminder_details;
     private Button reminder_back;
@@ -1032,7 +1028,7 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
         reminder_details.setFocusable(false);
         reminder_details.setFocusableInTouchMode(false);
 
-
+        detail_container = myview.findViewById(R.id.detail_container);
         reminder_back = myview.findViewById(R.id.back_from_reminder);
         reminder_modify = myview.findViewById(R.id.reminder_modify);
         reminder_delete = myview.findViewById(R.id.reminder_delete);
@@ -1084,9 +1080,11 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                 reminder_title.setEnabled(true);
                 reminder_title.setFocusable(true);
                 reminder_title.setFocusableInTouchMode(true);
+                reminder_title.setTextColor(Color.parseColor("#AAAAAA"));
                 reminder_details.setEnabled(true);
                 reminder_details.setFocusable(true);
                 reminder_details.setFocusableInTouchMode(true);
+                reminder_details.setTextColor(Color.parseColor("#AAAAAA"));
             }
         });
 
@@ -1103,10 +1101,12 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                 reminder_title.setEnabled(false);
                 reminder_title.setFocusable(false);
                 reminder_title.setFocusableInTouchMode(false);
+                reminder_title.setTextColor(Color.parseColor("#000000"));
                 reminder_details.setText(schedule.getRoom());
                 reminder_details.setEnabled(false);
                 reminder_details.setFocusable(false);
                 reminder_details.setFocusableInTouchMode(false);
+                reminder_details.setTextColor(Color.parseColor("#000000"));
             }
         });
 
@@ -1122,9 +1122,11 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                     reminder_title.setEnabled(false);
                     reminder_title.setFocusable(false);
                     reminder_title.setFocusableInTouchMode(false);
+                    reminder_title.setTextColor(Color.parseColor("#000000"));
                     reminder_details.setEnabled(false);
                     reminder_details.setFocusable(false);
                     reminder_details.setFocusableInTouchMode(false);
+                    reminder_details.setTextColor(Color.parseColor("#000000"));
                 }
                 else if(TextUtils.isEmpty(reminder_title.getText())){
                     alertBuilder = new AlertDialog.Builder(getContext());
@@ -1169,12 +1171,15 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                     reminder_title.setEnabled(false);
                     reminder_title.setFocusable(false);
                     reminder_title.setFocusableInTouchMode(false);
+                    reminder_title.setTextColor(Color.parseColor("#000000"));
                     reminder_details.setEnabled(false);
                     reminder_details.setFocusable(false);
                     reminder_details.setFocusableInTouchMode(false);
+                    reminder_details.setTextColor(Color.parseColor("#000000"));
                 }
             }
         });
+
 
     }
 
@@ -1185,6 +1190,18 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
     public void showPopmenu() {
         PopupMenu popup = new PopupMenu(this.getActivity(), moreButton);
         popup.getMenuInflater().inflate(R.menu.tabletime_menu, popup.getMenu());
+        if(isShowNoThisWeek){
+        popup.getMenu().getItem(3).setChecked(true);
+        }
+        else {
+            popup.getMenu().getItem(3).setChecked(false);
+        }
+        if(isShowWeekend){
+            popup.getMenu().getItem(4).setChecked(true);
+        }
+        else {
+            popup.getMenu().getItem(4).setChecked(false);
+        }
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
@@ -1206,19 +1223,38 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                         else
                             Toast.makeText(getContext(), "请先实名认证", Toast.LENGTH_SHORT).show();
                         break;
-                    case R.id.menu_shownotthisweek:
-                        showNonThisWeek();
+                    case R.id.menu_export_classes:
+                        Log.d(TAG, "onLongClick: + " + mClassBoxData);
+                        Resources r = getContext().getResources();
+                        Bitmap bmp = BitmapFactory.decodeResource(r, R.drawable.icon_logo);
+                        Bitmap bitmap = CodeCreator.createQRCode("http://106.12.105.160:8081/getallcourse/student?userId=" + userId, 700, 700, bmp);
+                        LayoutInflater inflater=LayoutInflater.from(getContext());
+                        View xxview=inflater.inflate(R.layout.fragment_qrcodeshowdialog,null);
+                        final AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+                        qrcode = xxview.findViewById(R.id.iv_qrcode);
+                        qrcode.setImageBitmap(bitmap);
+                        builder.setView(xxview);
+                        builder.create().show();
                         break;
-                    case R.id.menu_hidenotthisweek:
-                        hideNonThisWeek();
-                        break;
+
                     case R.id.menu_showweekend:
-                        showWeekends();
+                        if (isShowWeekend){
+                            isShowWeekend = false;
+                            hideWeekends();
+                        }else {
+                             isShowWeekend = true;
+                             showWeekends();
+                        }
                         break;
-                    case R.id.menu_hideweekend:
-                        hideWeekends();
-                        break;
-                    default:
+
+                    case R.id.menu_shownotthisweek:
+                        if(isShowNoThisWeek){//更改菜单项的选中状态
+                            isShowNoThisWeek = false;
+                            hideNonThisWeek();
+                        }else{
+                            isShowNoThisWeek = true;
+                            showNonThisWeek();
+                        }
                         break;
                 }
                 return true;
