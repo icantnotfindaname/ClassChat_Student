@@ -62,18 +62,25 @@
                 <EditText
                     android:id="@+id/reminder_title"
                     android:layout_width="0dp"
+                    android:textColor="#000"
                     android:layout_height="match_parent"
                     android:layout_marginRight="5dp"
                     android:layout_weight="3"
                     android:gravity="center"
                     android:background="#FFF"
                     android:textSize="15sp" />
+                <View
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"/>
 
             </LinearLayout>
 
             <ScrollView
                 android:layout_height="150dp"
                 android:layout_width="match_parent"
+                android:clickable="true"
+                android:fillViewport="true"
+                android:id="@+id/detail_container"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp">
 
@@ -81,7 +88,10 @@
                     android:id="@+id/reminder_detail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_gravity="top"
+                    android:gravity="top"
                     android:background="#fff"
                     android:textColor="#000"
                     android:textSize="15sp" />
@@ -105,7 +115,7 @@
                     android:id="@+id/reminder_back_modify"
                     android:visibility="gone"
                     android:layout_weight="1"
-                    android:background="#AA00D8A0"
+                    android:background="@drawable/green_bg"
                     android:textColor="#fff"
                     android:textSize="15sp"
                     android:text="取消" />
@@ -141,7 +151,7 @@
                     android:visibility="gone"
                     android:id="@+id/reminder_save"
                     android:layout_weight="1"
-                    android:background="#AA00D8A0"
+                    android:background="@drawable/green_bg"
                     android:textColor="#fff"
                     android:textSize="15sp"
                     android:text="保存" />

@@ -206,7 +206,7 @@ public class SimpleOperater extends AbsOperater {
             });
         }
         else{
-            textView.setTextColor(Color.parseColor("#000000"));
+            textView.setTextColor(Color.parseColor("#FFFFFF"));
         }
 
         mView.onItemBuildListener().onItemUpdate(layout, textView, countTextView, subject);

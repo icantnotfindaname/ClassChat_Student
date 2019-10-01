@@ -80,8 +80,6 @@ public class Fragment_SelfInformationCenter extends Fragment {
     private LinearLayout linearLayoutforUpdate;
     private TextView textViewforName;
     private TextView textViewforId;
-    private TextView textView_quit;
-
 
     private InstallUtils.DownloadCallBack downloadCallBack;
     private String apkDownloadPath;
@@ -130,7 +128,7 @@ public class Fragment_SelfInformationCenter extends Fragment {
 
         textViewforId = view.findViewById(R.id.user_stuID);
         textViewforName = view.findViewById(R.id.user_name);
-        textView_quit = view.findViewById(R.id.textview_quit);
+
 
         //获得用户ID
         MainActivity activity = (MainActivity) getActivity();
@@ -227,12 +225,7 @@ public class Fragment_SelfInformationCenter extends Fragment {
             }
         });
 
-        textView_quit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog_quit();
-            }
-        });
+
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -534,37 +527,7 @@ public class Fragment_SelfInformationCenter extends Fragment {
 
     }
 
-    private void showDialog_quit(){
-        // 这里的属性可以一直设置，因为每次设置后返回的是一个builder对象
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        // 设置提示框的标题
-        builder.setTitle("退出登录").
-                // 设置提示框的图标
-                        setIcon(R.drawable.icon_logo).
-                // 设置要显示的信息
-                        setMessage("确定要退出登录吗？").
-                // 设置确定按钮
-                        setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // 这里不应该只是一个简单的页面跳转
-                        Intent outIntent = new Intent(getActivity(),
-                                Activity_Enter.class);
-                        outIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(outIntent);
-                    }
-                }).
 
-                // 设置取消按钮,null是什么都不做，并关闭对话框
-                        setNegativeButton("取消", null);
-        // 生产对话框
-        AlertDialog alertDialog = builder.create();
-        // 显示对话框
-        alertDialog.show();
-
-
-    }
 
 }
 

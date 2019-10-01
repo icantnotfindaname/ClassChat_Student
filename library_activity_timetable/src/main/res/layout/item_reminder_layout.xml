@@ -11,8 +11,8 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:padding="2dp"
-        android:textColor="#FFFFFF"
+        android:textColor="#EEEEEE"
         android:textSize="13sp"
         android:textStyle="bold"
-        android:background="#fff"/>
+        android:background="@drawable/reminder_bg"/>
 </FrameLayout>

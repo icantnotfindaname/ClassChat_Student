@@ -84,12 +84,47 @@
             <EditText
                 android:id="@+id/edit_reminder_title"
                 android:layout_width="0dp"
+                android:hint="标题"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:background="#FFF"
+                android:textSize="15sp"
                 android:gravity="center_vertical"
+ />
+        </LinearLayout>
 
-                android:hint="请输入标题" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="50dp">
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:background="@drawable/rili"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:textColor="#000000"
+                android:text="周次"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="6"
+                android:id="@+id/edit_reminder_week"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                android:layout_marginLeft="3dp"
+                android:hint="本周"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                />
+
         </LinearLayout>
 
         <LinearLayout
@@ -111,7 +146,7 @@
                     android:background="@drawable/lishi" />
 
                 <TextView
-                    android:layout_width="0dip"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -123,15 +158,14 @@
                     android:id="@+id/edit_reminder_start"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.7"
                     android:gravity="center"
                     android:inputType="number"
                     android:textColor="#000000"
                     android:textSize="15sp" />
 
                 <TextView
-                    android:layout_width="0dip"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -143,8 +177,7 @@
                     android:id="@+id/edit_reminder_end"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.7"
                     android:gravity="center"
                     android:inputType="number"
                     android:textColor="#000000"
@@ -158,43 +191,14 @@
                     android:text="节"
                     android:textColor="#000000"
                     android:textSize="15sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                android:layout_height="50dp">
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/rili"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:textSize="15sp"
-                    android:gravity="center"
-                    android:layout_weight="1"
-                    android:textColor="#000000"
-                    android:text="周次"
+                <View
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
                     android:layout_height="match_parent"/>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="6"
-                    android:id="@+id/edit_reminder_week"
-                    android:textColor="#000000"
-                    android:textSize="15sp"
-                    android:layout_marginLeft="3dp"
-                    android:hint="本周"
-                    android:clickable="true"
-                    android:gravity="center_vertical"
-                    />
-
             </LinearLayout>
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -205,7 +209,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="top"
-                    android:layout_margin="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:background="#FFF"
                     android:gravity="left"
                     android:hint="内容详情"

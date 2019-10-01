@@ -79,7 +79,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="账号与安全"
+                android:text="账号信息"
                 android:gravity="center"
                 android:textColor="#000000"
                 android:textSize="12sp"/>
@@ -304,17 +304,7 @@
             android:layout_marginTop="20dp"
             >
 
-            <Button
-                android:id="@+id/textview_quit"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="退出登录"
-                android:textColor="#000000"
-                android:textSize="15sp"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="5dp"
-                android:shadowColor="#fafafa"/>
+
         </LinearLayout>
 
     </LinearLayout>

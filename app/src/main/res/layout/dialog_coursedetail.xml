@@ -176,7 +176,7 @@
                 android:gravity="center_horizontal"
                 android:textSize="12sp"
                 android:textColor="#BB000000"
-                android:text="马上聊"/>
+                android:text="聊天"/>
 
         </LinearLayout>
 
@@ -198,7 +198,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="藏经阁"
+                android:text="文件"
                 android:textColor="#BB000000"
                 android:textSize="12sp" />
 
@@ -224,7 +224,7 @@
                 android:gravity="center"
                 android:textSize="12sp"
                 android:textColor="#BB000000"
-                android:text="上上签"/>
+                android:text="签到"/>
 
         </LinearLayout>
 
@@ -248,7 +248,7 @@
                 android:gravity="center"
                 android:textSize="12sp"
                 android:textColor="#BB000000"
-                android:text="随心记"/>
+                android:text="笔记"/>
 
         </LinearLayout>
 
