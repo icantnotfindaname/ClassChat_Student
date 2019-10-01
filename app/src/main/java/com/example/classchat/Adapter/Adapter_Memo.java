@@ -36,8 +36,6 @@ public class Adapter_Memo extends RecyclerView.Adapter<Adapter_Memo.ViewHolder> 
         }
     }
 
-
-
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())

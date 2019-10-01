@@ -96,7 +96,6 @@ public class Activity_MyCourse extends AppCompatActivity {
 
     private void initData() {
         courseList.clear();
-
         RequestBody requestBody = new FormBody.Builder()
                 .add("userId", userId)
                 .add("tablename", proUni)
@@ -124,10 +123,6 @@ public class Activity_MyCourse extends AppCompatActivity {
                 handler.sendMessage(message);
 
             }
-
-
-
-
         });
     }
 }

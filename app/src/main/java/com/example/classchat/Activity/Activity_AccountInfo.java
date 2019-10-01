@@ -2,6 +2,7 @@ package com.example.classchat.Activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,10 +24,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +40,8 @@ import com.bumptech.glide.Glide;
 import com.example.classchat.R;
 import com.example.classchat.Util.Util_NetUtil;
 import com.example.classchat.Util.Util_PictureTool;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -48,6 +55,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -65,7 +74,6 @@ public class Activity_AccountInfo extends AppCompatActivity {
     final int mFirstRequestCode = 100;//权限请求码
     final int mPhoteRequestCode = 150;//照相权限申请码
 
-
     //辨别是照相还是选取文件
     final static int CHOOSE_PICTURE = 0;
     final static int TAKE_PHOTO = 1;
@@ -82,6 +90,8 @@ public class Activity_AccountInfo extends AppCompatActivity {
     private TextView tvName;
     private TextView tvId;
     private ImageView ivReturn;
+    private EditText etName;
+
 
     // 照相时使用到的重要变量
     private Bitmap headbitmap = null;
@@ -92,6 +102,9 @@ public class Activity_AccountInfo extends AppCompatActivity {
     private String userId;
     private String userName;
     private String imageUrl;
+
+    //对话框专用
+    private LinearLayout login;
 
     // 广播发射器
     private LocalBroadcastManager localBroadcastManager;
@@ -105,10 +118,34 @@ public class Activity_AccountInfo extends AppCompatActivity {
                     Toast.makeText(Activity_AccountInfo.this,"保存成功！",Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent("com.example.theclasschat_UPDATE_ACCOUNTINFO");
                     localBroadcastManager.sendBroadcast(intent);
+                    tvName.setText(etName.getText().toString());
                     loadingUpload.dismiss();
                     break;
                 case SAVE_FAILED:
                     Toast.makeText(Activity_AccountInfo.this,"网络错误，再试试？",Toast.LENGTH_SHORT).show();
+                    loadingUpload.dismiss();
+                    break;
+            }
+        }
+    };
+
+    @SuppressLint("HandlerLeak")
+    private Handler handler1 = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            switch (msg.what){
+                case SAVE_SUCCESS:
+                    Log.e("TAG", "SAVE SUCCESS");
+                    Toast.makeText( Activity_AccountInfo.this,"保存成功！",Toast.LENGTH_SHORT).show();
+                    loadingUpload.dismiss();
+                    Intent intent = new Intent();
+                    intent.putExtra("name_return", etName.getText().toString());
+                    System.out.println(etName.getText().toString());
+                    setResult(RESULT_OK, intent);
+                    finish();
+                    break;
+                case SAVE_FAILED:
+                    Toast.makeText(Activity_AccountInfo.this,"保存失败",Toast.LENGTH_SHORT).show();
                     loadingUpload.dismiss();
                     break;
             }
@@ -168,10 +205,14 @@ public class Activity_AccountInfo extends AppCompatActivity {
         nameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Activity_AccountInfo.this, Activity_Modify.class);
-                intent.putExtra("userId", userId);
-                intent.putExtra("userName", userName);
-                startActivityForResult(intent, NAME_ACTIVITY);
+//                Intent intent = new Intent(Activity_AccountInfo.this, Activity_Modify.class);
+//                intent.putExtra("userId", userId);
+//                intent.putExtra("userName", userName);
+//                startActivityForResult(intent, NAME_ACTIVITY);
+                /**
+                 * 这里修改成对话框
+                 */
+                showDialog();
             }
         });
 
@@ -194,6 +235,75 @@ public class Activity_AccountInfo extends AppCompatActivity {
             }
         });
 
+    }
+
+    Dialog dialog;
+    private void showDialog(){
+        // 自定义对话框
+        LayoutInflater inflater= LayoutInflater.from(Activity_AccountInfo.this);
+        View myView = inflater.inflate(R.layout.dialog_modify_name,null);//引用自定义布局
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(Activity_AccountInfo.this);
+        builder.setView(myView);
+        dialog = builder.create();  //创建对话框
+        dialog.show();  //显示对话框
+        etName = myView.findViewById(R.id.modify_name);
+        myView.findViewById(R.id.cancel_modify).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();//点击按钮对话框消失
+                Toast.makeText(Activity_AccountInfo.this, "退出修改", Toast.LENGTH_SHORT ).show();
+            }
+        });
+
+        myView.findViewById(R.id.confirm_modify).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (etName.getText().toString().equals("")) {
+                    Toast.makeText(Activity_AccountInfo.this, "请先输入您的昵称", Toast.LENGTH_SHORT).show();
+                } else {
+                    /*
+                    等待界面，因为登录操作是耗时操作
+                    */
+                    loadingUpload = new ProgressDialog(Activity_AccountInfo.this);  //初始化等待动画
+                    loadingUpload.setCanceledOnTouchOutside(false); //
+                    loadingUpload.setMessage("正在上传....");  //等待动画的标题
+                    loadingUpload.show();  //显示等待动画
+                    // 发起网络请求修改昵称
+                    RequestBody requestBody = new FormBody.Builder()
+                            .add("userId", userId)
+                            .add("newname", etName.getText().toString())
+                            .build();
+
+                    Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/changenickname/student", requestBody, new Callback() {
+                        @Override
+                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                            Toast.makeText(Activity_AccountInfo.this, "修改昵称失败", Toast.LENGTH_SHORT);
+                            dialog.cancel();
+                        }
+
+                        @Override
+                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
+                            // 得到服务器返回的具体内容
+                            boolean responseData = Boolean.parseBoolean(response.body().string());
+                            Message message = new Message();    // 准备发送信息通知UI线程
+
+
+                            if(responseData) {
+                                message.what = SAVE_SUCCESS;
+                                handler.sendMessage(message);
+
+                            } else {
+                                message.what = SAVE_FAILED;
+                                handler.sendMessage(message);
+                            }
+
+                            dialog.cancel();
+                        }
+                    });
+                }
+            }
+        });
     }
 
     // 初始权限申请函数
@@ -411,7 +521,7 @@ public class Activity_AccountInfo extends AppCompatActivity {
                 .addFormDataPart("icon", "head_image", RequestBody.create(MediaType.parse("image/jpeg"), Util_PictureTool.compressImage(headbitmap, "new_head")))
                 .build();   //构建请求体
 
-        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/changeico/student", requestBody, new okhttp3.Callback() {
+        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/changeico/student", requestBody, new Callback() {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 // 得到服务器返回的具体内容

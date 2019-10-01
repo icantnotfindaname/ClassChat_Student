@@ -6,8 +6,8 @@
     android:orientation="horizontal">
 
     <ImageView
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:background="@drawable/memo_todo_prefix"
         android:layout_margin="2dp"/>
 
