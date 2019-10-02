@@ -11,6 +11,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -50,6 +53,7 @@ import com.example.classchat.R;
 import com.example.classchat.Util.Util_NetUtil;
 import com.example.classchat.Util.Util_ToastUtils;
 import com.maning.updatelibrary.InstallUtils;
+import com.yzq.zxinglibrary.encode.CodeCreator;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -69,6 +73,8 @@ public class Fragment_SelfInformationCenter extends Fragment {
     private static final String APK_SAVE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/laoke_update.apk";
     //控件
     private ImageView avatarImageView;
+    private ImageView qrcode;
+    private String userId;
 
     private LinearLayout linearLayoutforAnquan;
     private LinearLayout linearLayoutforKecheng;
@@ -224,6 +230,23 @@ public class Fragment_SelfInformationCenter extends Fragment {
                 }
             }
         });
+        avatarImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity mainActivity = (MainActivity)getActivity();
+                userId = mainActivity.getId();
+                Resources r = getContext().getResources();
+                Bitmap bmp = BitmapFactory.decodeResource(r, R.drawable.icon_logo);
+                Bitmap bitmap = CodeCreator.createQRCode(userId, 700, 700, bmp);
+                LayoutInflater inflater=LayoutInflater.from(getContext());
+                View xxview=inflater.inflate(R.layout.dialog_id_qrcode,null);
+                final android.support.v7.app.AlertDialog.Builder builder=new android.support.v7.app.AlertDialog.Builder(getContext());
+                qrcode = xxview.findViewById(R.id.im_qrcode);
+                qrcode.setImageBitmap(bitmap);
+                builder.setView(xxview);
+                builder.create().show();
+            }
+        });
 
 
     }
@@ -234,6 +257,7 @@ public class Fragment_SelfInformationCenter extends Fragment {
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
     }
 
     /*
