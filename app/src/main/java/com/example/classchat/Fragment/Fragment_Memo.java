@@ -498,7 +498,6 @@ public class Fragment_Memo extends Fragment {
                         public void onResponse(Call call, Response response) throws IOException {
                             // 得到服务器返回的具体内容
                             String responseData = response.body().string();
-                            Log.e("啊啊啊啊",responseData);
                             JSONArray first = null;
                             String wea;
                             String high;
@@ -508,12 +507,10 @@ public class Fragment_Memo extends Fragment {
                             try {
                                 first = new JSONObject(responseData.toString()).getJSONArray("data");
                             } catch (org.json.JSONException e) {
-                                Log.e("天气数组","获得数组失败");
                             }
                             try {
                                 for(int i = 0; i < 5; i++){
                                     JSONObject day = ((JSONArray) first).getJSONObject(i);
-                                    Log.e("天气数组",day.toString());
                                     date = day.get("day").toString();
                                     wea = day.get("wea").toString();
                                     high = day.get("tem1").toString();
@@ -522,14 +519,11 @@ public class Fragment_Memo extends Fragment {
                                     weatherContainers.add(new WeatherContainer(wea,high, low,date,wea_img));
 
                                 }
-                                Log.d("Size", "onResponse: " + weatherContainers.size());
-                                Log.e("天气数组",weatherContainers.get(0).getWea()+ weatherContainers.get(0).getLow() + weatherContainers.get(0).getHigh());
 
                                 Message message = new Message();
                                 message.what = WEATHER;
                                 handler.sendMessage(message);
                             } catch (org.json.JSONException e) {
-                                Log.e("天气数组","获得数组单个赋值失败");
                             }
                         }
                     });

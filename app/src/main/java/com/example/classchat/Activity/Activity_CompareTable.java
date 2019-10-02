@@ -4,9 +4,9 @@ package com.example.classchat.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
@@ -20,7 +20,7 @@ import com.example.classchat.R;
 import com.example.library_cache.Cache;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 public class Activity_CompareTable extends AppCompatActivity {
@@ -29,7 +29,9 @@ public class Activity_CompareTable extends AppCompatActivity {
     private android.support.v7.widget.RecyclerView rv;
     private LinearLayout empty;
     private List<String> compareActivity = new ArrayList<>();
+    private String compareActivityStr;
     private Adapter_CompareTable adapter_compareTable;
+    private boolean isFirst = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,18 +51,7 @@ public class Activity_CompareTable extends AppCompatActivity {
             }
         });
 
-        compareActivity = Collections.singletonList(Cache.with(Activity_CompareTable.this)
-                                        .path(getCacheDir(Activity_CompareTable.this))
-                                        .getCache("compareActivityName", String.class));
-        Log.e("compare",compareActivity.toString());
-        String s = compareActivity.get(0)+"d";//缓存没有时compareActivity=[null],直接compareActivity.get(0).equals("null")报错，原因未知
-
-        if(compareActivity.size() == 1 && s.equals("nulld")){
-            empty.setVisibility(View.VISIBLE);
-        }else {
-            adapter_compareTable = new Adapter_CompareTable(this, compareActivity);
-            rv.setAdapter(adapter_compareTable);
-        }
+        initData();
 
         //沉浸式状态栏
         if (Build.VERSION.SDK_INT >= 21) {
@@ -72,19 +63,50 @@ public class Activity_CompareTable extends AppCompatActivity {
             window.setStatusBarColor(getResources().getColor(R.color.theme));
         }
 
-
     }
+
+    private void initData(){
+        compareActivity.clear();
+        List<String> Temp = new ArrayList<>();
+        compareActivityStr = Cache.with(Activity_CompareTable.this)
+                .path(getCacheDir(Activity_CompareTable.this))
+                .getCache("compareActivityName", String.class);
+
+        if(compareActivityStr != null)
+            Temp = Arrays.asList(compareActivityStr.split("[,\\s+]"));
+        for(String item:Temp)
+            if(!item.equals(""))
+                compareActivity.add(item);
+        compareActivity.remove("null");
+        compareActivity.remove(" ");
+        Log.e("compareTable82",compareActivity.toString());
+
+        if(compareActivity.size() > 0){
+            adapter_compareTable = new Adapter_CompareTable(this, compareActivity);
+            rv.setAdapter(adapter_compareTable);
+        }else {
+            empty.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     @Override
     protected void onResume() {
         super.onResume();
-        adapter_compareTable.notifyDataSetChanged();
+        if(isFirst){
+            isFirst = false;
+        }else {
+            initData();
+            Log.e("compareActivity", compareActivity.toString());
+            if(!(compareActivity.size() > 0))
+                empty.setVisibility(View.VISIBLE);
+            else empty.setVisibility(View.GONE);
+        }
     }
 
     public String getCacheDir(Context context) {
         String cachePath;
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
-                || !Environment.isExternalStorageRemovable()) {
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) || !Environment.isExternalStorageRemovable()) {
             cachePath = context.getExternalCacheDir().getPath();
         } else {
             cachePath = context.getCacheDir().getPath();
@@ -92,7 +114,7 @@ public class Activity_CompareTable extends AppCompatActivity {
         return cachePath;
     }
     public void add(View view) {
-        startActivity(new Intent(Activity_CompareTable.this, Activity_AddNewComparision.class));
+        startActivity(new Intent(Activity_CompareTable.this, Activity_AddNewComparison.class));
 
     }
 }

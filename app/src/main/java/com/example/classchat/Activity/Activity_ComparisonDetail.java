@@ -1,14 +1,14 @@
 package com.example.classchat.Activity;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +17,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.example.classchat.R;
@@ -35,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -44,9 +43,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class Activity_AddNewComparision extends AppCompatActivity {
-
-    private Button picker_back, picker_save;
+public class Activity_ComparisonDetail extends AppCompatActivity {
+    private Button picker_back, picker_save, delete;
     private EditText getTitle;
     private TextView setWeek;
     private NumberPicker weekPicker;
@@ -54,20 +52,29 @@ public class Activity_AddNewComparision extends AppCompatActivity {
     private int weekTemp;
     private Dialog weekPickerDialog;
     private String mBeginClassTime;
-    private int currenWeek;
+    private int currentWeek;
     private static final int COMPARE_TABLE = 1;
     private List<String> classBoxData = new ArrayList<>();
-
+    private List<String> compareActivity = new ArrayList<>();
+    private String compareActivityStr;
+    private String title;
+    private List<String> Temp = new ArrayList<>();
+    private AlertDialog builder = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity__add_new_commparision);
-
+        setContentView(R.layout.activity__comparison_detail);
         setWeek = findViewById(R.id.get_compare_week);
         getTitle = findViewById(R.id.get_activity_title);
+        delete = findViewById(R.id.compare_delete);
 
-        Toast.makeText(this, "点击保存可保存所有已扫入的课程信息,点击完成对比得到共同空闲时间", Toast.LENGTH_LONG).show();
+
+        Intent intent = getIntent();
+        title = intent.getStringExtra("activity");
+        getTitle.setText(title);
+        getTitle.setEnabled(false);
+        setWeek.setEnabled(false);
 
         //沉浸式状态栏
         if (Build.VERSION.SDK_INT >= 21) {
@@ -84,15 +91,66 @@ public class Activity_AddNewComparision extends AppCompatActivity {
             week[i] = "第" + (i + 1) + "周";
         }
         //获取当前周
-        mBeginClassTime = Cache.with(Activity_AddNewComparision.this)
-                .path(getCacheDir(Activity_AddNewComparision.this))
+        mBeginClassTime = Cache.with(Activity_ComparisonDetail.this)
+                .path(getCacheDir(Activity_ComparisonDetail.this))
                 .getCache("BeginClassTime",String.class);
         if(mBeginClassTime == null || mBeginClassTime.length() <= 0){
             Calendar calendar=Calendar.getInstance();
-            mBeginClassTime=calendar.get(Calendar.YEAR)+"-" + (calendar.get(Calendar.MONTH)+1) +"-"+calendar.get(Calendar.DAY_OF_MONTH)+" 00:00:00";
+            mBeginClassTime = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + " 00:00:00";
         }
-        currenWeek = ScheduleSupport.timeTransfrom(mBeginClassTime);
-        setWeek.setText(week[currenWeek - 1]);
+        currentWeek = ScheduleSupport.timeTransfrom(mBeginClassTime);
+        setWeek.setText(week[currentWeek - 1]);
+
+        compareActivityStr =(Cache.with(Activity_ComparisonDetail.this)
+                .path(getCacheDir(Activity_ComparisonDetail.this))
+                .getCache("compareActivityName", String.class));
+        if(compareActivityStr != null)
+            Temp = Arrays.asList(compareActivityStr.split("[,\\s+]"));
+        for(String item:Temp)
+            compareActivity.add(item);
+        compareActivity.remove("null");
+        compareActivity.remove(",");
+        Log.e("DetailonCreate111",compareActivity.toString());
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder = new AlertDialog.Builder(Activity_ComparisonDetail.this)
+                        .setTitle("温馨提示：")
+                        .setMessage("宁真的要删除🐎？")
+                        .setPositiveButton("确定",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int whichButton) {
+                                        removeCompareActivityDetailCache();
+                                        removeCompareActivityListCache();
+                                        String s = (Cache.with(Activity_ComparisonDetail.this)
+                                                .path(getCacheDir(Activity_ComparisonDetail.this))
+                                                .getCache("compareActivityName", String.class));
+                                        if(s != null)Log.e("s", s);
+                                        Log.e("beforeDelete119", compareActivity.toString());
+                                        Log.e("beforeDelete120", compareActivity.size()+"");
+                                        //TODO 逗号删除不净
+                                        compareActivity.remove(getTitle.getText().toString());
+                                        Log.e("afterDeleteSize121", compareActivity.toString().length()+"");
+                                        Log.e("afterDelete122", compareActivity.toString());
+                                        Cache.with(Activity_ComparisonDetail.this)
+                                                .path(getCacheDir(Activity_ComparisonDetail.this))
+                                                .saveCache("compareActivityName", compareActivity.size() > 0? compareActivity.toString().substring(1,compareActivity.toString().length() - 1):",");
+                                        finish();
+                                    }
+                                })
+                        .setNegativeButton("取消",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int whichButton) {
+                                        builder.dismiss();
+                                    }
+                                }).show();
+
+            }
+        });
+        //TODO
     }
 
     public void back(View view) {
@@ -100,9 +158,9 @@ public class Activity_AddNewComparision extends AppCompatActivity {
     }
 
     public void pickWeek(View view) {
-        LayoutInflater inflater=LayoutInflater.from(Activity_AddNewComparision.this);
+        LayoutInflater inflater=LayoutInflater.from(Activity_ComparisonDetail.this);
         View myview = inflater.inflate(R.layout.dialog_comparison_week_picker,null);
-        final android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(Activity_AddNewComparision.this);
+        final android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(Activity_ComparisonDetail.this);
         picker_back = myview.findViewById(R.id.back_from_pick);
         picker_save = myview.findViewById(R.id.set_time);
         weekPicker = myview.findViewById(R.id.week_picker);
@@ -114,7 +172,7 @@ public class Activity_AddNewComparision extends AppCompatActivity {
         weekPicker.setMinValue(0);
         weekPicker.setMaxValue(week.length - 1);
         //设置默认的位置
-        weekPicker.setValue(currenWeek - 1);
+        weekPicker.setValue(currentWeek - 1);
         weekTemp = weekPicker.getValue();
         weekPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
         weekPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
@@ -140,42 +198,53 @@ public class Activity_AddNewComparision extends AppCompatActivity {
         });
     }
 
-
-    public void add(View view) {
-        getTitle.clearFocus();
+    private boolean isValid(){
         if(!getTitle.getText().toString().equals("")) {
-            importTable();
+            if(!compareActivity.contains(getTitle.getText().toString())){
+                return true;
+            }else {
+                Util_ToastUtils.showToast(Activity_ComparisonDetail.this, "此活动已存在，请修改活动名称");
+                return false;
+            }
         }
-        else Util_ToastUtils.showToast(Activity_AddNewComparision.this, "活动名称不能为空！");
+        else {
+            Util_ToastUtils.showToast(Activity_ComparisonDetail.this, "活动名称不能为空！");
+            return false;
+        }
     }
 
+    public void add(View view) {
+        if(isValid()){
+            importTable();
+        }
+    }
 
     public void save(View view) {
         //获得数据后存入缓存
-        Cache.with(Activity_AddNewComparision.this)
-                .path(getCacheDir(Activity_AddNewComparision.this))
-                .remove("compare" + getTitle.getText().toString());
-
-        Cache.with(Activity_AddNewComparision.this)
-                .path(getCacheDir(Activity_AddNewComparision.this))
-                .saveCache("compare" + getTitle.getText().toString(), classBoxData);
-
-        Cache.with(Activity_AddNewComparision.this)
-                .path(getCacheDir(Activity_AddNewComparision.this))
-                .saveCache("compareActivityName", getTitle.getText().toString());
-
-        finish();
-
-
-//                                List<String> data = Collections.singletonList(Cache.with(Activity_AddNewComparision.this)
-//                                        .path(getCacheDir(Activity_AddNewComparision.this))
-//                                        .getCache("compare" + getTitle.getText().toString(), String.class));
-
+        if(isValid()) {
+            Cache.with(Activity_ComparisonDetail.this)
+                    .path(getCacheDir(Activity_ComparisonDetail.this))
+                    .saveCache("compare" + getTitle.getText().toString(), classBoxData);
+            compareActivityStr += "," + getTitle.getText().toString();
+            Cache.with(Activity_ComparisonDetail.this)
+                    .path(getCacheDir(Activity_ComparisonDetail.this))
+                    .saveCache("compareActivityName", compareActivityStr);
+            finish();
+        }
     }
 
 
-    public void finishAdd(View view) {
-        //TODO 发送请求
+
+    private void removeCompareActivityDetailCache(){
+        Cache.with(Activity_ComparisonDetail.this)
+                .path(getCacheDir(Activity_ComparisonDetail.this))
+                .remove("compare" + getTitle.getText().toString());
+    }
+
+    private void removeCompareActivityListCache(){
+        Cache.with(Activity_ComparisonDetail.this)
+                .path(getCacheDir(Activity_ComparisonDetail.this))
+                .remove("compareActivityName");
     }
 
     /*
@@ -211,7 +280,7 @@ public class Activity_AddNewComparision extends AppCompatActivity {
 
 
     private void importTable(){
-        Intent intent = new Intent(Activity_AddNewComparision.this, CaptureActivity.class);
+        Intent intent = new Intent(Activity_ComparisonDetail.this, CaptureActivity.class);
         /*ZxingConfig是配置类
          *可以设置是否显示底部布局，闪光灯，相册，
          * 是否播放提示音  震动
@@ -260,4 +329,10 @@ public class Activity_AddNewComparision extends AppCompatActivity {
         }
     }
 
+
+    public void edit(View view) {
+        setWeek.setEnabled(true);
+        getTitle.setEnabled(true);
+    }
 }
+

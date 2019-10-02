@@ -157,95 +157,109 @@ public class Activity_TodoDetail extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO 删除
-                final RequestBody requestBody = new FormBody.Builder()
-                        .add("todoID", todoID)
-                        .add("todoItemID", memo.getTodoItemID())
-                        .build();   //构建请求体
-                if(!isSeeAll){
-                    final int[] choice = new int[1];
-                    final int[] index = new int[1];
-                    builder = new AlertDialog.Builder(Activity_TodoDetail.this)
-                            .setTitle("删除")
-                            .setSingleChoiceItems(new CharSequence[] { "仅删除本周", "删除所有周" }, 0, new DialogInterface.OnClickListener() {//添加单选框
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    index[0] = i;
-                                }
-                            })
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {//添加"Yes"按钮
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    choice[0] = index[0];
+                builder = new AlertDialog.Builder(Activity_TodoDetail.this)
+                        .setTitle("温馨提示：")
+                        .setMessage("宁真的要删除🐎？")
+                        .setPositiveButton("确定",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int whichButton) {
+                                        final RequestBody requestBody = new FormBody.Builder()
+                                                .add("todoID", todoID)
+                                                .add("todoItemID", memo.getTodoItemID())
+                                                .build();   //构建请求体
+                                        if(!isSeeAll){
+                                            final int[] choice = new int[1];
+                                            final int[] index = new int[1];
+                                            builder = new AlertDialog.Builder(Activity_TodoDetail.this)
+                                                    .setTitle("删除")
+                                                    .setSingleChoiceItems(new CharSequence[] { "仅删除本周", "删除所有周" }, 0, new DialogInterface.OnClickListener() {//添加单选框
+                                                        @Override
+                                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                                            index[0] = i;
+                                                        }
+                                                    })
+                                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {//添加"Yes"按钮
+                                                        @Override
+                                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                                            choice[0] = index[0];
 
 
-                                    String address;
+                                                            String address;
 
-                                    switch(choice[0]){
-                                        case 1:
-                                            //todo
-                                            address = "http://106.12.105.160:8081/deletesametodoitem";
-                                            break;
-                                        default:
-                                            address = "http://106.12.105.160:8081/deletetodoitem";
-                                            break;
+                                                            switch(choice[0]){
+                                                                case 1:
+                                                                    //todo
+                                                                    address = "http://106.12.105.160:8081/deletesametodoitem";
+                                                                    break;
+                                                                default:
+                                                                    address = "http://106.12.105.160:8081/deletetodoitem";
+                                                                    break;
+                                                            }
+
+                                                            Util_NetUtil.sendOKHTTPRequest(address, requestBody, new okhttp3.Callback() {
+                                                                @Override
+                                                                public void onResponse(Call call, Response response) throws IOException {
+                                                                    // 得到服务器返回的具体内容
+                                                                    boolean responseData = Boolean.parseBoolean(response.body().string());
+                                                                    Message message = new Message();
+                                                                    if (responseData) {
+                                                                        message.what = DELETE_SUCCESS;
+                                                                        handler.sendMessage(message);
+                                                                    } else {
+                                                                        message.what = DELETE_FAILED;
+                                                                        handler.sendMessage(message);
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                                                    // 在这里对异常情况进行处理
+                                                                }
+                                                            });
+
+                                                            builder.dismiss();
+
+                                                        }
+                                                    })
+
+                                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {//添加取消
+                                                        @Override
+                                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                                            builder.dismiss();
+                                                        }
+                                                    }).show();
+                                        }else {
+                                            Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/deletesametodoitem", requestBody, new okhttp3.Callback() {
+                                                @Override
+                                                public void onResponse(Call call, Response response) throws IOException {
+                                                    // 得到服务器返回的具体内容
+                                                    boolean responseData = Boolean.parseBoolean(response.body().string());
+                                                    Message message = new Message();
+                                                    if (responseData) {
+                                                        message.what = DELETE_SUCCESS;
+                                                        handler.sendMessage(message);
+                                                    } else {
+                                                        message.what = DELETE_FAILED;
+                                                        handler.sendMessage(message);
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                                    // 在这里对异常情况进行处理
+                                                }
+                                            });
+                                        }
                                     }
-
-                                    Util_NetUtil.sendOKHTTPRequest(address, requestBody, new okhttp3.Callback() {
-                                        @Override
-                                        public void onResponse(Call call, Response response) throws IOException {
-                                            // 得到服务器返回的具体内容
-                                            boolean responseData = Boolean.parseBoolean(response.body().string());
-                                            Message message = new Message();
-                                            if (responseData) {
-                                                message.what = DELETE_SUCCESS;
-                                                handler.sendMessage(message);
-                                            } else {
-                                                message.what = DELETE_FAILED;
-                                                handler.sendMessage(message);
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                                            // 在这里对异常情况进行处理
-                                        }
-                                    });
-
-                                    builder.dismiss();
-
-                                }
-                            })
-
-                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {//添加取消
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    builder.dismiss();
-                                }
-                            }).show();
-                }else {
-                    Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/deletesametodoitem", requestBody, new okhttp3.Callback() {
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            // 得到服务器返回的具体内容
-                            boolean responseData = Boolean.parseBoolean(response.body().string());
-                            Message message = new Message();
-                            if (responseData) {
-                                message.what = DELETE_SUCCESS;
-                                handler.sendMessage(message);
-                            } else {
-                                message.what = DELETE_FAILED;
-                                handler.sendMessage(message);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                            // 在这里对异常情况进行处理
-                        }
-                    });
-                }
-
+                                })
+                        .setNegativeButton("取消",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int whichButton) {
+                                        builder.dismiss();
+                                    }
+                                }).show();
             }
         });
 
