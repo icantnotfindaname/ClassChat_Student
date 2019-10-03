@@ -219,10 +219,15 @@ public class Activity_AddNewComparison extends AppCompatActivity {
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     // 得到服务器返回的具体内容
                     String responseData = response.body().string();
-                    newComparison = JSON.parseObject(responseData, Object_Comparison.class);
                     Message message = new Message();
-                    message.what = ADD_COMPARISON;
-                    handler.sendMessage(message);
+                    if(responseData.equals("ERROR")){
+                        message.what = WRONG_TYPE;
+                        handler.sendMessage(message);
+                    }else {
+                        newComparison = JSON.parseObject(responseData, Object_Comparison.class);
+                        message.what = ADD_COMPARISON;
+                        handler.sendMessage(message);
+                    }
                 }
             });
         }
