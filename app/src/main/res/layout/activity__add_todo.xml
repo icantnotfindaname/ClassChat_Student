@@ -237,7 +237,7 @@
             android:text="+添加待办"
             android:background="@drawable/green_bg"
             android:layout_height="match_parent"
-            android:onClick="save"/>
+            android:onClick="saveTodo"/>
 
     </LinearLayout>
 </LinearLayout>

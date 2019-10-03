@@ -308,7 +308,7 @@ public class Activity_AddTodo extends AppCompatActivity {
 
 
 
-        public void save(View view) {
+        public void saveTodo(View view) {
             if (title.getText() == null || title.getText().toString().equals("")) {
                 builder = new AlertDialog.Builder(Activity_AddTodo.this)
                         .setTitle("温馨提示：")
@@ -380,4 +380,5 @@ public class Activity_AddTodo extends AppCompatActivity {
                 });
             }
         }
-    }
+
+}

@@ -318,7 +318,6 @@ public class Fragment_Memo extends Fragment {
             }
         }
         location_ = String.valueOf(latitude)+","+String.valueOf(longitude);
-        Log.e("城市",url_head_2 + location_);
 
         sendOKHTTPRequest(url_head_2 + location_  , new Callback() {
             @Override
@@ -331,7 +330,6 @@ public class Fragment_Memo extends Fragment {
                 // 得到服务器返回的具体内容
 
                 String responseData = response.body().string();
-                Log.e("城市",responseData);
 
                 String city = "";
                 String district = "";
@@ -345,14 +343,13 @@ public class Fragment_Memo extends Fragment {
                 } catch (org.json.JSONException e) {
                     e.printStackTrace();
                 }
-                Log.e("城市",two.toString());
 
                 try {
 
                     city = deleteString0(two.get("city").toString(),'市');
                     district =deleteString0( two.get("district").toString(),'区');
                 } catch (org.json.JSONException e) {
-                    Log.e("城市","城市地区获取失败");
+                    e.printStackTrace();
                 }
 
                 Message message = new Message();
@@ -460,7 +457,10 @@ public class Fragment_Memo extends Fragment {
            return;
         }
 
+
         checkcount = 4;
+        prevNull.setVisibility(View.GONE);
+        nextNull.setVisibility(View.GONE);
         calendar = Calendar.getInstance();
         next.setVisibility(View.VISIBLE);
         prev.setVisibility(View.VISIBLE);

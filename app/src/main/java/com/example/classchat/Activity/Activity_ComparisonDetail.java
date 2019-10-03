@@ -1,5 +1,6 @@
 package com.example.classchat.Activity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -8,6 +9,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,15 +18,14 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.example.classchat.Object.Object_Comparison;
 import com.example.classchat.R;
 import com.example.classchat.Util.Util_NetUtil;
 import com.example.classchat.Util.Util_ToastUtils;
-import com.example.library_activity_timetable.model.ScheduleSupport;
 import com.example.library_cache.Cache;
 import com.yzq.zxinglibrary.android.CaptureActivity;
 import com.yzq.zxinglibrary.bean.ZxingConfig;
@@ -33,33 +35,34 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class Activity_ComparisonDetail extends AppCompatActivity {
-    private Button picker_back, picker_save, delete;
-    private EditText getTitle;
-    private TextView setWeek;
+    private Button picker_back, picker_save, delete, edit, done, add;
+    private TextView setWeek, getTitle;
     private NumberPicker weekPicker;
     private String[] week = new String[25];
     private int weekTemp;
     private Dialog weekPickerDialog;
-    private String mBeginClassTime;
-    private int currentWeek;
     private static final int COMPARE_TABLE = 1;
-    private List<String> classBoxData = new ArrayList<>();
-    private List<String> compareActivity = new ArrayList<>();
-    private String compareActivityStr;
-    private String title;
-    private List<String> Temp = new ArrayList<>();
+    private List<Object_Comparison> compareActivity = new ArrayList<>();
+
+    private int index;
+    private Object_Comparison activity;
+    private String title, comparisonID;
     private AlertDialog builder = null;
+    private static final int UPDATE_COMPARISON = 0;
+    private static final int GET_RESULT = 1;
+    private static final int DELETE_SUCCESS = 2;
+    private static final int DELETE_FAILED = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +71,17 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
         setWeek = findViewById(R.id.get_compare_week);
         getTitle = findViewById(R.id.get_activity_title);
         delete = findViewById(R.id.compare_delete);
-
+        add = findViewById(R.id.add);
+        edit = findViewById(R.id.compare_edit);
+        done = findViewById(R.id.compare_done);
 
         Intent intent = getIntent();
-        title = intent.getStringExtra("activity");
+        compareActivity = (List<Object_Comparison>)intent.getSerializableExtra("activityList");
+        index = Integer.parseInt(intent.getStringExtra("index"));
+        activity = compareActivity.get(index);
+        title = activity.getComparisonTitle();
+        comparisonID = intent.getStringExtra("userId") + title;
         getTitle.setText(title);
-        getTitle.setEnabled(false);
         setWeek.setEnabled(false);
 
         //沉浸式状态栏
@@ -90,27 +98,7 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
         for(int i =0; i < week.length; ++i){
             week[i] = "第" + (i + 1) + "周";
         }
-        //获取当前周
-        mBeginClassTime = Cache.with(Activity_ComparisonDetail.this)
-                .path(getCacheDir(Activity_ComparisonDetail.this))
-                .getCache("BeginClassTime",String.class);
-        if(mBeginClassTime == null || mBeginClassTime.length() <= 0){
-            Calendar calendar=Calendar.getInstance();
-            mBeginClassTime = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + " 00:00:00";
-        }
-        currentWeek = ScheduleSupport.timeTransfrom(mBeginClassTime);
-        setWeek.setText(week[currentWeek - 1]);
-
-        compareActivityStr =(Cache.with(Activity_ComparisonDetail.this)
-                .path(getCacheDir(Activity_ComparisonDetail.this))
-                .getCache("compareActivityName", String.class));
-        if(compareActivityStr != null)
-            Temp = Arrays.asList(compareActivityStr.split("[,\\s+]"));
-        for(String item:Temp)
-            compareActivity.add(item);
-        compareActivity.remove("null");
-        compareActivity.remove(",");
-        Log.e("DetailonCreate111",compareActivity.toString());
+        setWeek.setText("第" + activity.getComparisonWeek() + "周");
 
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,22 +110,33 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,
                                                         int whichButton) {
-                                        removeCompareActivityDetailCache();
-                                        removeCompareActivityListCache();
-                                        String s = (Cache.with(Activity_ComparisonDetail.this)
-                                                .path(getCacheDir(Activity_ComparisonDetail.this))
-                                                .getCache("compareActivityName", String.class));
-                                        if(s != null)Log.e("s", s);
-                                        Log.e("beforeDelete119", compareActivity.toString());
-                                        Log.e("beforeDelete120", compareActivity.size()+"");
-                                        //TODO 逗号删除不净
-                                        compareActivity.remove(getTitle.getText().toString());
-                                        Log.e("afterDeleteSize121", compareActivity.toString().length()+"");
-                                        Log.e("afterDelete122", compareActivity.toString());
-                                        Cache.with(Activity_ComparisonDetail.this)
-                                                .path(getCacheDir(Activity_ComparisonDetail.this))
-                                                .saveCache("compareActivityName", compareActivity.size() > 0? compareActivity.toString().substring(1,compareActivity.toString().length() - 1):",");
-                                        finish();
+
+                                        RequestBody requestBody = new FormBody.Builder()
+                                                .add("comparisonID", comparisonID)
+                                                .build();
+
+                                        Log.e("comparisonID",comparisonID);
+                                        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/deletecomparison", requestBody,new Callback() {
+                                            @Override
+                                            public void onFailure(@NotNull Call call, @NotNull IOException e) {}
+
+                                            @Override
+                                            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                                                // 得到服务器返回的具体内容
+                                                String responseData = response.body().string();
+                                                Log.e("deletecomparison", responseData);
+
+                                                Message message = new Message();
+                                                if(Boolean.parseBoolean(responseData)){
+                                                    message.what = DELETE_SUCCESS;
+                                                    handler.sendMessage(message);
+                                                }
+                                                else {
+                                                    message.what = DELETE_FAILED;
+                                                    handler.sendMessage(message);
+                                                }
+                                            }
+                                        });
                                     }
                                 })
                         .setNegativeButton("取消",
@@ -147,11 +146,38 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
                                         builder.dismiss();
                                     }
                                 }).show();
-
             }
         });
-        //TODO
     }
+
+    @SuppressLint("HandlerLeak")
+    private final Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case UPDATE_COMPARISON:
+                    importTable();
+                    break;
+                case GET_RESULT:
+                    //TODO 渲染课表
+                    compareActivity.remove(index);
+                    compareActivity.add(activity);
+                    updateCache();
+                    break;
+                case DELETE_SUCCESS:
+                    compareActivity.remove(index);
+                    Log.e("AfterRefresh", compareActivity.toString());
+                    updateCache();
+                    finish();
+                    break;
+                case DELETE_FAILED:
+                    Util_ToastUtils.showToast(Activity_ComparisonDetail.this, "删除失败请重试！");
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     public void back(View view) {
         finish();
@@ -171,8 +197,7 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
         //设置最大最小值
         weekPicker.setMinValue(0);
         weekPicker.setMaxValue(week.length - 1);
-        //设置默认的位置
-        weekPicker.setValue(currentWeek - 1);
+        weekPicker.setValue(activity.getComparisonWeek() - 1);
         weekTemp = weekPicker.getValue();
         weekPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
         weekPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
@@ -198,53 +223,17 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
         });
     }
 
-    private boolean isValid(){
-        if(!getTitle.getText().toString().equals("")) {
-            if(!compareActivity.contains(getTitle.getText().toString())){
-                return true;
-            }else {
-                Util_ToastUtils.showToast(Activity_ComparisonDetail.this, "此活动已存在，请修改活动名称");
-                return false;
-            }
-        }
-        else {
-            Util_ToastUtils.showToast(Activity_ComparisonDetail.this, "活动名称不能为空！");
-            return false;
-        }
+    private void updateCache(){
+        Cache.with(Activity_ComparisonDetail.this)
+                .path(getCacheDir(Activity_ComparisonDetail.this))
+                .remove("compareTable");
+        Cache.with(Activity_ComparisonDetail.this)
+                .path(getCacheDir(Activity_ComparisonDetail.this))
+                .saveCache("compareTable", JSON.toJSONString(compareActivity));
     }
 
     public void add(View view) {
-        if(isValid()){
-            importTable();
-        }
-    }
-
-    public void save(View view) {
-        //获得数据后存入缓存
-        if(isValid()) {
-            Cache.with(Activity_ComparisonDetail.this)
-                    .path(getCacheDir(Activity_ComparisonDetail.this))
-                    .saveCache("compare" + getTitle.getText().toString(), classBoxData);
-            compareActivityStr += "," + getTitle.getText().toString();
-            Cache.with(Activity_ComparisonDetail.this)
-                    .path(getCacheDir(Activity_ComparisonDetail.this))
-                    .saveCache("compareActivityName", compareActivityStr);
-            finish();
-        }
-    }
-
-
-
-    private void removeCompareActivityDetailCache(){
-        Cache.with(Activity_ComparisonDetail.this)
-                .path(getCacheDir(Activity_ComparisonDetail.this))
-                .remove("compare" + getTitle.getText().toString());
-    }
-
-    private void removeCompareActivityListCache(){
-        Cache.with(Activity_ComparisonDetail.this)
-                .path(getCacheDir(Activity_ComparisonDetail.this))
-                .remove("compareActivityName");
+        importTable();
     }
 
     /*
@@ -307,7 +296,14 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
                     if (data != null) {
                         String content = data.getStringExtra(Constant.CODED_CONTENT);
 
-                        Util_NetUtil.sendOKHTTPRequest(content, new Callback() {
+                        RequestBody requestBody = new FormBody.Builder()
+                                .add("comparisonID", comparisonID)
+                                .add("otherUserID", content)
+                                .add("weekChosen", setWeek.getText().toString().substring(1, setWeek.getText().toString().length() - 1))
+                                .build();
+
+                        Log.e("comparisonID",comparisonID);
+                        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/updatecomparison", requestBody,new Callback() {
                             @Override
                             public void onFailure(@NotNull Call call, @NotNull IOException e) {}
 
@@ -315,10 +311,12 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
                             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                                 // 得到服务器返回的具体内容
                                 String responseData = response.body().string();
-                                //TODO 对数据classBoxData进行简化
-                                classBoxData.add(responseData);
-                                // 转化为具体的对象列表
-                                List<String> jsonlist = JSON.parseArray(responseData, String.class);
+                                activity = JSON.parseObject(responseData, Object_Comparison.class);
+                                Log.e("activityAfterUpdateScan", activity.toString());
+
+                                Message message = new Message();
+                                message.what = GET_RESULT;
+                                handler.sendMessage(message);
                             }
                         });
                     }
@@ -332,7 +330,39 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
 
     public void edit(View view) {
         setWeek.setEnabled(true);
-        getTitle.setEnabled(true);
+        add.setVisibility(View.VISIBLE);
+        done.setVisibility(View.VISIBLE);
+        edit.setVisibility(View.GONE);
+    }
+
+    public void done(View view) {
+        edit.setVisibility(View.VISIBLE);
+        add.setVisibility(View.GONE);
+        done.setVisibility(View.GONE);
+        setWeek.setEnabled(false);
+
+        //TODO 仅修改周数
+        RequestBody requestBody = new FormBody.Builder()
+                .add("comparisonID", comparisonID)
+                .add("comparisonWeekChosen", setWeek.getText().toString().substring(1, setWeek.getText().toString().length() - 1))
+                .build();
+
+        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/updateweekchosen", requestBody,new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {}
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                // 得到服务器返回的具体内容
+                String responseData = response.body().string();
+                activity = JSON.parseObject(responseData, Object_Comparison.class);
+                Log.e("activityAfterUpdateWeek", activity.toString());
+
+                Message message = new Message();
+                message.what = GET_RESULT;
+                handler.sendMessage(message);
+            }
+        });
     }
 }
 

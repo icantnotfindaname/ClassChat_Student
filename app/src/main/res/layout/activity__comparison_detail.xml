@@ -6,33 +6,38 @@
     tools:context=".Activity.Activity_ComparisonDetail"
     android:orientation="vertical">
 
-    <LinearLayout
-        style="@style/top_nav"
+    <RelativeLayout
+        android:layout_height="44dp"
+        android:layout_width="match_parent"
+        android:background="@color/theme"
         android:layout_marginBottom="3dp"
         android:id="@+id/title">
 
         <ImageView
             android:id="@+id/iv_compare_back"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.15"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
             android:src="@drawable/ico_left_back"
-            android:padding="8dp"
-            android:onClick="back"/>
+            android:onClick="back"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true" />
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.7"
+            android:layout_centerInParent="true"
             android:gravity="center"
             android:textColor="#fff"
             android:textAlignment="center"
-            android:text="添加对比"
+            android:text="详情"
             android:textSize="16sp" />
 
         <Button
             android:id="@+id/compare_delete"
             android:layout_marginRight="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_gravity="center_vertical"
@@ -42,13 +47,26 @@
         <Button
             android:id="@+id/compare_edit"
             android:layout_marginRight="3dp"
+            android:layout_toLeftOf="@+id/compare_delete"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_gravity="center_vertical"
+            android:layout_centerVertical="true"
             android:background="@drawable/edit_square"
             android:onClick="edit"/>
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/compare_done"
+            android:layout_marginRight="3dp"
+            android:layout_toLeftOf="@+id/compare_delete"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:padding="5dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/done"
+            android:visibility="gone"
+            android:onClick="done" />
+
+    </RelativeLayout>
 
     <LinearLayout android:layout_width="match_parent"
         android:orientation="horizontal"
@@ -66,7 +84,7 @@
             android:textColor="#00D8A0"
             android:gravity="center"
             android:layout_height="match_parent"/>
-        <EditText
+        <TextView
             android:layout_width="0dp"
             android:id="@+id/get_activity_title"
             android:layout_weight="1"
@@ -76,7 +94,6 @@
             android:textAlignment="center"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:hint="填写活动标题(不可重复)"
             android:textSize="17sp"
             android:background="@null"
             android:layout_height="match_parent"/>
@@ -129,20 +146,10 @@
             android:layout_height="wrap_content"
             android:text="添加"
             android:textColor="@color/theme"
-            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
             android:background="@drawable/bg_radius_register_btn"
+            android:visibility="gone"
             android:onClick="add"/>
-
-        <Button
-            android:id="@+id/save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="70dp"
-            android:text="保存"
-            android:textColor="@color/theme"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/bg_radius_register_btn"
-            android:onClick="save"/>
 
     </RelativeLayout>
 

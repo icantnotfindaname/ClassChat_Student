@@ -64,7 +64,7 @@
             android:textAlignment="center"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:hint="填写活动标题(不可重复)"
+            android:hint="填写活动标题(不可重复不可修改)"
             android:textSize="17sp"
             android:background="@null"
             android:layout_height="match_parent"/>
@@ -111,27 +111,29 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/add"
             android:layout_marginLeft="70dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="添加"
+            android:text="继续"
             android:textColor="@color/theme"
-            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
             android:background="@drawable/bg_radius_register_btn"
-            android:onClick="add"/>
+            android:onClick="add"
+            android:visibility="gone"/>
 
         <Button
-            android:id="@+id/save"
+            android:id="@+id/compare_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="70dp"
-            android:text="保存"
+            android:text="扫一扫"
             android:textColor="@color/theme"
-            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
             android:background="@drawable/bg_radius_register_btn"
-            android:onClick="save"/>
+            android:onClick="start"/>
 
     </RelativeLayout>
 

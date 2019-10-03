@@ -325,7 +325,11 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                                 choice[0] = index[0];
                                 switch(choice[0]){
                                     case 1:
-                                        startActivity(new Intent(getContext(), Activity_CompareTable.class));
+                                        Intent intent = new Intent(getActivity(),Activity_CompareTable.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("userId", userId);
+                                        intent.putExtras(bundle);
+                                        getActivity().startActivity(intent);
                                         break;
                                     default:
                                         importTable();

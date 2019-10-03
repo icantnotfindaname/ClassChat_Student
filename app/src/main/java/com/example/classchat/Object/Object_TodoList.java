@@ -110,7 +110,7 @@ public class Object_TodoList {
     @NonNull
     @Override
     public String toString() {
-        return todoTitle + content+isClock+detailTime+dayChosen+weekChosen+timeSlot;
+        return todoTitle + content + isClock + detailTime + dayChosen + weekChosen + timeSlot;
 
     }
 }
