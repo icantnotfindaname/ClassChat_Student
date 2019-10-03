@@ -138,6 +138,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
         android:orientation="horizontal">
         <Button
             android:id="@+id/add"
@@ -152,5 +153,20 @@
             android:onClick="add"/>
 
     </RelativeLayout>
+
+    <ScrollView
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:id="@+id/main_scrollview"
+        android:fillViewport="false">
+
+    <com.example.classchat.Activity.MiniTimetable
+        android:orientation="vertical"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:id="@+id/mini_timetable">
+    </com.example.classchat.Activity.MiniTimetable>
+
+</ScrollView>
 
 </LinearLayout>

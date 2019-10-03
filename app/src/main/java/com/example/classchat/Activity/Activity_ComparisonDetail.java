@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.example.classchat.Object.Object_Comparison;
+import com.example.classchat.Object.Object_MiniTimeTable;
 import com.example.classchat.R;
 import com.example.classchat.Util.Util_NetUtil;
 import com.example.classchat.Util.Util_ToastUtils;
@@ -54,6 +55,8 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
     private Dialog weekPickerDialog;
     private static final int COMPARE_TABLE = 1;
     private List<Object_Comparison> compareActivity = new ArrayList<>();
+    private MiniTimetable mTimaTableView;
+    private static List<Object_MiniTimeTable> mList;
 
     private int index;
     private Object_Comparison activity;
@@ -75,6 +78,7 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
         add = findViewById(R.id.add);
         edit = findViewById(R.id.compare_edit);
         done = findViewById(R.id.compare_done);
+        mTimaTableView = findViewById(R.id.mini_timetable);
 
         Intent intent = getIntent();
         compareActivity = (List<Object_Comparison>)intent.getSerializableExtra("activityList");
@@ -84,6 +88,9 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
         comparisonID = intent.getStringExtra("userId") + title;
         getTitle.setText(title);
         setWeek.setEnabled(false);
+
+        initList();
+        mTimaTableView.setTimeTable(mList);
 
         //沉浸式状态栏
         if (Build.VERSION.SDK_INT >= 21) {
@@ -160,7 +167,35 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
                     importTable();
                     break;
                 case GET_RESULT:
-                    //TODO 渲染课表
+                    String comparisonData =activity.getComparisonData();
+                    mList = new ArrayList<>();
+                    List<Integer> cData = JSON.parseArray(comparisonData,Integer.class);
+                    for(int n = 0; n < cData.size();n+=12) {
+                        for (int i = n; i < n + 12; i++) {
+                            if (cData.get(i) != 0) {
+                                int low = i;
+                                int up = i;
+                                for (int ii = i + 1; ii < n + 12; ii++) {
+                                    if (cData.get(ii) != cData.get(i)) {
+                                        i = ii - 1;
+                                        up = ii - 1;
+                                        break;
+                                    }
+                                    else if (ii == n + 11){
+                                        i = ii;
+                                        up = ii;
+                                    }
+                                }
+                                int week = (i + 1)/12 + 1;
+                                int start = ((low+1) %12 == 0)? 12 :((low+1) %12 );
+                                int end =((up+1) %12 == 0)? 12 :((up+1) %12 );
+                                String name = cData.get(i).toString() + "人";
+                                mList.add(new Object_MiniTimeTable(start, end, week, name));
+                            }
+                        }
+                    }
+                    mTimaTableView.refreshTimeTable(mList);
+
                     compareActivity.remove(index);
                     compareActivity.add(activity);
                     updateCache();
@@ -369,6 +404,36 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
                 handler.sendMessage(message);
             }
         });
+    }
+
+    private void initList(){
+        String comparisonData = activity.getComparisonData();
+        mList = new ArrayList<>();
+        List<Integer> cData = JSON.parseArray(comparisonData,Integer.class);
+        for(int n = 0; n < cData.size();n+=12) {
+            for (int i = n; i < n + 12; i++) {
+                if (cData.get(i) != 0) {
+                    int low = i;
+                    int up = i;
+                    for (int ii = i + 1; ii < n + 12; ii++) {
+                        if (cData.get(ii) != cData.get(i)) {
+                            i = ii - 1;
+                            up = ii - 1;
+                            break;
+                        }
+                        else if (ii == n + 11){
+                            i = ii;
+                            up = ii;
+                        }
+                    }
+                    int week = (i + 1)/12 + 1;
+                    int start = ((low+1) %12 == 0)? 12 :((low+1) %12 );
+                    int end =((up+1) %12 == 0)? 12 :((up+1) %12 );
+                    String name = cData.get(i).toString() + "人";
+                    mList.add(new Object_MiniTimeTable(start, end, week, name));
+                }
+            }
+        }
     }
 }
 

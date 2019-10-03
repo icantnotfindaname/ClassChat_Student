@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.example.classchat.Object.Object_Comparison;
+import com.example.classchat.Object.Object_MiniTimeTable;
 import com.example.classchat.R;
 import com.example.classchat.Util.Util_NetUtil;
 import com.example.classchat.Util.Util_ToastUtils;
@@ -35,7 +36,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -63,9 +63,12 @@ public class Activity_AddNewComparison extends AppCompatActivity {
     private Object_Comparison newComparison;
     private String userID;
     private String comparisonID;
+    private static Boolean REFRESH_CHECK= false ;
     private static final int ADD_COMPARISON = 0;
     private static final int GET_RESULT = 1;
     private static final int WRONG_TYPE = 2;
+    private MiniTimetable mTimeTableView;
+    private static List<Object_MiniTimeTable> mList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +78,7 @@ public class Activity_AddNewComparison extends AppCompatActivity {
         getTitle = findViewById(R.id.get_activity_title);
         add = findViewById(R.id.add);
         start = findViewById(R.id.compare_start);
+        mTimeTableView = findViewById(R.id.mini_timetable);
 
         Intent intent = getIntent();
         userID = intent.getStringExtra("userId");
@@ -121,8 +125,40 @@ public class Activity_AddNewComparison extends AppCompatActivity {
                     updateCache();
                     break;
                 case GET_RESULT:
-                    //TODO 渲染课表
-
+                    String comparisonData =  newComparison.getComparisonData();
+                    mList = new ArrayList<>();
+                    List<Integer> cData = JSON.parseArray(comparisonData,Integer.class);
+                    for(int n = 0; n < cData.size();n+=12) {
+                        for (int i = n; i < n + 12; i++) {
+                            if (cData.get(i) != 0) {
+                                int low = i;
+                                int up = i;
+                                for (int ii = i + 1; ii < n + 12; ii++) {
+                                    if (cData.get(ii) != cData.get(i)) {
+                                        i = ii - 1;
+                                        up = ii - 1;
+                                        break;
+                                    }
+                                    else if (ii == n + 11){
+                                        i = ii;
+                                        up = ii;
+                                    }
+                                }
+                                int week = (i + 1)/12 + 1;
+                                int start = ((low+1) %12 == 0)? 12 :((low+1) %12 );
+                                int end =((up+1) %12 == 0)? 12 :((up+1) %12 );
+                                String name = cData.get(i).toString() + "人";
+                                mList.add(new Object_MiniTimeTable(start, end, week, name));
+                            }
+                        }
+                    }
+                    if(! REFRESH_CHECK){
+                        mTimeTableView.setTimeTable(mList);
+                        REFRESH_CHECK = true;
+                    }
+                    else{
+                        mTimeTableView.refreshTimeTable(mList);
+                    }
                     break;
                 case WRONG_TYPE:
                     Util_ToastUtils.showToast(Activity_AddNewComparison.this, "宁扫的🐎不对哦！");
@@ -219,15 +255,10 @@ public class Activity_AddNewComparison extends AppCompatActivity {
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     // 得到服务器返回的具体内容
                     String responseData = response.body().string();
+                    newComparison = JSON.parseObject(responseData, Object_Comparison.class);
                     Message message = new Message();
-                    if(responseData.equals("ERROR")){
-                        message.what = WRONG_TYPE;
-                        handler.sendMessage(message);
-                    }else {
-                        newComparison = JSON.parseObject(responseData, Object_Comparison.class);
-                        message.what = ADD_COMPARISON;
-                        handler.sendMessage(message);
-                    }
+                    message.what = ADD_COMPARISON;
+                    handler.sendMessage(message);
                 }
             });
         }
