@@ -65,6 +65,7 @@ public class Activity_AddNewComparison extends AppCompatActivity {
     private String comparisonID;
     private static final int ADD_COMPARISON = 0;
     private static final int GET_RESULT = 1;
+    private static final int WRONG_TYPE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +124,8 @@ public class Activity_AddNewComparison extends AppCompatActivity {
                     //TODO 渲染课表
 
                     break;
+                case WRONG_TYPE:
+                    Util_ToastUtils.showToast(Activity_AddNewComparison.this, "宁扫的🐎不对哦！");
                 default:
                     break;
             }
@@ -298,7 +301,7 @@ public class Activity_AddNewComparison extends AppCompatActivity {
                     if (data != null) {
                         String content = data.getStringExtra(Constant.CODED_CONTENT);
 
-                        RequestBody requestBody = new FormBody.Builder()
+                        final RequestBody requestBody = new FormBody.Builder()
                                 .add("comparisonID", comparisonID)
                                 .add("otherUserID", content)
                                 .add("weekChosen", setWeek.getText().toString().substring(1, setWeek.getText().toString().length() - 1))
@@ -311,16 +314,22 @@ public class Activity_AddNewComparison extends AppCompatActivity {
                             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                                 // 得到服务器返回的具体内容
                                 String responseData = response.body().string();
-                                Log.e("updatecomparison", responseData);
-                                compareActivity.remove(newComparison);
-                                newComparison = JSON.parseObject(responseData, Object_Comparison.class);
-                                compareActivity.add(newComparison);
-
-                                updateCache();
-
                                 Message message = new Message();
-                                message.what = GET_RESULT;
-                                handler.sendMessage(message);
+                                Log.e("updatecomparison", responseData);
+
+                                if(responseData.equals("ERROR")){
+                                    message.what = WRONG_TYPE;
+                                    handler.sendMessage(message);
+                                }else {
+                                    compareActivity.remove(newComparison);
+                                    newComparison = JSON.parseObject(responseData, Object_Comparison.class);
+                                    compareActivity.add(newComparison);
+
+                                    updateCache();
+
+                                    message.what = GET_RESULT;
+                                    handler.sendMessage(message);
+                                }
                             }
                         });
                     }

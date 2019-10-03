@@ -63,6 +63,7 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
     private static final int GET_RESULT = 1;
     private static final int DELETE_SUCCESS = 2;
     private static final int DELETE_FAILED = 3;
+    private static final int WRONG_TYPE = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,6 +174,8 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
                 case DELETE_FAILED:
                     Util_ToastUtils.showToast(Activity_ComparisonDetail.this, "删除失败请重试！");
                     break;
+                case WRONG_TYPE:
+                    Util_ToastUtils.showToast(Activity_ComparisonDetail.this, "宁扫的🐎不对哦！");
                 default:
                     break;
             }
@@ -311,10 +314,13 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
                             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                                 // 得到服务器返回的具体内容
                                 String responseData = response.body().string();
+                                Message message = new Message();
                                 activity = JSON.parseObject(responseData, Object_Comparison.class);
                                 Log.e("activityAfterUpdateScan", activity.toString());
-
-                                Message message = new Message();
+                                if(responseData.equals("ERROR")){
+                                    message.what = WRONG_TYPE;
+                                    handler.sendMessage(message);
+                                }
                                 message.what = GET_RESULT;
                                 handler.sendMessage(message);
                             }
