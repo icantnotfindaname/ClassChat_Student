@@ -1647,48 +1647,53 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                     if (data != null) {
                         String content = data.getStringExtra(Constant.CODED_CONTENT);
 
-                        Util_NetUtil.sendOKHTTPRequest(content, new Callback() {
-                            @Override
-                            public void onFailure(@NotNull Call call, @NotNull IOException e) {}
+                        try{
+                            Util_NetUtil.sendOKHTTPRequest(content, new Callback() {
+                                @Override
+                                public void onFailure(@NotNull Call call, @NotNull IOException e) {}
 
-                            @Override
-                            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                                // 得到服务器返回的具体内容
-                                String responseData = response.body().string();
-                                System.out.println(responseData);
-                                mClassBoxData = responseData;
-                                // 转化为具体的对象列表
-                                List<String> jsonlist = JSON.parseArray(responseData, String.class);
-                                mySubjects.clear();
-                                for(String s : jsonlist) {
-                                    MySubject mySubject = JSON.parseObject(s, MySubject.class);
-                                    mySubjects.add(mySubject);
+                                @Override
+                                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                                    // 得到服务器返回的具体内容
+                                    String responseData = response.body().string();
+                                    System.out.println(responseData);
+                                    mClassBoxData = responseData;
+                                    // 转化为具体的对象列表
+                                    List<String> jsonlist = JSON.parseArray(responseData, String.class);
+                                    mySubjects.clear();
+                                    for(String s : jsonlist) {
+                                        MySubject mySubject = JSON.parseObject(s, MySubject.class);
+                                        mySubjects.add(mySubject);
+                                    }
+                                    //获得数据后存入缓存
+                                    Cache.with(myContext.getActivity())
+                                            .path(getCacheDir(myContext.getActivity()))
+                                            .remove("classBox");
+
+                                    Cache.with(myContext.getActivity())
+                                            .path(getCacheDir(myContext.getActivity()))
+                                            .saveCache("classBox", mClassBoxData);
+
+                                    // 获取课程id 和未读消息数的 Key Value 关系
+                                    groupChatManager = getGroupChatManager(mySubjects);
+
+                                    Message message = new Message();
+                                    message.what = INIT_TABLE;
+                                    handler.sendMessage(message);
+
+                                    Message message1 = new Message();
+                                    message1.what = UPDATE_TABLE;
+                                    handler.sendMessage(message1);
+
+                                    // 发送登录聊天的广播
+                                    Intent intent2 = new Intent("com.example.broadcasttest.LOCAL_BROADCAST2");
+                                    localBroadcastManager.sendBroadcast(intent2);
                                 }
-                                //获得数据后存入缓存
-                                Cache.with(myContext.getActivity())
-                                        .path(getCacheDir(myContext.getActivity()))
-                                        .remove("classBox");
-
-                                Cache.with(myContext.getActivity())
-                                        .path(getCacheDir(myContext.getActivity()))
-                                        .saveCache("classBox", mClassBoxData);
-
-                                // 获取课程id 和未读消息数的 Key Value 关系
-                                groupChatManager = getGroupChatManager(mySubjects);
-
-                                Message message = new Message();
-                                message.what = INIT_TABLE;
-                                handler.sendMessage(message);
-
-                                Message message1 = new Message();
-                                message1.what = UPDATE_TABLE;
-                                handler.sendMessage(message1);
-
-                                // 发送登录聊天的广播
-                                Intent intent2 = new Intent("com.example.broadcasttest.LOCAL_BROADCAST2");
-                                localBroadcastManager.sendBroadcast(intent2);
-                            }
-                        });
+                            });
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Util_ToastUtils.showToast(getContext(), "宁扫的这是撒🐎哦？");
+                        }
                     }
                 }
                 break;

@@ -11,6 +11,7 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -67,6 +68,8 @@ public class Activity_AddNewComparison extends AppCompatActivity {
     private static final int ADD_COMPARISON = 0;
     private static final int GET_RESULT = 1;
     private static final int WRONG_TYPE = 2;
+    private static final int DELETE_SUCCESS = 3;
+
     private MiniTimetable mTimeTableView;
     private static List<Object_MiniTimeTable> mList;
 
@@ -122,7 +125,6 @@ public class Activity_AddNewComparison extends AppCompatActivity {
                     add.setVisibility(View.VISIBLE);
                     start.setVisibility(View.GONE);
                     compareActivity.add(newComparison);
-                    updateCache();
                     break;
                 case GET_RESULT:
                     String comparisonData =  newComparison.getComparisonData();
@@ -162,6 +164,8 @@ public class Activity_AddNewComparison extends AppCompatActivity {
                     break;
                 case WRONG_TYPE:
                     Util_ToastUtils.showToast(Activity_AddNewComparison.this, "宁扫的🐎不对哦！");
+                case DELETE_SUCCESS:
+                    finish();
                 default:
                     break;
             }
@@ -169,7 +173,7 @@ public class Activity_AddNewComparison extends AppCompatActivity {
     };
 
     public void back(View view) {
-        finish();
+        deleteWhenNotSave();
     }
 
     public void pickWeek(View view) {
@@ -360,9 +364,6 @@ public class Activity_AddNewComparison extends AppCompatActivity {
                                     compareActivity.remove(newComparison);
                                     newComparison = JSON.parseObject(responseData, Object_Comparison.class);
                                     compareActivity.add(newComparison);
-
-                                    updateCache();
-
                                     message.what = GET_RESULT;
                                     handler.sendMessage(message);
                                 }
@@ -376,5 +377,36 @@ public class Activity_AddNewComparison extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            deleteWhenNotSave();
+        }
+        return true;
+    }
 
+    private void deleteWhenNotSave(){
+        RequestBody requestBody = new FormBody.Builder()
+                .add("comparisonID", comparisonID)
+                .build();
+
+        Log.e("comparisonID",comparisonID);
+        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/deletecomparison", requestBody,new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {}
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                // 得到服务器返回的具体内容
+                Message message = new Message();
+                message.what = DELETE_SUCCESS;
+                handler.sendMessage(message);
+            }
+        });
+    }
+
+    public void save(View view) {
+        updateCache();
+        finish();
+    }
 }

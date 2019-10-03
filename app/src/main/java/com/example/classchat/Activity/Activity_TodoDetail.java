@@ -56,7 +56,6 @@ public class Activity_TodoDetail extends AppCompatActivity {
     private final static int SAVE_FAILED = 1;
     private final static int DELETE_SUCCESS = 2;
     private final static int DELETE_FAILED = 3;
-    //TODO 时间选择 、setTimeSlot(待办的位置，如 早课前、第1~2节)在编辑时的显示
     private Dialog timepicker_dialog;
     private Dialog slotpicker_dialog;
     private TimePicker timePicker;

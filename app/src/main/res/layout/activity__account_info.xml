@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -51,7 +50,7 @@
         <RelativeLayout
             android:id="@+id/rl_personalinfo_headimage"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="55dp"
             android:background="#FFFFFF">
 
             <TextView
@@ -61,7 +60,7 @@
                 android:layout_alignParentLeft="true"
                 android:textColor="#000000"
                 android:text="头像"
-                android:textSize="13sp"
+                android:textSize="15sp"
                 android:paddingLeft="8dp"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -70,13 +69,15 @@
                 android:paddingBottom="5dp"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/iv_headimage_arrow"
                 android:layout_marginRight="2dp" />
 
             <ImageView
                 android:layout_centerVertical="true"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginRight="5dp"
                 android:id="@+id/iv_headimage_arrow"
                 android:src="@drawable/ic_rightarrow"
                 android:layout_alignParentRight="true"
@@ -84,12 +85,22 @@
 
         </RelativeLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#fff">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#EDEDED"
+                android:layout_marginLeft="10dp"/>
+        </LinearLayout>
+
         <RelativeLayout
             android:id="@+id/rl_personalinfo_name"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="#FFFFFF"
-            android:layout_marginTop="2dp">
+            android:layout_height="55dp"
+            android:background="#FFFFFF">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -98,13 +109,14 @@
                 android:layout_alignParentLeft="true"
                 android:textColor="#000000"
                 android:text="昵称"
-                android:textSize="13sp"
+                android:textSize="15sp"
                 android:paddingLeft="8dp"/>
 
             <ImageView
                 android:layout_centerVertical="true"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginRight="5dp"
                 android:id="@+id/iv_name_arrow"
                 android:src="@drawable/ic_rightarrow"
                 android:layout_alignParentRight="true"
@@ -116,16 +128,25 @@
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="测试昵称"
                 android:layout_toLeftOf="@+id/iv_name_arrow"
                 android:layout_marginRight="2dp" />
         </RelativeLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#fff">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#EDEDED"
+                android:layout_marginLeft="10dp"/>
+        </LinearLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="#FFFFFF"
-            android:layout_marginTop="2dp">
+            android:layout_height="55dp"
+            android:background="#FFFFFF">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -134,13 +155,14 @@
                 android:layout_alignParentLeft="true"
                 android:textColor="#000000"
                 android:text="唠课号"
-                android:textSize="13sp"
+                android:textSize="15sp"
                 android:paddingLeft="8dp"/>
 
             <ImageView
                 android:layout_centerVertical="true"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginRight="5dp"
                 android:id="@+id/iv_id_arrow"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" />
@@ -151,7 +173,6 @@
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="测试账号"
                 android:layout_toLeftOf="@+id/iv_id_arrow"
                 android:layout_marginRight="2dp" />
         </RelativeLayout>
@@ -159,7 +180,7 @@
         <RelativeLayout
             android:id="@+id/rl_personalinfo_password"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="55dp"
             android:background="#FFFFFF"
             android:layout_marginTop="20dp">
 
@@ -170,13 +191,14 @@
                 android:layout_alignParentLeft="true"
                 android:textColor="#000000"
                 android:text="修改密码"
-                android:textSize="13sp"
+                android:textSize="15sp"
                 android:paddingLeft="8dp"/>
 
             <ImageView
                 android:layout_centerVertical="true"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginRight="5dp"
                 android:id="@+id/iv_password_arrow"
                 android:src="@drawable/ic_rightarrow"
                 android:layout_alignParentRight="true"

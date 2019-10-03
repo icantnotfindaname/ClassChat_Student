@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/memo_item_no"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
         android:scaleType="centerCrop"
         android:background="@drawable/memo_todo_prefix"
         android:layout_gravity="center_vertical"

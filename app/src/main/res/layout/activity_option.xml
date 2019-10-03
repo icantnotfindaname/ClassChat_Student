@@ -39,7 +39,7 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <TextView
+        <TextView
         android:layout_width="match_parent"
         android:clickable="true"
         android:id="@+id/sign_out"
@@ -47,8 +47,8 @@
         android:background="#fff"
         android:gravity="center"
         android:text="退出登录"
-        android:textSize="14sp"
-        android:padding="8dp"
+        android:textSize="15sp"
+        android:padding="10dp"
         android:layout_height="wrap_content" />
 
 </LinearLayout>

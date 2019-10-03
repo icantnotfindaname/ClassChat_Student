@@ -31,11 +31,13 @@
             android:textSize="16sp" />
 
         <ImageView
+            android:id="@+id/add_comparison_done"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.15"
-            android:src="@null"
-            android:padding="8dp" />
+            android:src="@drawable/done"
+            android:padding="12dp"
+            android:onClick="save"/>
     </LinearLayout>
 
     <LinearLayout android:layout_width="match_parent"

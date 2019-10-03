@@ -19,6 +19,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.NumberPicker;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -47,7 +48,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class Activity_ComparisonDetail extends AppCompatActivity {
-    private Button picker_back, picker_save, delete, edit, done, add;
+    private Button picker_back, picker_save, delete;
     private TextView setWeek, getTitle;
     private NumberPicker weekPicker;
     private String[] week = new String[25];
@@ -75,9 +76,6 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
         setWeek = findViewById(R.id.get_compare_week);
         getTitle = findViewById(R.id.get_activity_title);
         delete = findViewById(R.id.compare_delete);
-        add = findViewById(R.id.add);
-        edit = findViewById(R.id.compare_edit);
-        done = findViewById(R.id.compare_done);
         mTimaTableView = findViewById(R.id.mini_timetable);
 
         Intent intent = getIntent();
@@ -87,7 +85,6 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
         title = activity.getComparisonTitle();
         comparisonID = intent.getStringExtra("userId") + title;
         getTitle.setText(title);
-        setWeek.setEnabled(false);
 
         initList();
         mTimaTableView.setTimeTable(mList);
@@ -257,6 +254,28 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
             public void onClick(View v) {
                 setWeek.setText(week[weekTemp]);
                 weekPickerDialog.dismiss();
+                //TODO 仅修改周数
+                RequestBody requestBody = new FormBody.Builder()
+                        .add("comparisonID", comparisonID)
+                        .add("comparisonWeekChosen", setWeek.getText().toString().substring(1, setWeek.getText().toString().length() - 1))
+                        .build();
+
+                Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/updateweekchosen", requestBody,new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {}
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        // 得到服务器返回的具体内容
+                        String responseData = response.body().string();
+                        activity = JSON.parseObject(responseData, Object_Comparison.class);
+                        Log.e("activityAfterUpdateWeek", activity.toString());
+
+                        Message message = new Message();
+                        message.what = GET_RESULT;
+                        handler.sendMessage(message);
+                    }
+                });
             }
         });
     }
@@ -366,44 +385,6 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
             default:
                 break;
         }
-    }
-
-
-    public void edit(View view) {
-        setWeek.setEnabled(true);
-        add.setVisibility(View.VISIBLE);
-        done.setVisibility(View.VISIBLE);
-        edit.setVisibility(View.GONE);
-    }
-
-    public void done(View view) {
-        edit.setVisibility(View.VISIBLE);
-        add.setVisibility(View.GONE);
-        done.setVisibility(View.GONE);
-        setWeek.setEnabled(false);
-
-        //TODO 仅修改周数
-        RequestBody requestBody = new FormBody.Builder()
-                .add("comparisonID", comparisonID)
-                .add("comparisonWeekChosen", setWeek.getText().toString().substring(1, setWeek.getText().toString().length() - 1))
-                .build();
-
-        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/updateweekchosen", requestBody,new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {}
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                // 得到服务器返回的具体内容
-                String responseData = response.body().string();
-                activity = JSON.parseObject(responseData, Object_Comparison.class);
-                Log.e("activityAfterUpdateWeek", activity.toString());
-
-                Message message = new Message();
-                message.what = GET_RESULT;
-                handler.sendMessage(message);
-            }
-        });
     }
 
     private void initList(){
