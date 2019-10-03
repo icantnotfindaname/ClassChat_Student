@@ -31,13 +31,10 @@
             android:textSize="16sp" />
 
         <ImageView
-            android:id="@+id/add_comparison_done"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.15"
-            android:src="@drawable/done"
-            android:padding="12dp"
-            android:onClick="save"/>
+            android:padding="8dp" />
     </LinearLayout>
 
     <LinearLayout android:layout_width="match_parent"
@@ -122,7 +119,8 @@
             android:layout_height="wrap_content"
             android:text="继续"
             android:textColor="@color/theme"
-            android:layout_centerInParent="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginStart="70dp"
             android:background="@drawable/bg_radius_register_btn"
             android:onClick="add"
             android:visibility="gone"/>
@@ -131,12 +129,23 @@
             android:id="@+id/compare_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="70dp"
             android:text="扫一扫"
             android:textColor="@color/theme"
             android:layout_centerInParent="true"
             android:background="@drawable/bg_radius_register_btn"
             android:onClick="start"/>
+
+        <Button
+            android:id="@+id/add_comparison_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="保存"
+            android:textColor="@color/theme"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="70dp"
+            android:background="@drawable/bg_radius_register_btn"
+            android:onClick="save"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

@@ -50,7 +50,7 @@ import okhttp3.Response;
 
 public class Activity_AddNewComparison extends AppCompatActivity {
 
-    private Button picker_back, picker_save, add, start;
+    private Button picker_back, picker_save, add, start, save;
     private EditText getTitle;
     private TextView setWeek;
     private NumberPicker weekPicker;
@@ -81,6 +81,8 @@ public class Activity_AddNewComparison extends AppCompatActivity {
         getTitle = findViewById(R.id.get_activity_title);
         add = findViewById(R.id.add);
         start = findViewById(R.id.compare_start);
+        save = findViewById(R.id.add_comparison_done);
+
         mTimeTableView = findViewById(R.id.mini_timetable);
 
         Intent intent = getIntent();
@@ -124,6 +126,7 @@ public class Activity_AddNewComparison extends AppCompatActivity {
                     importTable();
                     add.setVisibility(View.VISIBLE);
                     start.setVisibility(View.GONE);
+                    save.setVisibility(View.VISIBLE);
                     compareActivity.add(newComparison);
                     break;
                 case GET_RESULT:
