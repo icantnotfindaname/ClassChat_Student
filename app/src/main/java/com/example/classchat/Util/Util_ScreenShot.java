@@ -1,8 +1,10 @@
 package com.example.classchat.Util;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 
@@ -45,17 +47,22 @@ public class Util_ScreenShot {
                 b.compress(Bitmap.CompressFormat.PNG, 90, fos);
                 fos.flush();
                 fos.close();
+//                Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//                Uri uri = Uri.fromFile(file);
+//                intent.setData(uri);
+//                context.sendBroadcast(intent);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     // 程序入口
     public static String shoot(Activity activity) {
-        String strFileName = "sdcard/" + System.currentTimeMillis() + ".png";
+        String strFileName = "sdcard/" + System.currentTimeMillis() + ".jpg";
         Util_ScreenShot.savePic(Util_ScreenShot.takeScreenShot(activity), strFileName);
         return strFileName;
     }

@@ -16,7 +16,7 @@
         <activity android:name=".Activity.Activity_AddNewComparison" />
         <activity android:name=".Activity.Activity_CompareTable" />
         <activity android:name=".Activity.Activity_AllTodo" />
-        <activity android:name=".Activity.test" />
+        <activity android:name=".Activity.NotificatoinJumpBack" />
         <activity android:name=".Activity.Activity_TodoDetail" />
         <activity android:name=".Activity.Activity_AddTodo" />
         <activity android:name=".Activity.Activity_FindPassword" />
