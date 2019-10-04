@@ -237,10 +237,17 @@ public class Fragment_Memo extends Fragment {
                     .listener(new OnBMClickListener() {
                         @Override
                         public void onBoomButtonClick(int index) {
+                            //获取本周周次week
+                            mBeginClassTime = Cache.with(getActivity())
+                                    .path(getCacheDir(getActivity()))
+                                    .getCache("BeginClassTime",String.class);
+
                             Intent intent = new Intent(getActivity(),Activity_AddTodo.class);
                             Bundle bundle = new Bundle();
                             bundle.putString("timeslot", index+"");
                             bundle.putString("userId", userId);
+                            bundle.putString("begin_time", mBeginClassTime);
+
                             intent.putExtras(bundle);
                             getActivity().startActivity(intent);
                         }

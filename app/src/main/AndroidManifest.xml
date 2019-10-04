@@ -16,7 +16,7 @@
         <activity android:name=".Activity.Activity_AddNewComparison" />
         <activity android:name=".Activity.Activity_CompareTable" />
         <activity android:name=".Activity.Activity_AllTodo" />
-        <activity android:name=".Activity.TestAlarm" />
+        <activity android:name=".Activity.test" />
         <activity android:name=".Activity.Activity_TodoDetail" />
         <activity android:name=".Activity.Activity_AddTodo" />
         <activity android:name=".Activity.Activity_FindPassword" />
@@ -93,6 +93,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/rc_file_path" />
         </provider>
+        <receiver android:name=".Util.AlarmReceiver">
+        <intent-filter>
+            <action android:name="TIMER_ACTION" />
+        </intent-filter>
+        </receiver>
     </application> <!-- 这个权限用于访问GPS定位 -->
     <uses-feature android:name="android.hardware.camera" /> <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
     <uses-feature android:name="android.hardware.camera.autofocus" /> <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->

@@ -49,7 +49,10 @@ import com.example.classchat.Activity.Activity_IdAuthentation;
 import com.example.classchat.Activity.Activity_MyCourse;
 import com.example.classchat.Activity.Activity_Option;
 import com.example.classchat.Activity.MainActivity;
+import com.example.classchat.Object.Object_TodoList;
+import com.example.classchat.Object.Object_Todo_Broadcast_container;
 import com.example.classchat.R;
+import com.example.classchat.Util.AlarmTimer;
 import com.example.classchat.Util.Util_NetUtil;
 import com.example.classchat.Util.Util_ToastUtils;
 import com.maning.updatelibrary.InstallUtils;
@@ -59,6 +62,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -537,8 +542,6 @@ public class Fragment_SelfInformationCenter extends Fragment {
      * download函数
      */
     private void download() {
-
-
         InstallUtils.with(getContext())
                 //必须-下载地址
                 .setApkUrl(downloadUrl)
@@ -551,8 +554,21 @@ public class Fragment_SelfInformationCenter extends Fragment {
 
     }
 
+    /**
+     *  退出登陆的时候删除所有的闹钟
+     */
+    private void deteleAllAlarm(){
 
-
+        // 闹钟缓存的数组
+        List<String> alarm = new ArrayList<>();
+        Log.e("deleteAlarm", "start");
+        for(int i = 0; i < alarm.size() ; i++){
+            Object_Todo_Broadcast_container obj = JSON.parseObject(alarm.get(i), Object_Todo_Broadcast_container.class);
+            AlarmTimer alarmTimer = new AlarmTimer(obj);
+            alarmTimer.cancelAlarmTimer(getContext());
+            Log.e("delete_id", obj.getId() + "");
+        }
+    }
 }
 
 

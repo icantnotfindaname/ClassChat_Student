@@ -3,10 +3,12 @@ package com.example.classchat.Activity;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -29,13 +31,20 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.example.classchat.Object.Object_TodoList;
+import com.example.classchat.Object.Object_Todo_Broadcast_container;
 import com.example.classchat.R;
+import com.example.classchat.Util.AlarmTimer;
 import com.example.classchat.Util.Util_NetUtil;
 import com.example.classchat.Util.Util_ToastUtils;
+import com.example.library_activity_timetable.model.ScheduleSupport;
+import com.example.library_cache.Cache;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.Call;
@@ -84,6 +93,16 @@ public class Activity_TodoDetail extends AppCompatActivity {
     private AlertDialog builder = null;
     private boolean isSeeAll = false;
 
+    // 获取今天是第几周
+    private int week = 0;
+    private String mBeginClassTime = "";
+
+    // 闹钟缓存的数组
+    private List<String> alarm = new ArrayList<>();
+
+    // 闹钟的id
+    private int alarm_id = 0 ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,13 +117,42 @@ public class Activity_TodoDetail extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.theme));
         }
+
+        /**
+         * 获取当前周
+         */
         Intent intent = getIntent();
+        mBeginClassTime = Cache.with(this)
+                .path(getCacheDir(this))
+                .getCache("BeginClassTime",String.class);
+
+        Log.e("TAG", mBeginClassTime);
+        if(mBeginClassTime == null || mBeginClassTime.length() <= 0){
+            mBeginClassTime = getDate(0) + " 00:00:00";
+        }
+        week = ScheduleSupport.timeTransfrom(mBeginClassTime);
+
         memo = JSON.parseObject(intent.getStringExtra("memo"), Object_TodoList.class);
         isSeeAll = Boolean.parseBoolean(intent.getStringExtra("isSeeAll"));
         userID = memo.getUserID();
         todoID = (memo.getWeekChosen().get(0) < 10)? userID + "0" + memo.getWeekChosen().get(0) + memo.getDayChosen(): userID + memo.getWeekChosen().get(0) + memo.getDayChosen();
 
         bisClock = memo.isClock();
+
+
+        /**
+         *  获取闹钟的缓存
+         */
+        alarm = Cache.with(this).path(getCacheDir(this)).getCache("alarm", List.class);
+
+        /**
+         *  获取id的缓存
+         */
+        try {
+            alarm_id = Cache.with(this).path(getCacheDir(this)).getCache("alarm_id", Integer.class);
+        }catch (Exception e){
+            Log.e("试图获取缓存", "暂时还没有得到缓存");
+        }
 
         //初始化已选周数列表
         for(int i = 0; i < 25; ++ i){
@@ -190,9 +238,11 @@ public class Activity_TodoDetail extends AppCompatActivity {
                                                                 case 1:
                                                                     //todo
                                                                     address = "http://106.12.105.160:8081/deletesametodoitem";
+                                                                    deleteAlarm(memo);
                                                                     break;
                                                                 default:
                                                                     address = "http://106.12.105.160:8081/deletetodoitem";
+                                                                    deleteAlarm_one(week, memo);
                                                                     break;
                                                             }
 
@@ -205,6 +255,7 @@ public class Activity_TodoDetail extends AppCompatActivity {
                                                                     if (responseData) {
                                                                         message.what = DELETE_SUCCESS;
                                                                         handler.sendMessage(message);
+                                                                        deleteAlarm(memo);
                                                                     } else {
                                                                         message.what = DELETE_FAILED;
                                                                         handler.sendMessage(message);
@@ -576,6 +627,11 @@ public class Activity_TodoDetail extends AppCompatActivity {
             switch (msg.what) {
                 case SAVE_SUCCESS:
                     Util_ToastUtils.showToast(Activity_TodoDetail.this, "修改成功！");
+                    deleteAlarm(memo);
+                    if ( bisClock == true ){
+                        Log.e("setAlarm", "start");
+                        setAlarm();
+                    }
                     finish();
                     break;
                 case SAVE_FAILED:
@@ -592,6 +648,179 @@ public class Activity_TodoDetail extends AppCompatActivity {
         }
     };
 
+    /**
+     * 设置闹钟
+     */
+    private void setAlarm(){
+        // 获取选择的星期几
+        int []week_day_list = { 0, 1, 2, 3, 4, 5, 6, 7 };
+        int weekday_choose = week_day_list[dayOfweek];
 
+        // 获取选择的时间 xx时xx分 已经是24小时表示的了
+        // hour, minute_
+
+        // 获取current日期 年/月/日 /星期
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        int index = calendar.get(Calendar.DAY_OF_WEEK);  // 从星期日开始算
+        Log.e("星期几", index + "");
+        int []week_day_list1 = { 0, 7, 1, 2, 3, 4, 5, 6, 7 };
+        int weekday = week_day_list1[index] ;
+
+        // 获取起始周
+        int first_week = weeksnum.get(0);
+
+        // 获取选择的周列表
+        int[] list = new int[weeksnum.size()];
+        for( int i = 0 ; i < weeksnum.size() ; i++ ){
+            list[i] = weeksnum.get(i);
+        }
+
+        // 获取通知显示的标题
+        String title1 = title.getText().toString();
+
+        // 获取通知显示的具体内容（可能为空）
+        String detail = content.getText().toString();
+        Log.e("detail", detail);
+
+        /**
+         * 设置多个闹钟
+         */
+        for (int i = 0; i < list.length; i++){
+            int week_ = list[i];
+            if(week_ < week || (week_ == week && weekday_choose < weekday) || (week_ == week && weekday_choose == weekday && hour < calendar.get(Calendar.HOUR_OF_DAY)) ||
+                    (week_ == week && weekday_choose == weekday && hour == calendar.get(Calendar.HOUR_OF_DAY) && minute_ < calendar.get(Calendar.MINUTE))){
+
+            }else{
+                /**
+                 * 计算闹钟的日期
+                 */
+                long l = calculateDate(year, month, day, weekday, hour, minute_, weekday_choose, week_, week);
+
+                /**
+                 * 设置闹钟
+                 */
+                Object_Todo_Broadcast_container object_todo_broadcast_container = new Object_Todo_Broadcast_container(title1, l, week, hour, minute_, detail, alarm_id);
+                Log.e("TAG", object_todo_broadcast_container.getTitle());
+                AlarmTimer alarmTimer = new AlarmTimer(object_todo_broadcast_container);
+                alarmTimer.setAlarm(this);
+
+                alarm_id += 1;
+
+                /**
+                 *  Cache 里面保存的是一个数组，每一个位置是一串json的字符串
+                 */
+                String json_string = JSON.toJSONString(object_todo_broadcast_container);
+                alarm.add(json_string);
+                Cache.with(this).path(getCacheDir(this)).saveCache("alarm", alarm);
+
+                /**
+                 *  存id
+                 */
+                Cache.with(this).path(getCacheDir(this)).saveCache("alarm_id", alarm_id);
+
+                Log.e("alarm_cache", alarm.size() + "");
+            }
+        }
+
+    }
+
+    private long calculateDate(int year, int month, int day, int weekday, int hour, int minute, int weekday_choose, int first_week, int week) {
+        int distance_week = first_week - week ;  // 相隔的周数
+        int distance_weekday = weekday_choose - weekday ;  // 相隔的天数
+
+        int distance_day = distance_week * 7 + distance_weekday;
+        long distance_mills = day_to_mills(distance_day, hour, minute);
+
+        Log.e("distance_mills", distance_mills + "");
+        Log.e("first_week", first_week + "");
+        Log.e("week", week + "");
+        Log.e("year", year + "");
+        Log.e("month", month + "");
+        Log.e("day", day + "");
+        Log.e("weekday", weekday + "");
+        Log.e("weekday_choose", weekday_choose + "");
+        Log.e("hour", hour + "");
+        Log.e("minute", minute + "");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day, 0, 0, 0);
+        long begin_mills = calendar.getTimeInMillis();
+
+        Log.e("begin_mills", begin_mills + "");
+        long result_mills = begin_mills + distance_mills;
+        return result_mills;
+    }
+
+    private long day_to_mills(int day, int hour, int minute){
+        long mills = day * 24 * 60 * 60 * 1000 + hour * 60 * 60 * 1000 + minute * 60 * 1000 ;
+        return mills;
+    }
+
+    public static String getDate(int distanceDay) {
+        SimpleDateFormat dft = new SimpleDateFormat("MM-dd");
+        Date beginDate = new Date();
+        Calendar date = Calendar.getInstance();
+        date.setTime(beginDate);
+        date.set(Calendar.DATE, date.get(Calendar.DATE) + distanceDay);
+        Date endDate = null;
+        try {
+            endDate = dft.parse(dft.format(date.getTime()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return dft.format(endDate);
+    }
+
+    /*
+     * 获得缓存地址
+     * */
+    public String getCacheDir(Context context) {
+        String cachePath;
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+                || !Environment.isExternalStorageRemovable()) {
+            cachePath = context.getExternalCacheDir().getPath();
+        } else {
+            cachePath = context.getCacheDir().getPath();
+        }
+        return cachePath;
+    }
+
+    /**
+     *  删除单个闹钟
+     */
+    private void deleteAlarm_one(int week, Object_TodoList memo){
+        Log.e("deleteAlarm_one", "start");
+        for(int i = 0; i < alarm.size() ; i++){
+            Object_Todo_Broadcast_container obj = JSON.parseObject(alarm.get(i), Object_Todo_Broadcast_container.class);
+            String detail_time = obj.getHour() + " " + obj.getMinute() ;
+            Log.e("detail_time", detail_time);
+            if (obj.getTitle().equals(memo.getTodoTitle()) && obj.getDetail().equals(memo.getContent()) && detail_time.equals(memo.getDetailTime()) && week == obj.getWeek()){
+                AlarmTimer alarmTimer = new AlarmTimer(obj);
+                alarmTimer.cancelAlarmTimer(this);
+                Log.e("delete_id", obj.getId() + "");
+            }
+        }
+    }
+
+    /**
+     * 删除多个闹钟
+     */
+    private void deleteAlarm(Object_TodoList memo){
+        Log.e("deleteAlarm", "start");
+        for(int i = 0; i < alarm.size() ; i++){
+            Object_Todo_Broadcast_container obj = JSON.parseObject(alarm.get(i), Object_Todo_Broadcast_container.class);
+            String detail_time = obj.getHour() + " " + obj.getMinute() ;
+            Log.e("detail_time", detail_time);
+            if (obj.getTitle().equals(memo.getTodoTitle()) && obj.getDetail().equals(memo.getContent()) && detail_time.equals(memo.getDetailTime())){
+                AlarmTimer alarmTimer = new AlarmTimer(obj);
+                alarmTimer.cancelAlarmTimer(this);
+                Log.e("delete_id", obj.getId() + "");
+            }
+        }
+    }
 
 }
