@@ -347,7 +347,6 @@ public class Activity_AddNewComparison extends AppCompatActivity {
                         final RequestBody requestBody = new FormBody.Builder()
                                 .add("comparisonID", comparisonID)
                                 .add("otherUserID", content)
-                                .add("weekChosen", setWeek.getText().toString().substring(1, setWeek.getText().toString().length() - 1))
                                 .build();
                         Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/updatecomparison", requestBody,new Callback() {
                             @Override

@@ -40,7 +40,6 @@
     <LinearLayout android:layout_width="match_parent"
         android:orientation="horizontal"
         android:background="#FFFFFF"
-        android:layout_marginTop="17dp"
         android:layout_height="50dp"
         android:focusable="true"
         android:focusableInTouchMode="true">
@@ -63,30 +62,33 @@
             android:textAlignment="center"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:hint="填写活动标题(不可重复不可修改)"
-            android:textSize="17sp"
+            android:hint="标题(不可修改)"
+            android:textSize="15sp"
             android:background="@null"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:layout_width="60dp"
+            android:height="60dp"
+            android:textSize="15sp"
+            android:textColor="#00D8A0"
+            android:gravity="center"
             android:layout_height="match_parent"/>
 
     </LinearLayout>
 
     <LinearLayout android:layout_width="match_parent"
-        android:layout_marginTop="8dp"
         android:orientation="horizontal"
-        android:layout_height="50dp">
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="10dp"
-            android:background="@drawable/rili"/>
+        android:background="#FFFFFF"
+        android:layout_height="50dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
         <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:textSize="17sp"
-            android:gravity="center"
-            android:textColor="#000000"
+            android:layout_width="60dp"
+            android:height="60dp"
             android:text="周数"
+            android:textSize="15sp"
+            android:textColor="#00D8A0"
+            android:gravity="center"
             android:layout_height="match_parent"/>
         <TextView
             android:id="@+id/get_compare_week"
@@ -94,8 +96,7 @@
             android:layout_weight="4"
             android:layout_height="match_parent"
             android:textColor="#000000"
-            android:textSize="17sp"
-            android:layout_marginLeft="3dp"
+            android:textSize="15sp"
             android:textAlignment="center"
             android:hint="  请选择周数"
             android:clickable="true"
@@ -103,13 +104,21 @@
             android:onClick="pickWeek"
             />
 
+        <TextView
+            android:layout_width="60dp"
+            android:height="60dp"
+            android:textSize="15sp"
+            android:textColor="#00D8A0"
+            android:gravity="center"
+            android:layout_height="match_parent"/>
+
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal">
 
         <Button
@@ -150,16 +159,20 @@
     </RelativeLayout>
 
     <ScrollView
+        android:layout_marginLeft="1dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="1dp"
+        android:background="@drawable/bg_radius_mini_tb"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
         android:id="@+id/main_scrollview"
         android:fillViewport="false">
 
     <com.example.classchat.Activity.MiniTimetable
+        android:id="@+id/mini_timetable"
         android:orientation="vertical"
         android:layout_height="fill_parent"
-        android:layout_width="fill_parent"
-        android:id="@+id/mini_timetable">
+        android:layout_width="fill_parent">
     </com.example.classchat.Activity.MiniTimetable>
     </ScrollView>
 

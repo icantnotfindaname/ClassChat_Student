@@ -49,7 +49,6 @@
     <LinearLayout android:layout_width="match_parent"
         android:orientation="horizontal"
         android:background="#FFFFFF"
-        android:layout_marginTop="17dp"
         android:layout_height="50dp"
         android:focusable="true"
         android:focusableInTouchMode="true">
@@ -75,12 +74,20 @@
             android:textSize="17sp"
             android:background="@null"
             android:layout_height="match_parent"/>
+
+        <TextView
+            android:layout_width="60dp"
+            android:height="60dp"
+            android:textSize="15sp"
+            android:textColor="#00D8A0"
+            android:gravity="center"
+            android:layout_height="match_parent"/>
+
     </LinearLayout>
 
     <LinearLayout android:layout_width="match_parent"
         android:orientation="horizontal"
         android:background="#FFFFFF"
-        android:layout_marginTop="17dp"
         android:layout_height="50dp"
         android:focusable="true"
         android:focusableInTouchMode="true">
@@ -100,26 +107,33 @@
             android:layout_height="match_parent"
             android:textColor="#000000"
             android:textSize="17sp"
-            android:layout_marginLeft="3dp"
             android:textAlignment="center"
             android:clickable="true"
             android:gravity="center_vertical"
-            android:onClick="pickWeek"
-            />
+            android:onClick="pickWeek"/>
+
+        <TextView
+            android:layout_width="60dp"
+            android:height="60dp"
+            android:textSize="15sp"
+            android:textColor="#00D8A0"
+            android:gravity="center"
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal">
         <Button
             android:id="@+id/add"
             android:layout_marginLeft="70dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="添加"
+            android:text="添加成员"
             android:textColor="@color/theme"
             android:layout_centerInParent="true"
             android:background="@drawable/bg_radius_register_btn"
@@ -128,19 +142,21 @@
     </RelativeLayout>
 
     <ScrollView
+        android:layout_marginLeft="1dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="1dp"
+        android:background="@drawable/bg_radius_mini_tb"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
         android:id="@+id/main_scrollview"
-        android:fillViewport="false"
-        android:layout_marginTop="15dp">
+        android:fillViewport="false">
 
-    <com.example.classchat.Activity.MiniTimetable
-        android:orientation="vertical"
-        android:layout_height="fill_parent"
-        android:layout_width="fill_parent"
-        android:id="@+id/mini_timetable">
-    </com.example.classchat.Activity.MiniTimetable>
-
-</ScrollView>
+        <com.example.classchat.Activity.MiniTimetable
+            android:id="@+id/mini_timetable"
+            android:orientation="vertical"
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent">
+        </com.example.classchat.Activity.MiniTimetable>
+    </ScrollView>
 
 </LinearLayout>

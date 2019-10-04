@@ -356,9 +356,10 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
                         RequestBody requestBody = new FormBody.Builder()
                                 .add("comparisonID", comparisonID)
                                 .add("otherUserID", content)
-                                .add("weekChosen", setWeek.getText().toString().substring(1, setWeek.getText().toString().length() - 1))
                                 .build();
 
+                        Log.e("other",content);
+                        Log.e("weekChosen", setWeek.getText().toString().substring(1, setWeek.getText().toString().length() - 1));
                         Log.e("comparisonID",comparisonID);
                         Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/updatecomparison", requestBody,new Callback() {
                             @Override
@@ -369,6 +370,7 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
                                 // 得到服务器返回的具体内容
                                 String responseData = response.body().string();
                                 Message message = new Message();
+                                Log.e("responseData372", responseData);
                                 activity = JSON.parseObject(responseData, Object_Comparison.class);
                                 Log.e("activityAfterUpdateScan", activity.toString());
                                 if(responseData.equals("ERROR")){
