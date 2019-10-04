@@ -1005,7 +1005,6 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
     /**
      * 显示便签对话框
      */
-    private ScrollView detail_container;
     private EditText reminder_title;
     private EditText reminder_details;
     private Button reminder_back;
@@ -1030,7 +1029,6 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
         reminder_details.setFocusable(false);
         reminder_details.setFocusableInTouchMode(false);
 
-        detail_container = myview.findViewById(R.id.detail_container);
         reminder_back = myview.findViewById(R.id.back_from_reminder);
         reminder_modify = myview.findViewById(R.id.reminder_modify);
         reminder_delete = myview.findViewById(R.id.reminder_delete);

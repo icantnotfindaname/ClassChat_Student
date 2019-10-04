@@ -75,28 +75,19 @@
 
             </LinearLayout>
 
-            <ScrollView
-                android:layout_height="150dp"
+            <EditText
+                android:id="@+id/reminder_detail"
                 android:layout_width="match_parent"
-                android:clickable="true"
-                android:fillViewport="true"
-                android:id="@+id/detail_container"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
-
-                <EditText
-                    android:id="@+id/reminder_detail"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_gravity="top"
-                    android:gravity="top"
-                    android:background="#fff"
-                    android:textColor="#000"
-                    android:textSize="15sp"
-                    android:scrollbars="vertical"/>
-            </ScrollView>
+                android:layout_height="wrap_content"
+                android:minHeight="200dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="top"
+                android:gravity="top"
+                android:background="#fff"
+                android:textColor="#000"
+                android:textSize="15sp"
+                android:scrollbars="vertical"/>
 
             <LinearLayout
                 android:layout_marginTop="10dp"
