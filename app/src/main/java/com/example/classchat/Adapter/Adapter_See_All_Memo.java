@@ -45,7 +45,7 @@ public class Adapter_See_All_Memo extends RecyclerView.Adapter<Adapter_See_All_M
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.memo_item, viewGroup, false);
+                .inflate(R.layout.memo_see_all_item, viewGroup, false);
         DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
         int heightPixels = metrics.heightPixels;
         int widthPixels = metrics.widthPixels;
