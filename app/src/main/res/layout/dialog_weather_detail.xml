@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@color/theme"
-        android:padding="5dp">
+        android:padding="12dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_gravity="center_vertical"
@@ -50,7 +50,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="10dp">
         <ImageView
             android:layout_marginTop="10dp"
             android:layout_width="40dp"
@@ -95,7 +96,7 @@
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
-        android:layout_height="38dp">
+        android:layout_height="42dp">
         <TextView
             android:layout_width="wrap_content"
             android:gravity="center"
@@ -122,6 +123,7 @@
             android:layout_height="match_parent"
             android:id="@+id/wea_disc2"
             android:layout_marginLeft="5dp"
+            android:textStyle="bold"
             android:text="晴"
             android:textSize="10sp"
             android:gravity="center" />
@@ -145,7 +147,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:layout_height="38dp">
+        android:layout_height="42dp">
         <TextView
             android:layout_width="wrap_content"
             android:gravity="center"
@@ -172,6 +174,7 @@
             android:layout_height="match_parent"
             android:text="晴"
             android:layout_marginLeft="5dp"
+            android:textStyle="bold"
             android:id="@+id/wea_disc3"
             android:textSize="10sp"
             android:gravity="center" />
@@ -194,7 +197,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:layout_height="38dp">
+        android:layout_height="42dp">
         <TextView
             android:layout_width="wrap_content"
             android:gravity="center"
@@ -221,6 +224,7 @@
             android:layout_height="match_parent"
             android:text="晴"
             android:layout_marginLeft="5dp"
+            android:textStyle="bold"
             android:id="@+id/wea_disc4"
             android:textSize="10sp"
             android:gravity="center" />
@@ -244,8 +248,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:layout_marginBottom="10dp"
-        android:layout_height="38dp">
+        android:layout_height="42dp">
         <TextView
             android:layout_width="wrap_content"
             android:gravity="center"
@@ -271,6 +274,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="晴"
+            android:textStyle="bold"
             android:id="@+id/wea_disc5"
             android:textSize="10sp"
             android:layout_marginLeft="5dp"
@@ -291,5 +295,9 @@
             android:gravity="center" />
 
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:background="#fff"/>
 
 </LinearLayout>
