@@ -94,7 +94,8 @@
                     android:gravity="top"
                     android:background="#fff"
                     android:textColor="#000"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:scrollbars="vertical"/>
             </ScrollView>
 
             <LinearLayout

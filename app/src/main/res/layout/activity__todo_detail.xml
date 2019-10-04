@@ -251,6 +251,7 @@
                     android:background="#FFF"
                     android:gravity="left"
                     android:hint="内容详情"
+                    android:scrollbars="vertical"
                     android:textColor="#000"
                     android:textSize="15sp" />
             </LinearLayout>
