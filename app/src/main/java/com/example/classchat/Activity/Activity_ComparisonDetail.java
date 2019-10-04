@@ -371,14 +371,17 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
                                 String responseData = response.body().string();
                                 Message message = new Message();
                                 Log.e("responseData372", responseData);
-                                activity = JSON.parseObject(responseData, Object_Comparison.class);
-                                Log.e("activityAfterUpdateScan", activity.toString());
                                 if(responseData.equals("ERROR")){
                                     message.what = WRONG_TYPE;
                                     handler.sendMessage(message);
                                 }
-                                message.what = GET_RESULT;
-                                handler.sendMessage(message);
+                                else {
+                                    activity = JSON.parseObject(responseData, Object_Comparison.class);
+                                    Log.e("activityAfterUpdateScan", activity.toString());
+                                    message.what = GET_RESULT;
+                                    handler.sendMessage(message);
+                                }
+
                             }
                         });
                     }

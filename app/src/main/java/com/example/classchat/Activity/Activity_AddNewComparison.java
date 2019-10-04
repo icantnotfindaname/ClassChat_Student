@@ -167,8 +167,10 @@ public class Activity_AddNewComparison extends AppCompatActivity {
                     break;
                 case WRONG_TYPE:
                     Util_ToastUtils.showToast(Activity_AddNewComparison.this, "宁扫的🐎不对哦！");
+                    break;
                 case DELETE_SUCCESS:
                     finish();
+                    break;
                 default:
                     break;
             }
