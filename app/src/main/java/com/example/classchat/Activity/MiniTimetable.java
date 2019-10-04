@@ -25,18 +25,22 @@ import com.example.classchat.R;
  *
  * @author shallcheek
  */
-public class MiniTimetable extends LinearLayout {
+public class  MiniTimetable extends LinearLayout {
     /**
      * 配色数组
      */
-    public static int colors[] = {R.drawable.select_label_san,
-            R.drawable.select_label_er, R.drawable.select_label_si,
-            R.drawable.select_label_wu, R.drawable.select_label_liu,
-            R.drawable.select_label_qi, R.drawable.select_label_ba,
-            R.drawable.select_label_jiu, R.drawable.select_label_sss,
-            R.drawable.select_label_se, R.drawable.select_label_yiw,
-            R.drawable.select_label_sy, R.drawable.select_label_yiwu,
-            R.drawable.select_label_yi, R.drawable.select_label_wuw};
+    public static int colors[] = {
+            R.drawable.select_label_wu,
+            R.drawable.select_label_san,
+            R.drawable.select_label_er,
+            R.drawable.select_label_ba,
+            R.drawable.select_label_sss,
+            R.drawable.select_label_sy,
+            R.drawable.select_label_yiw,
+            R.drawable.select_label_yi};
+    public static List<String> colorStr ;
+
+
     private final static int START = 0;
     //最大节数
     public final static int MAXNUM = 12;
@@ -58,8 +62,8 @@ public class MiniTimetable extends LinearLayout {
     private LinearLayout mHorizontalWeekLayout;
     private LinearLayout mVerticalWeekLaout;
     private String[] mWeekTitle = {"一", "二", "三", "四", "五", "六", "七"};
-    public static String[] colorStr = new String[20];
-    int colorNum = 0;
+
+
     private List<Object_MiniTimeTable> mListTimeTable = new ArrayList<Object_MiniTimeTable>();
 
     private Context mContext;
@@ -303,7 +307,7 @@ public class MiniTimetable extends LinearLayout {
         mTimeTableView.addView(getWeekHorizontalLine());
 
         mTimeTableView.setBackgroundDrawable(getContext().getResources()
-                .getDrawable(colors[getColorNum(model.getName())]));
+                .getDrawable(colors[(getColorNum(model.getName())+ 1)%8]));
         mTimeTableView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -326,21 +330,21 @@ public class MiniTimetable extends LinearLayout {
 
     public void setTimeTable(List<Object_MiniTimeTable> mlist) {
         this.mListTimeTable = mlist;
-        colorStr = new String[20];
-        colorNum = 0;
+        colorStr = new ArrayList<>();
         for (Object_MiniTimeTable objectMiniTimeTable : mlist) {
             addTimeName(objectMiniTimeTable.getName());
         }
         initView();
         invalidate();
     }
+
     public void refreshTimeTable(List<Object_MiniTimeTable> mlist) {
         removeView(mHorizontalWeekLayout);
         removeView(getWeekHorizontalLine());
         removeView(mVerticalWeekLaout);
         this.mListTimeTable = mlist;
-        colorStr = new String[20];
-        colorNum = 0;
+        colorStr = new ArrayList<>();
+
         for (Object_MiniTimeTable objectMiniTimeTable : mlist) {
             addTimeName(objectMiniTimeTable.getName());
         }
@@ -355,9 +359,9 @@ public class MiniTimetable extends LinearLayout {
      * @param name
      */
     private void addTimeName(String name) {
-        boolean isRepeat = true;
-        for (int i = 0; i < 20; i++) {
-            if (name.equals(colorStr[i])) {
+        boolean isRepeat = false;
+        for (int i = 0; i < colorStr.size(); i++) {
+            if (name.equals(colorStr.get(i))) {
                 isRepeat = true;
                 break;
             } else {
@@ -365,8 +369,8 @@ public class MiniTimetable extends LinearLayout {
             }
         }
         if (!isRepeat) {
-            colorStr[colorNum] = name;
-            colorNum++;
+            colorStr.add(name);
+
         }
     }
 
@@ -378,8 +382,8 @@ public class MiniTimetable extends LinearLayout {
      */
     public static int getColorNum(String name) {
         int num = 0;
-        for (int i = 0; i < 20; i++) {
-            if (name.equals(colorStr[i])) {
+        for (int i = 0; i < colorStr.size(); i++) {
+            if (name.equals(colorStr.get(i))) {
                 num = i;
             }
         }
