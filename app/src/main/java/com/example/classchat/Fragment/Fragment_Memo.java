@@ -352,10 +352,9 @@ public class Fragment_Memo extends Fragment {
                 }
 
                 try {
-
                     city = deleteString0(two.get("city").toString(),'市');
                     district =deleteString0( two.get("district").toString(),'区');
-                } catch (org.json.JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 

@@ -437,6 +437,10 @@ public class Activity_AddTodo extends AppCompatActivity {
                     .add("content", content.getText().toString())
                     .add("todoItemID", todoItemId)
                     .build();   //构建请求体
+
+
+            Log.e("detailTime", hour + " " + minute_);
+
             //TODO
             Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/addnewitem", requestBody, new okhttp3.Callback() {
                 @Override
