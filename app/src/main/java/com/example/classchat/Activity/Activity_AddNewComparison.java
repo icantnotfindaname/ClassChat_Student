@@ -124,9 +124,7 @@ public class Activity_AddNewComparison extends AppCompatActivity {
             switch (msg.what) {
                 case ADD_COMPARISON:
                     importTable();
-                    add.setVisibility(View.VISIBLE);
-                    start.setVisibility(View.GONE);
-                    save.setVisibility(View.VISIBLE);
+
                     compareActivity.add(newComparison);
                     break;
                 case GET_RESULT:
@@ -342,6 +340,10 @@ public class Activity_AddNewComparison extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         switch (requestCode){
             case COMPARE_TABLE:
+                add.setVisibility(View.VISIBLE);
+                start.setVisibility(View.GONE);
+                save.setVisibility(View.VISIBLE);
+
                 if (resultCode == RESULT_OK) {
                     if (data != null) {
                         String content = data.getStringExtra(Constant.CODED_CONTENT);
@@ -390,23 +392,29 @@ public class Activity_AddNewComparison extends AppCompatActivity {
     }
 
     private void deleteWhenNotSave(){
-        RequestBody requestBody = new FormBody.Builder()
-                .add("comparisonID", comparisonID)
-                .build();
+        try{
+            RequestBody requestBody = new FormBody.Builder()
+                    .add("comparisonID", comparisonID)
+                    .build();
 
-        Log.e("comparisonID",comparisonID);
-        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/deletecomparison", requestBody,new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {}
+            Log.e("comparisonID",comparisonID);
+            Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/deletecomparison", requestBody,new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {}
 
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                // 得到服务器返回的具体内容
-                Message message = new Message();
-                message.what = DELETE_SUCCESS;
-                handler.sendMessage(message);
-            }
-        });
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    // 得到服务器返回的具体内容
+                    Message message = new Message();
+                    message.what = DELETE_SUCCESS;
+                    handler.sendMessage(message);
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+            finish();
+        }
+
     }
 
     public void save(View view) {
