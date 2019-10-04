@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,7 +32,7 @@ public class Adapter_See_All_Memo extends RecyclerView.Adapter<Adapter_See_All_M
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView title, itemWeek, itemDay;
-        private RelativeLayout layout;
+        private LinearLayout layout;
 
         public ViewHolder(View view) {
             super(view);
@@ -50,8 +51,8 @@ public class Adapter_See_All_Memo extends RecyclerView.Adapter<Adapter_See_All_M
         int heightPixels = metrics.heightPixels;
         int widthPixels = metrics.widthPixels;
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-        layoutParams.height = heightPixels / 10;
-        layoutParams.width = (int) (widthPixels * 0.95);
+        layoutParams.height = heightPixels / 7;
+        layoutParams.width = (int) (widthPixels * 0.92);
         Adapter_See_All_Memo.ViewHolder holder = new Adapter_See_All_Memo.ViewHolder(view);
         return holder;
     }
