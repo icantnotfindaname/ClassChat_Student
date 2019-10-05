@@ -240,7 +240,7 @@ public class  MiniTimetable extends LinearLayout {
             classView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getContext(), "星期" + week + "第" + (start + num) + "节", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getContext(), "星期" + week + "第" + (start + num) + "节", Toast.LENGTH_LONG).show();
                 }
             });
 
@@ -311,7 +311,7 @@ public class  MiniTimetable extends LinearLayout {
         mTimeTableView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), model.getName() , Toast.LENGTH_LONG).show();
+//                Toast.makeText(getContext(), model.getName() , Toast.LENGTH_LONG).show();
             }
         });
         return mTimeTableView;
@@ -370,7 +370,6 @@ public class  MiniTimetable extends LinearLayout {
         }
         if (!isRepeat) {
             colorStr.add(name);
-
         }
     }
 
