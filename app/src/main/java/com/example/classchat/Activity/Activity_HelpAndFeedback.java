@@ -22,6 +22,8 @@ import com.example.classchat.R;
 import com.example.classchat.Util.Util_ScreenShot;
 import com.example.classchat.Util.Util_ToastUtils;
 
+import java.io.IOException;
+
 import io.rong.imageloader.utils.L;
 
 /**
@@ -69,7 +71,7 @@ public class Activity_HelpAndFeedback extends AppCompatActivity {
         finish();
     }
 
-    public void jumpToWechat(View view) {
+    public void jumpToWechat(View view) throws IOException {
         Util_ScreenShot.shoot(Activity_HelpAndFeedback.this);
         getWechatApi();
         Toast.makeText(Activity_HelpAndFeedback.this, "已截图保存，扫一扫添加客胡叭\uD83D\uDE48", Toast.LENGTH_LONG).show();

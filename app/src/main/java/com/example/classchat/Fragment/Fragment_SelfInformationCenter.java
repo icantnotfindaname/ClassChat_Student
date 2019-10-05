@@ -81,6 +81,8 @@ public class Fragment_SelfInformationCenter extends Fragment {
     private ImageView qrcode;
     private String userId;
 
+    private LinearLayout headclick;
+
     private LinearLayout linearLayoutforAnquan;
     private LinearLayout linearLayoutforKecheng;
     private LinearLayout linearLayoutforShoucang;
@@ -89,6 +91,7 @@ public class Fragment_SelfInformationCenter extends Fragment {
     private LinearLayout linearLayoutforBangzhu;
     private LinearLayout linearLayoutforGuanyu;
     private LinearLayout linearLayoutforUpdate;
+    private LinearLayout linearLayoutQuit;
     private TextView textViewforName;
     private TextView textViewforId;
 
@@ -136,6 +139,10 @@ public class Fragment_SelfInformationCenter extends Fragment {
         linearLayoutforShezhi = view.findViewById(R.id.shezhi);
         linearLayoutforShoucang = view.findViewById(R.id.shoucang);
         linearLayoutforUpdate  = view.findViewById(R.id.check_for_update);
+
+        linearLayoutQuit = view.findViewById(R.id.quit);
+
+        headclick = view.findViewById(R.id.head_click);
 
         textViewforId = view.findViewById(R.id.user_stuID);
         textViewforName = view.findViewById(R.id.user_name);
@@ -235,7 +242,39 @@ public class Fragment_SelfInformationCenter extends Fragment {
                 }
             }
         });
-        avatarImageView.setOnClickListener(new View.OnClickListener() {
+        linearLayoutQuit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 这里的属性可以一直设置，因为每次设置后返回的是一个builder对象
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                // 设置提示框的标题
+                builder.setTitle("退出登录").
+                        // 设置提示框的图标
+                                setIcon(R.drawable.icon_logo).
+                        // 设置要显示的信息
+                                setMessage("确定要退出登录吗？").
+                        // 设置确定按钮
+                                setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // 这里不应该只是一个简单的页面跳转
+                                Intent outIntent = new Intent(getActivity(),
+                                        Activity_Enter.class);
+                                outIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                        | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(outIntent);
+                            }
+                        }).
+
+                        // 设置取消按钮,null是什么都不做，并关闭对话框
+                                setNegativeButton("取消", null);
+                // 生产对话框
+                AlertDialog alertDialog = builder.create();
+                // 显示对话框
+                alertDialog.show();
+            }
+        });
+        headclick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MainActivity mainActivity = (MainActivity)getActivity();

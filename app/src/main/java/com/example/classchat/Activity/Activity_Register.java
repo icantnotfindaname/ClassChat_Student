@@ -26,6 +26,7 @@ import com.example.classchat.Util.TimingButton;
 import com.example.classchat.Util.Util_NetUtil;
 import com.example.classchat.Util.Util_ToastUtils;
 import java.io.IOException;
+import java.util.Calendar;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
@@ -49,6 +50,7 @@ public class Activity_Register extends AppCompatActivity implements View.OnClick
     //在主线程里接收到信息并报错
     public static final int REGISTER_SUCCESS = 0;
     public static final int REGISTER_FAILED = 1;
+    public static final int INIT_TODO_SUCCESS = 2;
 
     //重写handler，接收网络线程中回来的信息
     @SuppressLint("HandlerLeak")
@@ -57,9 +59,7 @@ public class Activity_Register extends AppCompatActivity implements View.OnClick
             switch (msg.what) {
                 case REGISTER_SUCCESS:
                     Toast.makeText(Activity_Register.this, "注册成功", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Activity_Register.this, Activity_Enter.class);
-                    startActivity(intent);
-                    finish();
+                    initTodoItem();
                     break;
                 case REGISTER_FAILED:
                     //用户名存在
@@ -67,6 +67,11 @@ public class Activity_Register extends AppCompatActivity implements View.OnClick
                     editTextP.setText(null);
                     editSMS.setText(null);
                     editTextCT.setText(null);
+                    break;
+                case INIT_TODO_SUCCESS:
+                    Intent intent = new Intent(Activity_Register.this, Activity_Enter.class);
+                    startActivity(intent);
+                    finish();
                     break;
                 default:
                     break;
@@ -235,6 +240,40 @@ public class Activity_Register extends AppCompatActivity implements View.OnClick
 
         }
     }
+
+    private void initTodoItem() {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("userID", editTextP.getText().toString().trim())
+                .add("todoTitle", "再忙也要吃早餐撒")
+                .add("weekList", "1a2a3a4a5a6a7a8a9a10a11a12a13a14a15a16a17a18a19a20a21a22a23a24a25")
+                .add("dayChosen", (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1) + "")
+                .add("timeSlot", "0")
+                .add("detailTime", 8 + " " + 15)
+                .add("isClock", "false")
+                .add("content", "")
+                .add("todoItemID", "init")
+                .build();   //构建请求体
+        //TODO
+        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/addnewitem", requestBody, new okhttp3.Callback() {
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                // 得到服务器返回的具体内容
+                boolean responseData = Boolean.parseBoolean(response.body().string());
+                Message message = new Message();
+                if (responseData) {
+                    message.what = INIT_TODO_SUCCESS;
+                    handler.sendMessage(message);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                // 在这里对异常情况进行处理
+            }
+        });
+
+    }
+
 
     // 使用完EventHandler需注销，否则可能出现内存泄漏
     protected void onDestroy() {

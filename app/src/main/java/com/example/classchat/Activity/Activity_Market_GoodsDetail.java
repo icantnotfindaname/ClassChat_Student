@@ -223,7 +223,11 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity implements Gr
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareImage = Util_ScreenShot.shoot(Activity_Market_GoodsDetail.this);
+                try {
+                    shareImage = Util_ScreenShot.shoot(Activity_Market_GoodsDetail.this);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 Intent intent  = new Intent(Intent.ACTION_SEND);
                 File file = new File(shareImage);
                 intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
