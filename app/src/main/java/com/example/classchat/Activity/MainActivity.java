@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.example.classchat.Fragment.Fragment_ClassBox;
@@ -44,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import io.rong.imageloader.utils.L;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Message;
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     //    private Toolbar mToolbar;
+
     private BottomNavigationView mBottomNavigationView;
     private int lastIndex;
 
@@ -114,9 +117,9 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                                android.os.Message message = new android.os.Message();
-                                message.what = 2;
-                                handler.sendMessage(message);
+                            android.os.Message message = new android.os.Message();
+                            message.what = 2;
+                            handler.sendMessage(message);
                         }
                     });
                     break;
@@ -229,6 +232,13 @@ public class MainActivity extends AppCompatActivity {
 //        mToolbar = findViewById(R.id.toolbar);
 //
 //    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+    }
+
+
 
     public void initData() {
 //        setSupportActionBar(mToolbar);
@@ -406,3 +416,4 @@ public class MainActivity extends AppCompatActivity {
         return resources;
     }
 }
+
