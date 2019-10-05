@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.classchat.R;
+import com.example.classchat.Util.SharedPreferencesUtil;
 import com.example.classchat.Util.Util_NetUtil;
 
 import java.io.IOException;
@@ -66,6 +67,17 @@ public class Activity_Flash extends AppCompatActivity {
         int flag = WindowManager.LayoutParams.FLAG_FULLSCREEN;
         //设置当前窗体为全屏显示
         getWindow().setFlags(flag, flag);
+
+        // 判断是否是第一次开启应用
+        boolean isFirstOpen = SharedPreferencesUtil.getBoolean(this, SharedPreferencesUtil.FIRST_OPEN, true);
+        // 如果是第一次启动，则先进入功能引导页
+        if (isFirstOpen) {
+            Intent intent = new Intent(this, WelcomeGuideActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity__flash);
         getUserInfo();
 //        timer.schedule(task, 1000, 1000);//等待时间一秒，停顿时间一秒

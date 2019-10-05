@@ -94,6 +94,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".Activity.Activity_Market_AddCommodity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.WelcomeGuideActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Activity.Activity_Conversation"
             android:launchMode="singleTask"
