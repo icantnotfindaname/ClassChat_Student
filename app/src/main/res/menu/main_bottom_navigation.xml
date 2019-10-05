@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/menu_forum"
-        android:enabled="true"
-        android:icon="@drawable/memo"
-        app:showAsAction="ifRoom"
-        android:title="备忘" />
+
     <item
         android:id="@+id/menu_classtable"
         android:enabled="true"
         android:icon="@drawable/classtable"
         app:showAsAction="ifRoom"
         android:title="@string/classtable" />
+
+    <item
+        android:id="@+id/menu_forum"
+        android:enabled="true"
+        android:icon="@drawable/memo"
+        app:showAsAction="ifRoom"
+        android:title="备忘" />
+
 <!--    <item-->
 <!--        android:id="@+id/menu_market"-->
 <!--        android:enabled="true"-->

@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        RongIM.setConversationClickListener(new MyConversationClickListener(mFragments.get(1)));
+        RongIM.setConversationClickListener(new MyConversationClickListener(mFragments.get(0)));
 
         //防止在商城搜索时导航栏上移到键盘上方
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
@@ -243,8 +243,8 @@ public class MainActivity extends AppCompatActivity {
     public void initData() {
 //        setSupportActionBar(mToolbar);
         mFragments = new ArrayList<>();
-        mFragments.add(new Fragment_Memo());
         mFragments.add(new Fragment_ClassBox());
+        mFragments.add(new Fragment_Memo());
         //mFragments.add(new Fragment_Market());
         mFragments.add(new Fragment_SelfInformationCenter());
         // 初始化展示MessageFragment
@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.menu_forum:
+                    case R.id.menu_classtable:
                         setFragmentPosition(0);
                         if (Build.VERSION.SDK_INT >= 21) {
                             Window window = getWindow();
@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
                             window.setStatusBarColor(getResources().getColor(R.color.theme));
                         }
                         break;
-                    case R.id.menu_classtable:
+                    case R.id.menu_forum:
                         setFragmentPosition(1);
                         // 设置沉浸式状态栏
                         if (Build.VERSION.SDK_INT >= 21) {

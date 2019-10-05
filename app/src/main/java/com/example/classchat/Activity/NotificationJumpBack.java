@@ -7,12 +7,12 @@ import android.util.Log;
 
 import com.example.classchat.R;
 
-public class NotificatoinJumpBack extends AppCompatActivity {
+public class NotificationJumpBack extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("NotificatoinJumpBack", "begin");
+        Log.e("NotificationJumpBack", "begin");
         setContentView(R.layout.activity_test);
         Intent i = getBaseContext().getPackageManager()
                 .getLaunchIntentForPackage( getBaseContext().getPackageName() );
