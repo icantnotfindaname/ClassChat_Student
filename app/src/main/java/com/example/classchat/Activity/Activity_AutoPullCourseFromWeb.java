@@ -63,7 +63,7 @@ public class Activity_AutoPullCourseFromWeb extends AppCompatActivity {
                             .add("xnm" ,"2019" )
                             .add("xqm" , "3")
                             .build();
-                    Request request =new Request.Builder()
+                    Request request = new Request.Builder()
                             .url("http://xsjw2018.scuteo.com/jwglxt/kbcx/xskbcx_cxXsKb.html?gnmkdm=N2151")
                             .addHeader("Cookie" , cookie)
                             .post(body)
