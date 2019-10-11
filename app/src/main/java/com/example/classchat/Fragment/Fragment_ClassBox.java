@@ -519,10 +519,8 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
                 .getCache("BeginClassTime",String.class);
         //若用户没有设置初始时间
         if(mBeginClassTime == null || mBeginClassTime.length() <= 0){
-            Calendar calendar=Calendar.getInstance();
-            mBeginClassTime=calendar.get(Calendar.YEAR)+"-" + (calendar.get(Calendar.MONTH)+1) +"-"+calendar.get(Calendar.DAY_OF_MONTH)+" 00:00:00";
+            mBeginClassTime= "2019-08-26 00:00:00";
         }
-        //mBeginClassTime="2019-08-26 00:00:00";
         //设置周次选择属性
         mTimetableView.curWeek(mBeginClassTime);
         mWeekView.source(mySubjects)

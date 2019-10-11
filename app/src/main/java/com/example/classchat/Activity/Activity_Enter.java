@@ -17,6 +17,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -70,6 +71,7 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
     //设置登录成功或失败的常量
     private static final int LOGIN_FAILED = 0;
     private static final int LOGIN_SUCCESS = 1;
+    private static final int STATUS_TRUE = 2;
 
     // 登录时就返回必须的数据，这里先定义好
     private boolean isAuthentation;
@@ -88,6 +90,9 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
     List<String> mPermissionList = new ArrayList<>();
 
     final int mFirstRequestCode = 100;//权限请求码
+
+    // 广播发射器
+    private LocalBroadcastManager localBroadcastManager;
 
     /*
     设置handler接收网络线程的信号并处理
@@ -123,12 +128,46 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
                     intent.putExtra("headUrl", headUrl);
                     loadingForLogin.dismiss();
                     startActivity(intent);
+                    getAuthentationStatus(editPerson.getText().toString());
                     finish();
                     break;
+                case STATUS_TRUE:
+                    Intent intent1 = new Intent("com.example.theclasschat_UPDATE_ACCOUNTINFO");
+                    localBroadcastManager.sendBroadcast(intent1);
+                    Intent intent2 = new Intent("com.example.broadcasttest.UPDATE_STATE");
+                    localBroadcastManager.sendBroadcast(intent2);
+                    break;
                 default:
+                    break;
             }
         }
     };
+
+    private void getAuthentationStatus(String userId) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("username", userId)
+                .build();
+
+        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/getauthentationstatus", requestBody, new okhttp3.Callback() {
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        // 得到服务器返回的具体内容
+                        Message message = new Message();
+                        String responsedata = response.body().string();
+
+                        if(Boolean.parseBoolean(responsedata)){
+                            message.what = STATUS_TRUE;
+                            handler.sendMessage(message);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        // 在这里对异常情况进行处理
+                    }
+
+        });
+    }
 
     /*
     重写活动启动方法
@@ -149,6 +188,8 @@ public class Activity_Enter extends AppCompatActivity implements View.OnClickLis
         initPermission(); // 初始化权限请求
         init(); // 初始化各控件
         //getUserInfo(); // 取出储存好的用户信息
+
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
 
         event = this;
         //实例化IntentFilter对象

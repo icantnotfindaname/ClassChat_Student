@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#E2E5E9"
     tools:context=".Activity.Activity_IdAuthentation">
 
     <LinearLayout style="@style/top_nav">
-
-
         <ImageView
             android:id="@+id/back_from_authentation_button"
             android:layout_width="0dp"
@@ -39,10 +35,7 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-
-
     <LinearLayout
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:background="#CCC"
@@ -58,43 +51,21 @@
                 android:layout_height="match_parent"
                 android:text="真实姓名"
                 android:gravity="center"
-                android:textSize="18sp"/>
+                android:textSize="15sp"/>
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/auth_name"
                 android:layout_marginLeft="20dp"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:hint="请填写真实姓名"
                 android:background="@null"/>
 
         </LinearLayout>
-        <!--<LinearLayout-->
-            <!--android:layout_marginTop="2dp"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:background="#fff"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:layout_height="50dp">-->
-            <!--<TextView-->
-                <!--android:layout_marginLeft="20dp"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:text="身份证号"-->
-                <!--android:gravity="center"-->
-                <!--android:textSize="20sp"/>-->
-            <!--<EditText-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_marginLeft="20dp"-->
-                <!--android:id="@+id/auth_number"-->
-                <!--android:textSize="20sp"-->
-                <!--android:hint="请填写身份证号"-->
-                <!--android:background="@null"/>-->
-
-        <!--</LinearLayout>-->
-
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
@@ -112,15 +83,17 @@
                 android:layout_height="match_parent"
                 android:text="学校"
                 android:gravity="center"
-                android:textSize="18sp"/>
+                android:textSize="15sp"/>
+
             <Spinner
                 android:layout_marginLeft="30dp"
                 android:layout_width="wrap_content"
                 android:id="@+id/auth_university"
                 android:spinnerMode="dropdown"
-                android:layout_height="match_parent"></Spinner>
+                android:layout_height="match_parent"/>
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_marginTop="2dp"
             android:layout_width="match_parent"
@@ -133,13 +106,14 @@
                 android:layout_height="match_parent"
                 android:text="学院"
                 android:gravity="center"
-                android:textSize="18sp"/>
+                android:textSize="15sp"/>
+
             <Spinner
                 android:layout_marginLeft="30dp"
                 android:layout_width="wrap_content"
                 android:id="@+id/auth_colloge"
                 android:spinnerMode="dropdown"
-                android:layout_height="match_parent"></Spinner>
+                android:layout_height="match_parent"/>
 
 
         </LinearLayout>
@@ -155,13 +129,14 @@
                 android:layout_height="match_parent"
                 android:text="学号"
                 android:gravity="center"
-                android:textSize="18sp"/>
+                android:textSize="15sp"/>
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="30dp"
                 android:id="@+id/auth_st_number"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:hint="请填写学号"
                 android:background="@null"/>
 
@@ -175,12 +150,13 @@
         android:layout_marginTop="20dp"
         android:background="#fff"
         android:layout_height="wrap_content">
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_weight="1"
             android:orientation="vertical"
             android:layout_height="190dp">
             <TextView
+                android:layout_alignParentTop="true"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="7dp"
                 android:layout_marginBottom="2dp"
@@ -189,56 +165,55 @@
                 android:gravity="center"
                 android:text="点击上传本人正脸照片"
                 android:textSize="15sp"/>
+
             <ImageView
+                android:layout_centerInParent="true"
                 android:layout_gravity="center_horizontal"
-                android:layout_width="150dp"
+                android:layout_width="120dp"
                 android:clickable="true"
                 android:id="@+id/auth_photo_face"
                 android:background="@drawable/ic_add_photo"
-                android:layout_height="150dp" />
+                android:layout_height="120dp" />
 
-        </LinearLayout>
-        <LinearLayout
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_weight="1"
             android:orientation="vertical"
             android:layout_height="190dp">
             <TextView
+                android:layout_alignParentTop="true"
                 android:layout_width="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="7dp"
                 android:layout_marginBottom="2dp"
                 android:gravity="center"
                 android:layout_height="wrap_content"
-                android:text="点击上传身份证正面照片"
+                android:text="点击上传校卡正面照片"
                 android:textSize="15sp"/>
+
             <ImageView
+                android:id="@+id/auth_photo_card"
+                android:layout_centerInParent="true"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/ic_add_photo"
                 android:clickable="true"
-                android:id="@+id/auth_photo_card"
-                android:layout_width="150dp"
-                android:layout_height="150dp" />
+                android:layout_width="120dp"
+                android:layout_height="120dp" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
         android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal"
         android:id="@+id/auth_confirm"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="#ffffff"
-        android:background="#00D8A0"
-        android:text="提交审核"
-        />
+        android:textColor="@color/theme"
+        android:background="@drawable/bg_radius_register_btn"
+        android:text="提交审核" />
 
 </LinearLayout>

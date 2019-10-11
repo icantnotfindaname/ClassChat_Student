@@ -591,7 +591,7 @@ public class Fragment_Memo extends Fragment {
                 .getCache("BeginClassTime",String.class);
         //若用户没有设置初始时间
         if(mBeginClassTime == null || mBeginClassTime.length() <= 0){
-            mBeginClassTime = getDate(distanceDay) + " 00:00:00";
+            mBeginClassTime= "2019-08-26 00:00:00";
         }
         int week = timeTransfrom(mBeginClassTime);
         int day = calendar.get(Calendar.DAY_OF_WEEK);

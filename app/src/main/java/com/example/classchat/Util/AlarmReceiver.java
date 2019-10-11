@@ -13,7 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.example.classchat.Activity.NotificatoinJumpBack;
+import com.example.classchat.Activity.NotificationJumpBack;
 import com.example.classchat.Object.Object_Todo_Broadcast_container;
 import com.example.classchat.R;
 
@@ -32,16 +32,16 @@ public class AlarmReceiver extends BroadcastReceiver{
 //            // 点击返回的时候就跳转到app的主界面
 //            Intent back_Intent = new Intent(context, MainActivity.class);
 //            TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-//            stackBuilder.addParentStack(NotificatoinJumpBack.class);
+//            stackBuilder.addParentStack(NotificationJumpBack.class);
 //            stackBuilder.addNextIntent(back_Intent);
 //
 //            // 如果AlarmManager管理的PendingIntent已经存在,让新的Intent更新之前Intent对象数据
 //            PendingIntent pi = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
             /**
-             * NotificatoinJumpBack
+             * NotificationJumpBack
              */
-            Intent intent1 = new Intent(context, NotificatoinJumpBack.class);
+            Intent intent1 = new Intent(context, NotificationJumpBack.class);
             PendingIntent pi = PendingIntent.getActivity(context,0,intent1,0);
 
             Bundle bundle = intent.getBundleExtra("data");

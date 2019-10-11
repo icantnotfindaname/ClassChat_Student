@@ -112,9 +112,6 @@ public class Activity_IdAuthentation extends AppCompatActivity {
     private String university_;
     private String school_;
 
-    // 广播发射器
-    private LocalBroadcastManager localBroadcastManager;
-
     /*
     设置handler接收网络线程的信号并处理
      */
@@ -130,12 +127,8 @@ public class Activity_IdAuthentation extends AppCompatActivity {
                     loadingForAddCommodity.dismiss();
                     break;
                 case 2:
-                    Intent intent = new Intent("com.example.theclasschat_UPDATE_ACCOUNTINFO");
-                    localBroadcastManager.sendBroadcast(intent);
-                    Intent intent1 = new Intent("com.example.broadcasttest.UPDATE_STATE");
-                    localBroadcastManager.sendBroadcast(intent1);
                     loadingForAddCommodity.dismiss();
-                    Toast.makeText(Activity_IdAuthentation.this,"认证成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Activity_IdAuthentation.this,"提交成功，请耐心等待审核！", Toast.LENGTH_SHORT).show();
                     finish();
                 case 3:
 
@@ -163,8 +156,6 @@ public class Activity_IdAuthentation extends AppCompatActivity {
         // 从MainActivity获得学生ID
         Intent intent = getIntent();
         userId_ = intent.getStringExtra("userId");
-
-        localBroadcastManager = LocalBroadcastManager.getInstance(this);
 
         mContext = this;
         name = findViewById(R.id.auth_name);
@@ -377,6 +368,7 @@ public class Activity_IdAuthentation extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     card.setImageBitmap(secondBitmap);
+                    card.setScaleType(ImageView.ScaleType.FIT_CENTER);
                     card_checked = true;
                 }
                 break;
@@ -390,6 +382,7 @@ public class Activity_IdAuthentation extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     face.setImageBitmap(firstBitmap);
+                    face.setScaleType(ImageView.ScaleType.FIT_XY);
                     face_checked = true;
                 }
                 break;
