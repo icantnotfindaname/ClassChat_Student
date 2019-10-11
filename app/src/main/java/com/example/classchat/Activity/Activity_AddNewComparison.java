@@ -61,6 +61,8 @@ public class Activity_AddNewComparison extends AppCompatActivity {
     private int currentWeek;
     private static final int COMPARE_TABLE = 1;
     private List<Object_Comparison>compareActivity = new ArrayList<>();
+    private List<String>memberList = new ArrayList<>();
+
     private Object_Comparison newComparison;
     private String userID;
     private String comparisonID;
@@ -124,11 +126,12 @@ public class Activity_AddNewComparison extends AppCompatActivity {
             switch (msg.what) {
                 case ADD_COMPARISON:
                     importTable();
-
                     compareActivity.add(newComparison);
                     break;
                 case GET_RESULT:
                     String comparisonData =  newComparison.getComparisonData();
+                    memberList = JSON.parseArray(newComparison.getComparisonMember(), String.class);
+
                     mList = new ArrayList<>();
                     List<Integer> cData = JSON.parseArray(comparisonData,Integer.class);
                     for(int n = 0; n < cData.size();n+=12) {
