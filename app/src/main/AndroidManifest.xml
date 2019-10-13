@@ -20,7 +20,7 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".Activity.Activity_AllTodo"
             android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.NotificatoinJumpBack"
+        <activity android:name=".Activity.NotificationJumpBack"
             android:screenOrientation="portrait"/>
         <activity android:name=".Activity.Activity_TodoDetail"
             android:screenOrientation="portrait"/>
