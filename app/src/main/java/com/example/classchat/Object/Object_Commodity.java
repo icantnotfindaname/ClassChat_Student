@@ -4,8 +4,6 @@ import java.util.List;
 
 public  class Object_Commodity implements Comparable{
 
-
-
     //TODO 图片 点赞方法修改
     private String itemID;
     private String itemName;

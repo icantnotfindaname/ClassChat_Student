@@ -163,7 +163,7 @@ public class Activity_Market_MyGoods extends AppCompatActivity {
                 .add("userID", userID)
                 .build();
 
-        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/getusertodolist", requestBody, new okhttp3.Callback() {
+        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/getuseritems", requestBody, new okhttp3.Callback() {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 // 得到服务器返回的具体内容

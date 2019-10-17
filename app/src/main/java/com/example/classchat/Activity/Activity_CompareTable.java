@@ -112,8 +112,7 @@ public class Activity_CompareTable extends AppCompatActivity {
                 .path(getCacheDir(Activity_CompareTable.this))
                 .getCache("compareTable", String.class);
         final Message message = new Message();
-
-        if(info == null || info.isEmpty() || info.equals("[null]"))
+        if(info == null || info.isEmpty() || info.equals("[]"))
         {
             RequestBody requestBody = new FormBody.Builder()
                     .add("userID", userId)

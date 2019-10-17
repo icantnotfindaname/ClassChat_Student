@@ -19,7 +19,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.NumberPicker;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -37,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.Call;
@@ -164,33 +164,8 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
                     importTable();
                     break;
                 case GET_RESULT:
-                    String comparisonData =activity.getComparisonData();
                     mList = new ArrayList<>();
-                    List<Integer> cData = JSON.parseArray(comparisonData,Integer.class);
-                    for(int n = 0; n < cData.size();n+=12) {
-                        for (int i = n; i < n + 12; i++) {
-                            if (cData.get(i) != 0) {
-                                int low = i;
-                                int up = i;
-                                for (int ii = i + 1; ii < n + 12; ii++) {
-                                    if (cData.get(ii) != cData.get(i)) {
-                                        i = ii - 1;
-                                        up = ii - 1;
-                                        break;
-                                    }
-                                    else if (ii == n + 11){
-                                        i = ii;
-                                        up = ii;
-                                    }
-                                }
-                                int week = (i + 1)/12 + 1;
-                                int start = ((low+1) %12 == 0)? 12 :((low+1) %12 );
-                                int end =((up+1) %12 == 0)? 12 :((up+1) %12 );
-                                String name = cData.get(i).toString() + "人";
-                                mList.add(new Object_MiniTimeTable(start, end, week, name));
-                            }
-                        }
-                    }
+                    initList();
                     mTimaTableView.refreshTimeTable(mList);
 
                     compareActivity.remove(index);
@@ -393,31 +368,50 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
     }
 
     private void initList(){
-        String comparisonData = activity.getComparisonData();
-        mList = new ArrayList<>();
-        List<Integer> cData = JSON.parseArray(comparisonData,Integer.class);
-        for(int n = 0; n < cData.size();n+=12) {
-            for (int i = n; i < n + 12; i++) {
-                if (cData.get(i) != 0) {
-                    int low = i;
-                    int up = i;
-                    for (int ii = i + 1; ii < n + 12; ii++) {
-                        if (cData.get(ii) != cData.get(i)) {
-                            i = ii - 1;
-                            up = ii - 1;
-                            break;
-                        }
-                        else if (ii == n + 11){
-                            i = ii;
-                            up = ii;
-                        }
-                    }
-                    int week = (i + 1)/12 + 1;
-                    int start = ((low+1) %12 == 0)? 12 :((low+1) %12 );
-                    int end =((up+1) %12 == 0)? 12 :((up+1) %12 );
-                    String name = cData.get(i).toString() + "人";
-                    mList.add(new Object_MiniTimeTable(start, end, week, name));
+        List<String>rawData = (List<String>) JSON.parse(activity.getComparisonData());
+        Log.e("rawData", rawData.toString());
+        List<List<String>>name = new ArrayList<>();
+        for (int i = 0; i < 84 ; ++i)
+            name.add(new ArrayList<String>());
+        List<List<Integer>>num = new ArrayList<>();
+        for (int i = 0; i < 84 ; ++i)
+            num.add(new ArrayList<Integer>());
+        for(int i = 0; i < rawData.size(); ++ i){
+            List<String> templist = new ArrayList<>(Arrays.asList(rawData.get(i).split("a")));
+            Log.e("tempList", templist.toString());
+            Log.e("tempList.size()", templist.size()+"");
+            if(templist.size() == 1 && templist.get(0).equals("")){
+                name.get(i).add("");
+                num.get(i).add(0);
+            }else {
+                for(int j = 0; j < templist.size(); ++j){
+                    name.get(i).add(templist.get(j).split("\\*")[0]);
+                    num.get(i).add(Integer.valueOf(templist.get(j).split("\\*")[1]));
                 }
+
+            }
+        }
+
+        Log.e("name", name.toString());
+        Log.e("num", num.toString());
+
+        mList = new ArrayList<>();
+        List<Integer> cData = new ArrayList<>();//每节课总人数
+        for(int i = 0; i < num.size(); ++i){
+            int totalnumber = 0;
+            for(int j = 0; j < num.get(i).size(); ++j){
+                totalnumber += num.get(i).get(j);
+            }
+            Log.e("totalNumber", totalnumber + "");
+            cData.add(totalnumber);
+        }
+
+        for(int i = 0; i < cData.size(); i ++) {
+            Log.e("cdata, i", cData.toString() + i);
+            if (cData.get(i) != 0) {
+                int week = (i + 1)/12 + 1;
+                String count = cData.get(i).toString();
+                mList.add(new Object_MiniTimeTable(i % 12, i % 12, week, count, name.get(i), num.get(i), comparisonID));
             }
         }
     }

@@ -168,11 +168,6 @@
         android:id="@+id/main_scrollview"
         android:fillViewport="false">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_member_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
     <com.example.classchat.Activity.MiniTimetable
         android:id="@+id/mini_timetable"
         android:orientation="vertical"

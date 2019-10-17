@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,155 +6,330 @@
     tools:context=".Activity.MainActivity"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_Market_Page_Title"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="唠课商城"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:textColor="#ffffff"
-        android:background="@color/theme"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"/>
+    <com.qiantao.coordinatormenu.CoordinatorMenu
+        android:id="@+id/cm_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"/>
+        <LinearLayout
+            android:id="@+id/menu"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/grocery"
+                    android:layout_toLeftOf="@+id/menu_1"
+                    android:padding="10dp"
+                    android:layout_marginRight="10dp"/>
+                <Button
+                    android:id="@+id/menu_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="日化用品"
+                    android:background="@null"
+                    android:textColor="@color/theme"
+                    android:textAlignment="center"
+                    android:textStyle="bold"/>
 
-    <ImageView
-        android:layout_gravity="center"
-        android:src="@drawable/construstion"
-        android:layout_width="150dp"
-        android:layout_height="150dp"/>
+            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#85EEE2E2"
+                android:padding="5dp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/snackandfood"
+                    android:layout_toLeftOf="@+id/menu_2"
+                    android:padding="10dp"
+                    android:layout_marginRight="10dp"/>
+                <Button
+                    android:id="@+id/menu_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="零食水果"
+                    android:background="@null"
+                    android:textColor="@color/theme"
+                    android:textAlignment="center"
+                    android:textStyle="bold"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:textStyle="italic"
-        android:text="商城正在搭建"
-        />
+            </RelativeLayout>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#85EEE2E2"
+                android:padding="5dp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/cosmetic"
+                    android:layout_toLeftOf="@+id/menu_3"
+                    android:padding="10dp"
+                    android:layout_marginRight="10dp"/>
+                <Button
+                    android:id="@+id/menu_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="美妆护肤"
+                    android:background="@null"
+                    android:textColor="@color/theme"
+                    android:textAlignment="center"
+                    android:textStyle="bold"/>
 
-<!--    <LinearLayout-->
-<!--        android:id="@+id/ll_Market_Searchbar_Background"-->
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#85EEE2E2"
+                android:padding="5dp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/women"
+                    android:layout_toLeftOf="@+id/menu_4"
+                    android:padding="10dp"
+                    android:layout_marginRight="10dp"/>
+                <Button
+                    android:id="@+id/menu_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="小姐姐的衣橱"
+                    android:background="@null"
+                    android:textColor="@color/theme"
+                    android:textAlignment="center"
+                    android:textStyle="bold"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#85EEE2E2"
+                android:padding="5dp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/men"
+                    android:layout_toLeftOf="@+id/menu_5"
+                    android:padding="10dp"
+                    android:layout_marginRight="10dp"/>
+                <Button
+                    android:id="@+id/menu_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="小哥哥的衣橱"
+                    android:background="@null"
+                    android:textColor="@color/theme"
+                    android:textAlignment="center"
+                    android:textStyle="bold"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <com.qiantao.coordinatormenu.MainView
+            android:id="@+id/main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:id="@+id/ll_Market_Searchbar_Background"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@+id/tv_Market_Page_Title"
+                android:background="@color/theme"
+                android:orientation="horizontal">
+            </LinearLayout>
+
+            <com.mancj.materialsearchbar.MaterialSearchBar
+                android:id="@+id/searchBar"
+                style="@style/MaterialSearchBarLight"
+                android:layout_width="match_parent"
+                android:layout_marginTop="7dp"
+                android:layout_height="35dp"
+                android:layout_below="@+id/tv_Market_Page_Title"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="5dp"
+                app:mt_hint="@string/MarketSearchBarHint"
+                app:mt_placeholderColor="@color/theme" />
+
+            <RadioGroup
+                android:id="@+id/rg_Market_sort"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@id/ll_Market_Searchbar_Background"
+                android:layout_marginTop="2dp">
+
+                <RadioButton
+                    android:id="@+id/rb_Market_default_sort"
+                    android:padding="5dp"
+                    android:layout_width="0dip"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="最新商品"
+                    android:textSize="10sp"
+                    android:checked="true"
+                    android:textColor="@color/theme"
+                    android:textAlignment="center"/>
+
+<!--                <RadioButton-->
+<!--                    android:id="@+id/rb_Market_thumbs_sort"-->
+<!--                    android:padding="5dp"-->
+<!--                    android:layout_width="0dip"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="点赞最多"-->
+<!--                    android:textSize="10sp"-->
+<!--                    android:textColor="@color/theme"-->
+<!--                    android:textAlignment="center"/>-->
+
+                <RadioButton
+                    android:id="@+id/rb_Market_up_sort"
+                    android:padding="5dp"
+                    android:layout_width="0dip"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="价格升序"
+                    android:textSize="10sp"
+                    android:textColor="@color/theme"
+                    android:textAlignment="center"/>
+
+                <RadioButton
+                    android:id="@+id/rb_Market_down_sort"
+                    android:padding="5dp"
+                    android:layout_width="0dip"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="价格降序"
+                    android:textSize="10sp"
+                    android:textColor="@color/theme"
+                    android:textAlignment="center"/>
+
+            </RadioGroup>
+
+            <com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
+                android:id="@+id/pullLoadMoreRecyclerView"
+                android:layout_below="@+id/rg_Market_sort"
+                android:layout_marginTop="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"/>
+
+            <ImageButton
+                android:id="@+id/ib_Market_toTop"
+                android:layout_width="70dp"
+                android:layout_height="78dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/ic_market_totop"
+                android:visibility="gone"
+                android:scaleType="center" />
+
+            <LinearLayout
+                android:id="@+id/hint"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="#40000000"
+                android:padding="2dp">
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/hint"
+                    android:padding="5dp"/>
+            </LinearLayout>
+
+            <com.nightonke.boommenu.BoomMenuButton
+                android:id="@+id/bmb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:bmb_buttonEnum="textInsideCircle"
+                app:bmb_piecePlaceEnum="piecePlace_dot_3_3"
+                app:bmb_buttonPlaceEnum="buttonPlace_sc_3_3"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                />
+        </com.qiantao.coordinatormenu.MainView>
+
+    </com.qiantao.coordinatormenu.CoordinatorMenu>
+<!--    <TextView-->
+<!--        android:id="@+id/tv_Market_Page_Title"-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="50dp"-->
-<!--        android:layout_below="@+id/tv_Market_Page_Title"-->
+<!--        android:text="唠课商城"-->
+<!--        android:textStyle="bold"-->
+<!--        android:gravity="center"-->
+<!--        android:textSize="20sp"-->
+<!--        android:textColor="#ffffff"-->
 <!--        android:background="@color/theme"-->
-<!--        android:orientation="horizontal">-->
-<!--    </LinearLayout>-->
+<!--        android:layout_alignParentTop="true"-->
+<!--        android:layout_centerInParent="true"/>-->
 
-<!--    <com.mancj.materialsearchbar.MaterialSearchBar-->
-<!--        android:id="@+id/searchBar"-->
-<!--        style="@style/MaterialSearchBarLight"-->
+<!--    <ImageView-->
 <!--        android:layout_width="match_parent"-->
-<!--        android:layout_marginTop="7dp"-->
-<!--        android:layout_height="35dp"-->
-<!--        android:layout_below="@+id/tv_Market_Page_Title"-->
-<!--        android:layout_marginLeft="10dp"-->
-<!--        android:layout_marginRight="10dp"-->
-<!--        android:layout_marginBottom="5dp"-->
-<!--        app:mt_hint="@string/MarketSearchBarHint"-->
-<!--        app:mt_placeholderColor="@color/theme" />-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="3"/>-->
 
-<!--    <RadioGroup-->
-<!--        android:id="@+id/rg_Market_sort"-->
+<!--    <ImageView-->
+<!--        android:layout_gravity="center"-->
+<!--        android:src="@drawable/construstion"-->
+<!--        android:layout_width="150dp"-->
+<!--        android:layout_height="150dp"/>-->
+
+<!--    <TextView-->
 <!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:layout_below="@id/ll_Market_Searchbar_Background"-->
-<!--        android:layout_marginTop="2dp">-->
-
-<!--        <RadioButton-->
-<!--            android:id="@+id/rb_Market_default_sort"-->
-<!--            android:padding="5dp"-->
-<!--            android:layout_width="0dip"-->
-<!--            android:layout_weight="1"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="最新商品"-->
-<!--            android:textSize="10sp"-->
-<!--            android:checked="true"-->
-<!--            android:textColor="@color/theme"-->
-<!--            android:textAlignment="center"/>-->
-
-<!--        <RadioButton-->
-<!--            android:id="@+id/rb_Market_thumbs_sort"-->
-<!--            android:padding="5dp"-->
-<!--            android:layout_width="0dip"-->
-<!--            android:layout_weight="1"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="点赞最多"-->
-<!--            android:textSize="10sp"-->
-<!--            android:textColor="@color/theme"-->
-<!--            android:textAlignment="center"/>-->
-
-<!--        <RadioButton-->
-<!--            android:id="@+id/rb_Market_up_sort"-->
-<!--            android:padding="5dp"-->
-<!--            android:layout_width="0dip"-->
-<!--            android:layout_weight="1"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="价格升序"-->
-<!--            android:textSize="10sp"-->
-<!--            android:textColor="@color/theme"-->
-<!--            android:textAlignment="center"/>-->
-
-<!--        <RadioButton-->
-<!--            android:id="@+id/rb_Market_down_sort"-->
-<!--            android:padding="5dp"-->
-<!--            android:layout_width="0dip"-->
-<!--            android:layout_weight="1"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="价格降序"-->
-<!--            android:textSize="10sp"-->
-<!--            android:textColor="@color/theme"-->
-<!--            android:textAlignment="center"/>-->
-
-<!--    </RadioGroup>-->
-
-<!--    <com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView-->
-<!--        android:id="@+id/pullLoadMoreRecyclerView"-->
-<!--        android:layout_below="@+id/rg_Market_sort"-->
-<!--        android:layout_marginTop="2dp"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"/>-->
-
-<!--    <ImageButton-->
-<!--        android:id="@+id/ib_Market_toTop"-->
-<!--        android:layout_width="70dp"-->
-<!--        android:layout_height="78dp"-->
-<!--        android:layout_alignParentLeft="true"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:layout_marginStart="5dp"-->
-<!--        android:layout_marginLeft="5dp"-->
-<!--        android:layout_marginTop="5dp"-->
-<!--        android:layout_marginEnd="5dp"-->
-<!--        android:layout_marginRight="5dp"-->
-<!--        android:layout_marginBottom="5dp"-->
-<!--        android:background="@drawable/ic_market_totop"-->
-<!--        android:visibility="gone"-->
-<!--        android:scaleType="center" />-->
-
-<!--    <com.nightonke.boommenu.BoomMenuButton-->
-<!--        android:id="@+id/bmb"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:bmb_buttonEnum="textInsideCircle"-->
-<!--        app:bmb_piecePlaceEnum="piecePlace_dot_3_3"-->
-<!--        app:bmb_buttonPlaceEnum="buttonPlace_sc_3_3"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:layout_alignParentRight="true"-->
-<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="1"-->
+<!--        android:gravity="center"-->
+<!--        android:textSize="20sp"-->
+<!--        android:textStyle="italic"-->
+<!--        android:text="商城正在搭建"-->
 <!--        />-->
 
-</LinearLayout>
+<!--    <ImageView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="3"/>-->
+
+
+
+</RelativeLayout>

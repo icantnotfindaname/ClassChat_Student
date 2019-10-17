@@ -30,14 +30,13 @@ public class Adapter_CommodityRecycleView extends RecyclerView.Adapter<Adapter_C
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView itemName, itemIntroduction, itemPrice;
+        public TextView itemName, itemPrice;
         public ImageView itemPic;
 //        ThumbsUpCountView thumbs;
 
         public ViewHolder(View itemView) {
             super(itemView);
             itemName = itemView.findViewById(R.id.tv_market_item_name);
-            itemIntroduction = itemView.findViewById(R.id.tv_market_item_intro);
             itemPrice = itemView.findViewById(R.id.tv_market_item_price);
             itemPic = itemView.findViewById(R.id.iv_market_item_pic);
 //            thumbs =  itemView.findViewById(R.id.market_item_thumb);
@@ -54,10 +53,9 @@ public class Adapter_CommodityRecycleView extends RecyclerView.Adapter<Adapter_C
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Object_Commodity item = itemList.get(position);
         holder.itemName.setText(item.getItemName());
-        holder.itemIntroduction.setText(item.getBriefIntroduction());
         holder.itemPrice.setText(Double.toString(item.getPrice()));
 
-        Glide.with(mContext).load(item.getImageList().get(0)).override(720,480).into(holder.itemPic);
+        Glide.with(mContext).load(item.getImageList().get(0)).override(720,(480 + (int)(Math.random() * 50))).into(holder.itemPic);
 //        //TODO 点赞设置
 
 //        //TODO 获取用户信息
