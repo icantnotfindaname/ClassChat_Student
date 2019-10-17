@@ -10,21 +10,19 @@
         android:padding="5dp"
         android:orientation="horizontal"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_margin="8dp"
+        android:layout_margin="2dp"
         app:cardBackgroundColor="#F8FCF3"
         app:cardCornerRadius="5dp"
         android:clickable="true"
         app:cardElevation="5dp"
         android:focusable="true">
         <RelativeLayout
-            android:id="@+id/rl_comparison_detail"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toLeftOf="@+id/comparison_detail_deit"
                 android:focusable="true"
                 android:focusableInTouchMode="true">
                 <TextView
@@ -37,49 +35,45 @@
                     android:textStyle="bold"
                     android:textSize="15sp"
                     android:text="黄梓楷" />
-
-                <EditText
-                    android:id="@+id/comparison_detail_num"
+                <RelativeLayout
                     android:layout_width="0dip"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center">
+                    <Button
+                        android:id="@+id/sub_count"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/sub_count"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="5dp"/>
+
+                    <TextView
+                        android:id="@+id/comparison_detail_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"/>
+
+                    <Button
+                        android:id="@+id/add_count"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/add_count"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="5dp"/>
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/comparison_detail_delete"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:padding="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/close"
                     android:layout_gravity="center_vertical"
-                    android:inputType="number"
-                    android:textAlignment="center"
-                    android:textSize="18sp"
-                    android:textColor="#C08F04"
-                    android:textStyle="bold"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:background="@null"
-                    android:imeOptions="actionDone"
                     android:singleLine="true"/>
             </LinearLayout>
-
-            <Button
-                android:id="@+id/comparison_detail_deit"
-                android:layout_width="60dp"
-                android:layout_height="match_parent"
-                android:layout_toLeftOf="@+id/comparison_detail_delete"
-                android:text="修改"
-                android:layout_margin="2dp"
-                android:background="#C5C4C4"
-                android:visibility="gone" />
-
-            <Button
-                android:id="@+id/comparison_detail_delete"
-                android:layout_width="60dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:background="#ff4a57"
-                android:text="删除"
-                android:layout_alignParentEnd="true"
-                android:textColor="@android:color/white"
-                android:layout_margin="2dp"
-                android:layout_alignParentRight="true"
-                android:visibility="gone" />
-
-
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

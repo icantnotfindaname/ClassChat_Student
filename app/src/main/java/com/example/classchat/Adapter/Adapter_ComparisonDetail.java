@@ -1,7 +1,10 @@
 package com.example.classchat.Adapter;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -47,6 +50,7 @@ public class Adapter_ComparisonDetail extends RecyclerView.Adapter<Adapter_Compa
     private final static int EDIT_FAIL = 2;
     private final static int EDIT_SUCESS = 3;
     private String otherUserID;
+    private Dialog builder;
 
     public Adapter_ComparisonDetail(Context context, List<String>nameList, List<Integer>num, String comparisonID){
         mContext = context;
@@ -86,17 +90,16 @@ public class Adapter_ComparisonDetail extends RecyclerView.Adapter<Adapter_Compa
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView name;
-        private EditText number;
-        private Button edit, delete;
-        private RelativeLayout rl;
+        private TextView number;
+        private Button delete, add, sub;
 
         public ViewHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.comparison_detail_name);
             number = itemView.findViewById(R.id.comparison_detail_num);
-            edit = itemView.findViewById(R.id.comparison_detail_deit);
             delete = itemView.findViewById(R.id.comparison_detail_delete);
-            rl = itemView.findViewById(R.id.rl_comparison_detail);
+            add = itemView.findViewById(R.id.add_count);
+            sub = itemView.findViewById(R.id.sub_count);
         }
     }
 
@@ -112,38 +115,58 @@ public class Adapter_ComparisonDetail extends RecyclerView.Adapter<Adapter_Compa
         Log.e("nameList Adapter", nameList.get(position));
         Log.e("num Adapter", num.get(position)+"");
         holder.name.setText(nameList.get(position).substring(11));
-        holder.number.setEnabled(false);
-        holder.number.setText(String.valueOf(num.get(position)));
-        holder.rl.setOnLongClickListener(new View.OnLongClickListener() {
+        final int[] i = {num.get(position)};
+        holder.number.setText(i[0] + "");
+
+        holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-                holder.edit.setVisibility(View.VISIBLE);
-                holder.delete.setVisibility(View.VISIBLE);
-                holder.number.setEnabled(true);
-                holder.delete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        otherUserID = nameList.get(position);
-                        deleteMember(comparisonID, otherUserID.substring(0, 11));
-                        holder.edit.setVisibility(View.GONE);
-                        holder.delete.setVisibility(View.GONE);
-                        holder.number.setEnabled(false);
-                    }
-                });
-                holder.edit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        otherUserID = nameList.get(position);
-                        newNumber = Integer.parseInt(holder.number.getText().toString());
-                        editNUmber(comparisonID, otherUserID.substring(0, 11), holder.number.getText().toString());
-                        holder.edit.setVisibility(View.GONE);
-                        holder.delete.setVisibility(View.GONE);
-                        holder.number.setEnabled(false);
-                    }
-                });
-                return false;
+            public void onClick(View v) {
+                builder = new AlertDialog.Builder(mContext)
+                        .setTitle("温馨提示：")
+                        .setMessage("确定通过🐎？")
+                        .setPositiveButton("确定",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        otherUserID = nameList.get(position);
+                                        deleteMember(comparisonID, otherUserID.substring(0, 11));
+                                    }
+                                })
+                        .setNegativeButton("取消",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int whichButton) {
+                                        builder.dismiss();
+                                    }
+                                }).show();
             }
         });
+
+        holder.add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(i[0] == 1)
+                    holder.sub.setVisibility(View.VISIBLE);
+                i[0]++;
+                holder.number.setText(i[0] + "");
+                otherUserID = nameList.get(position);
+                newNumber = Integer.parseInt(holder.number.getText().toString());
+                editNUmber(comparisonID, otherUserID.substring(0, 11), holder.number.getText().toString());
+            }
+        });
+
+        holder.sub.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                i[0] --;
+                holder.number.setText(i[0] + "");
+                otherUserID = nameList.get(position);
+                newNumber = Integer.parseInt(holder.number.getText().toString());
+                editNUmber(comparisonID, otherUserID.substring(0, 11), holder.number.getText().toString());
+                if(i[0] == 1)
+                    holder.sub.setVisibility(View.GONE);
+            }
+        });
+
 
     }
 

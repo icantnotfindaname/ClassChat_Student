@@ -2,8 +2,10 @@ package com.example.classchat.Activity;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
@@ -76,6 +78,8 @@ public class Activity_AddNewComparison extends AppCompatActivity {
     private MiniTimetable mTimeTableView;
     private static List<Object_MiniTimeTable> mList;
 
+    private Activity_AddNewComparison.MyReceiver myReceiver = new Activity_AddNewComparison.MyReceiver();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +122,10 @@ public class Activity_AddNewComparison extends AppCompatActivity {
         currentWeek = ScheduleSupport.timeTransfrom(mBeginClassTime);
         setWeek.setText(week[currentWeek - 1]);
 
+        IntentFilter intentFilter = new IntentFilter("miniTimetable.send");
+        registerReceiver(myReceiver, intentFilter);
+        Intent intent1 = new Intent(Activity_AddNewComparison.this, Activity_ComparisonDetail.MyReceiver.class);
+        startService(intent1);
     }
 
     @SuppressLint("HandlerLeak")
@@ -446,4 +454,36 @@ public class Activity_AddNewComparison extends AppCompatActivity {
         }
     }
 
+    public class MyReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            RequestBody requestBody = new FormBody.Builder()
+                    .add("comparisonID", comparisonID)
+                    .add("comparisonWeekChosen", setWeek.getText().toString().substring(1, setWeek.getText().toString().length() - 1))
+                    .build();
+
+            Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/updateweekchosen", requestBody,new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {}
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    // 得到服务器返回的具体内容
+                    String responseData = response.body().string();
+                    newComparison = JSON.parseObject(responseData, Object_Comparison.class);
+                    Message message = new Message();
+                    message.what = GET_RESULT;
+                    handler.sendMessage(message);
+                }
+            });
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(myReceiver);
+    }
 }

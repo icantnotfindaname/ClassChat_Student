@@ -8,8 +8,10 @@ import java.util.List;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -23,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -332,9 +335,7 @@ public class  MiniTimetable extends LinearLayout {
             @Override
             public void onClick(View v) {
 //                设置点击有人格子事件
-//                TODO
                 showDialog(model.getNameList(), model.getNumList(), model.getComparisonID());
-
             }
         });
         return mTimeTableView;
@@ -342,7 +343,7 @@ public class  MiniTimetable extends LinearLayout {
 
     private void showDialog(List<String>nameList, List<Integer>numList, String comparisonID){
         // 自定义对话框
-        LayoutInflater inflater= LayoutInflater.from(mContext);
+        final LayoutInflater inflater= LayoutInflater.from(mContext);
         View myView = inflater.inflate(R.layout.dialog_comparison_detail,null);//引用自定义布局
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(mContext);
         rv = myView.findViewById(R.id.rv_comparison_dialog);
@@ -351,7 +352,9 @@ public class  MiniTimetable extends LinearLayout {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                //TODO
+                Intent intent = new Intent();
+                intent.setAction("miniTimetable.send");
+                mContext.sendBroadcast(intent);
             }
         });
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
@@ -362,12 +365,10 @@ public class  MiniTimetable extends LinearLayout {
         dialog = builder.create();  //创建对话框
         dialog.show();  //显示对话框
         dialog.setCanceledOnTouchOutside(false);
-
         dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if(keyCode == KeyEvent.KEYCODE_BACK){
-//                    TODO
                     dialog.dismiss();
                 }
                 return true;
@@ -446,4 +447,5 @@ public class  MiniTimetable extends LinearLayout {
         }
         return num;
     }
+
 }

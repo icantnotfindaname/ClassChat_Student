@@ -2,8 +2,10 @@
 package com.example.classchat.Activity;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,6 +19,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.example.classchat.Adapter.Adapter_CompareTable;
@@ -50,7 +53,7 @@ public class Activity_CompareTable extends AppCompatActivity {
     private List<Object_Comparison> activityList = new ArrayList<>();
     private static final int GET = 0;
     private static final int NULL = 1;
-
+    private MyReceiver myReceiver = new MyReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,11 @@ public class Activity_CompareTable extends AppCompatActivity {
                 finish();
             }
         });
+
+        IntentFilter intentFilter = new IntentFilter("miniTimetable.send");
+        registerReceiver(myReceiver, intentFilter);
+        Intent intent1 = new Intent(Activity_CompareTable.this, MyReceiver.class);
+        startService(intent1);
 
         initData();
 
@@ -164,28 +172,6 @@ public class Activity_CompareTable extends AppCompatActivity {
 
             handler.sendMessage(message);
         }
-
-//        compareActivity.clear();
-//        List<String> Temp = new ArrayList<>();
-//        compareActivityStr = Cache.with(Activity_CompareTable.this)
-//                .path(getCacheDir(Activity_CompareTable.this))
-//                .getCache("compareActivityName", String.class);
-//
-//        if(compareActivityStr != null)
-//            Temp = Arrays.asList(compareActivityStr.split("[,\\s+]"));
-//        for(String item:Temp)
-//            if(!item.equals(""))
-//                compareActivity.add(item);
-//        compareActivity.remove("null");
-//        compareActivity.remove(" ");
-//        Log.e("compareTable82",compareActivity.toString());
-//
-//        if(compareActivity.size() > 0){
-//            adapter_compareTable = new Adapter_CompareTable(this, compareActivity, userId);
-//            rv.setAdapter(adapter_compareTable);
-//        }else {
-//            empty.setVisibility(View.VISIBLE);
-//        }
     }
 
 
@@ -214,5 +200,22 @@ public class Activity_CompareTable extends AppCompatActivity {
         intent.putExtra("activityList", (Serializable)activityList);
         startActivity(intent);
 
+    }
+
+    public class MyReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Cache.with(Activity_CompareTable.this)
+                    .path(getCacheDir(Activity_CompareTable.this))
+                    .remove("compareTable");
+            initData();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(myReceiver);
     }
 }

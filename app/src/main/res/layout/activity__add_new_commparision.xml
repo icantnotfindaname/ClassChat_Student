@@ -62,7 +62,7 @@
             android:textAlignment="center"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:hint="标题(不可修改)"
+            android:hint="标题(不可修改不带标点符号)"
             android:textSize="15sp"
             android:background="@null"
             android:layout_height="match_parent"/>
