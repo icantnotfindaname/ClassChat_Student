@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,7 +21,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.example.classchat.Adapter.Adapter_ShoppingCart;
 import com.example.classchat.Object.Object_Commodity;
-import com.example.classchat.Object.Object_Commodity_Shoppingcart;
+import com.example.classchat.Object.Object_Pre_Sale;
 import com.example.classchat.R;
 import com.github.nisrulz.sensey.Sensey;
 import com.github.nisrulz.sensey.TouchTypeDetector;
@@ -29,6 +30,8 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.rong.imageloader.utils.L;
 
 public class Activity_Market_ShoppingCart extends Activity implements View.OnClickListener {
 
@@ -46,7 +49,16 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
     private LinearLayout ll_empty_shopcart;
     private TextView tv_empty_cart_tobuy;
 
-//    public static  List<Object_Commodity_Shoppingcart> datas = new ArrayList<>();
+//    private TextView check_size;
+//    private TextView item_name;
+//    // 以下是数量选择器的变量
+//    private ImageView count_add;
+//    private ImageView count_sub;
+//
+//    private TextView item_count;
+
+    private List<Object_Pre_Sale> datas = new ArrayList<>();
+    private  List<Object_Commodity> commodityList = new ArrayList<>();
 
     /**
      * 编辑状态
@@ -61,6 +73,9 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
      * Find the Views in the layout
      */
     private void findViews() {
+        /**
+         * 绑定控件
+         */
         ibShopcartBack = findViewById(R.id.ib_shopcart_back);
         tvShopcartEdit = findViewById(R.id.tv_shoppingcart_edit);
         recyclerview = findViewById(R.id.recyclerview);
@@ -74,11 +89,20 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
         ll_empty_shopcart = findViewById(R.id.ll_empty_shopcart);
         tv_empty_cart_tobuy = findViewById(R.id.tv_empty_cart_tobuy);
 
+//        count_add = findViewById(R.id.count_add);
+//        count_sub = findViewById(R.id.count_sub);
+//        item_count = findViewById(R.id.item_count);
+//        check_size = findViewById(R.id.check_size);
+//        item_name = findViewById(R.id.tv_desc_gov);
+
+        /**
+         * 设置监听
+         */
         ibShopcartBack.setOnClickListener(this);
         btnCheckOut.setOnClickListener(this);
         tvShopcartEdit.setOnClickListener(this);
         btn_delete.setOnClickListener(this);
-        tv_empty_cart_tobuy.setClickable(true);
+        tv_empty_cart_tobuy.setClickable(true); // 空购物车时“去看看”按钮设为true
         tv_empty_cart_tobuy.setOnClickListener(this);
     }
 
@@ -88,50 +112,63 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
     @Override
     public void onClick(View v) {
         if (v == ibShopcartBack) {
-            finish();
+            // 设置返回按钮的监听事件
+            finish(); // 直接退出
         } else if (v == btnCheckOut) {
+            //todo 设置结算按钮的点击事件 应该是进入确认订单界面
             Toast.makeText(Activity_Market_ShoppingCart.this, "结算", Toast.LENGTH_SHORT).show();
         } else if (v == tvShopcartEdit) {
-            //设置编辑的点击事件
+            //设置编辑按钮的点击事件
             int tag = (int) tvShopcartEdit.getTag();
+            // 检查状态
             if (tag == ACTION_EDIT) {
-                //变成完成状态
+                // 变成完成状态
                 showDelete();
             } else {
-                //变成编辑状态
+                // 变成编辑状态
                 hideDelete();
             }
         } else if (v == btn_delete) {
+            // 设置删除按钮的点击事件
             try {
+                // 删除选中的item
                 adapter.deleteData();
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
+                Toast.makeText(Activity_Market_ShoppingCart.this, "删除失败", Toast.LENGTH_SHORT).show();
             }
+            // 显示总金额
             adapter.showTotalPrice();
-            //显示空空如也
+            // 决定显示哪个页面
             checkData();
+            // 校验是否全选
             adapter.checkAll();
         } else if (v == tv_empty_cart_tobuy) {
-            /**
-             * 这里是跳转到商城首页的函数
-             */
+            // 设置“去看看”按钮的点击事件
+            // 以下是跳转到商城首页的语句
             Intent intent = new Intent(Activity_Market_ShoppingCart.this, MainActivity.class);
             intent.putExtra("id",1);
             startActivity(intent);
         }
     }
 
+    /**
+     * 隐藏编辑界面
+     */
     private void hideDelete() {
         tvShopcartEdit.setText("编辑");
         tvShopcartEdit.setTag(ACTION_EDIT);
 
-        adapter.checkAll_none(true);
+        adapter.checkAll_none(false);
         ll_delete.setVisibility(View.GONE);
         ll_check_all.setVisibility(View.VISIBLE);
 
         adapter.showTotalPrice();
     }
 
+    /**
+     * 显示编辑界面
+     */
     private void showDelete() {
         tvShopcartEdit.setText("完成");
         tvShopcartEdit.setTag(ACTION_COMPLETE);
@@ -149,7 +186,6 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity__market__shopping_cart);
 
         TouchTypeDetector.TouchTypListener touchTypListener = new TouchTypeDetector.TouchTypListener() {
@@ -190,10 +226,11 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
 
         tvShopcartEdit.setTag(ACTION_EDIT);
         tvShopcartEdit.setText("编辑");
-
     }
 
-    //-----------------------------------------
+    /**
+     * 根据数据决定要选择哪个页面来显示
+     */
     private void checkData() {
         if (adapter != null && adapter.getItemCount() > 0) {
             tvShopcartEdit.setVisibility(View.VISIBLE);
@@ -212,60 +249,44 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
      */
     private void showData() throws JSONException {
 
-        List<Object_Commodity_Shoppingcart> datas = new ArrayList<>();
         SharedPreferences sp = getSharedPreferences("shopping_cart_cache" , MODE_MULTI_PROCESS);
         String information = sp.getString("cart_information" ,"error");
+
         // debug专用
         System.out.println("这里是从缓存取出来的information在showData里面：" +information);
 
-        if(!information.equals("error")){
-
-//            List<JSONObject> commodityList = JSON.parseObject(information , new TypeReference<List<JSONObject>>(){});
-//            List<Object_Commodity_Shoppingcart> datas = new ArrayList<>();
-//            for(JSONObject object : commodityList){
-//                Object_Commodity_Shoppingcart obj = new Object_Commodity_Shoppingcart();
-//                obj.setImageList(JSON.parseObject(object.getString("url") , new TypeReference<List<String>>(){}));
-//                obj.setItemID(object.getString("itemId"));
-//                obj.setItemName(object.getString("itemName"));
-//                obj.setOwnerID(object.getString("ownerId"));
-//                obj.setPrice(object.getDouble("price"));
-//                datas.add(obj);
-//                Log.e("添加成功", "add successfully");
-//                System.out.println(datas.size());
-//            }
-
-            List<Object_Commodity> commodityList = JSON.parseObject(information , new TypeReference<List<Object_Commodity>>(){});
+//        if(!information.equals("error")){
+//            commodityList = JSON.parseObject(information , new TypeReference<List<Object_Commodity>>(){});
 
             /**
              * 把缓存里面的每一个对象都取出来
+             * 在这里进行数据传输
              */
-            for(Object_Commodity object_commodity: commodityList){
-                Object_Commodity_Shoppingcart object_commodity_shoppingcart = new Object_Commodity_Shoppingcart();
-
-//                boolean isAdded = false ;
+//            for(Object_Commodity object_commodity: commodityList) {
+//                Object_Pre_Sale object_item_shoppingcart = new Object_Pre_Sale();
 //
-//                for(int i = 0 ; i<datas.size() ; i++){
-//                    if((object_commodity.getItemID()).equals(datas.get(i).getItemID())){
-//                        isAdded = true;
-//                    }
-//                }
+//                // set到购物车这个类中
+//                object_item_shoppingcart.setImgurl(object_commodity.getImageList().get(0));
+//                object_item_shoppingcart.setItemId(object_commodity.getItemID());
+//                object_item_shoppingcart.setItemName(object_commodity.getItemName());
+//                object_item_shoppingcart.setPrice(object_commodity.getPrice());
+//
+//                //todo setCount
+//
+//                datas.add(object_item_shoppingcart);
+//            }
 
-                object_commodity_shoppingcart.setImageList(object_commodity.getImageList());
-                object_commodity_shoppingcart.setItemID(object_commodity.getItemID());
-                object_commodity_shoppingcart.setItemName(object_commodity.getItemName());
-                object_commodity_shoppingcart.setOwnerID(object_commodity.getOwnerID());
-                object_commodity_shoppingcart.setPrice(object_commodity.getPrice());
+            makeData();
 
-                datas.add(object_commodity_shoppingcart);
-            }
-
+            // 以下是商品展示界面的语句
             if (datas != null && datas.size() > 0) {
                 Log.e("不为空", "not null");
                 tvShopcartEdit.setVisibility(View.VISIBLE);
                 ll_empty_shopcart.setVisibility(View.GONE);
-                adapter = new Adapter_ShoppingCart(this, datas, tvShopcartTotal,  checkboxAll, cb_all);
+                adapter = new Adapter_ShoppingCart(this, datas, tvShopcartTotal, checkboxAll, cb_all);
                 recyclerview.setLayoutManager(new LinearLayoutManager(this));
                 recyclerview.setAdapter(adapter);
+                adapter.setOnItemClickListener(MyItemClickListener);
             } else {
                 //显示空的
                 tvShopcartEdit.setVisibility(View.GONE);
@@ -274,6 +295,21 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
                 ll_delete.setVisibility(View.GONE);
             }
         }
+//    }
+
+    private void makeData() {
+        String string1 = "rlsadkfjskljflakjdlakjsdlaskjd";
+        List<String> tempList = new ArrayList<>();
+        tempList.add(string1);
+        Object_Pre_Sale object_pre_sale1 = new Object_Pre_Sale("1", "1", tempList, 2, 2.22,
+                "http://b-ssl.duitang.com/uploads/item/201209/07/20120907181244_tGiNN.jpeg");
+        datas.add(object_pre_sale1);
+
+        List<String> tempList1 = new ArrayList<>();
+        tempList1.add(string1);
+        Object_Pre_Sale object_pre_sale2 = new Object_Pre_Sale("adaksdlkajhskfhajshfkjashfkjashkdjahksjhdakjshd", "1", tempList1, 2, 2.22,
+                "http://b-ssl.duitang.com/uploads/item/201209/07/20120907181244_tGiNN.jpeg");
+        datas.add(object_pre_sale2);
     }
 
     //用于手势监听
@@ -283,4 +319,71 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
         return super.dispatchTouchEvent(event);
     }
 
+    private Adapter_ShoppingCart.OnItemClickListener MyItemClickListener = new Adapter_ShoppingCart.OnItemClickListener() {
+
+        @Override
+        public void onItemClickListener(View v, int position) {
+            switch (v.getId()){
+                case R.id.count_add:
+                    int count_temp = datas.get(position).getNum();
+                    Log.e("count", count_temp + "");
+                    int max = getStorageNumber(datas.get(position).getItemId());
+                    if (count_temp < max){
+                        datas.get(position).setNum(count_temp + 1);
+                        adapter.notifyItemChanged(position);
+                    }else{
+                        Toast.makeText(Activity_Market_ShoppingCart.this, "您选择的数量已达到商品的最大库存", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case R.id.count_sub:
+                    int count_temp1 = datas.get(position).getNum();
+                    if (count_temp1 > 1){
+                        datas.get(position).setNum(count_temp1 - 1);
+                        adapter.notifyItemChanged(position);
+//                        data_changed(position);
+                    }else {
+                        Toast.makeText(Activity_Market_ShoppingCart.this, "已是最低数量", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case R.id.tv_desc_gov:
+                case R.id.iv_gov:
+                    // test
+                    // todo 跳转到特定的商品详情页面
+                    Intent intent = new Intent(Activity_Market_ShoppingCart.this, NotificationJumpBack.class);
+                    startActivity(intent);
+                    break;
+                case R.id.cb_gov:
+                    boolean b = datas.get(position).isChildSelected();
+                    datas.get(position).setChildSelected(!b);
+                    adapter.notifyItemChanged(position);
+                    adapter.showTotalPrice();
+                    adapter.checkAll();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    /**
+     * 如果数量有变化，就更新缓存的数据
+     * @param index
+     */
+    private void data_changed(int index){
+//        commodityList.get(index).setNum(commodityList.get(0).getNum() + 1 );
+        SharedPreferences sp = getSharedPreferences("shopping_cart_cache" , MODE_MULTI_PROCESS);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear().commit();
+        editor.putString("cart_information", JSON.toJSONString(commodityList)).commit();
+    }
+
+    /**
+     * todo 发请求得到库存的数量
+     * @param itemID
+     * @return
+     */
+    private int getStorageNumber(String itemID){
+        int number = 15;
+        return number;
+    }
 }

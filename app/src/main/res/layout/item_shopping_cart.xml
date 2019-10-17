@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -6,28 +7,41 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:orientation="horizontal"
         android:padding="10dp">
 
-        <!--选择框-->
-        <CheckBox
-            android:id="@+id/cb_gov"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:button="@drawable/xml_checkbox_selector"
-            android:checked="true"
-            android:padding="5dp"
-            android:clickable="false" />
+            android:layout_height="match_parent">
+
+            <!--选择框-->
+            <CheckBox
+                android:id="@+id/cb_gov"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleX="0.7"
+                android:scaleY="0.7"
+                android:layout_gravity="center_vertical"
+                android:button="@drawable/xml_checkbox_selector"
+                android:checked="true"
+                android:padding="5dp"
+                android:clickable="false" />
+        </LinearLayout>
 
         <!--图片-->
-        <ImageView
-            android:id="@+id/iv_gov"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@drawable/ic_new_img_loading_1"
-            android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_gov"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/ic_new_img_loading_1"
+                android:scaleType="centerCrop" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,36 +49,99 @@
             android:layout_marginLeft="5dp"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_desc_gov"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/ll_itemName"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:lines="3"
-                android:text="华硕（ASUS）经典系列X554LP 15.6英寸笔记本 （i5-5200U 4G 500G R5-M230 1G独显 蓝牙 Win8.1 黑色）"
-                android:textColor="#404040"
-                android:textSize="16sp" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_price_gov"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="1dp"
-                android:layout_gravity="start"
-                android:gravity="center"
-                android:text="LKB 0.0"
-                android:textColor="#f00"
-                android:textSize="15sp"
-                android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/tv_desc_gov"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:lines="2"
+                    android:text="华硕（ASUS）经典系列X554LP 15.6英寸笔记本 （i5-5200U 4G 500G R5-M230 1G独显 蓝牙 Win8.1 黑色）"
+                    android:textColor="#404040"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                    <TextView
+                    android:id="@+id/check_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
+                    android:text="如果时光可以倒流，我会在第一天就闭上眼，然后什么都看不见"
+                    android:textSize="15dp"
+                    android:textColor="#000000"
+                    />
+
+                </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_price_gov"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="3dp"
+                        android:gravity="center"
+                        android:text="￥ 0.00"
+                        android:textColor="@color/theme"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/count_sub"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/count_sub" />
+
+                    <TextView
+                        android:id="@+id/item_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="1"
+                        android:textSize="20dp" />
+
+                    <ImageView
+                        android:id="@+id/count_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/count_add" />
+
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
-
-
     </LinearLayout>
 
     <!--线-->
     <View
         android:layout_width="match_parent"
         android:layout_height="0.6dp"
+        android:layout_marginTop="1dp"
         android:background="#22000000" />
 
 </LinearLayout>

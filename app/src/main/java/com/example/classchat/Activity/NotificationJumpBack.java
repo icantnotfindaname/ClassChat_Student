@@ -13,7 +13,7 @@ public class NotificationJumpBack extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.e("NotificationJumpBack", "begin");
-        setContentView(R.layout.activity_test);
+        setContentView(R.layout.activity_notification_jumpback);
         Intent i = getBaseContext().getPackageManager()
                 .getLaunchIntentForPackage( getBaseContext().getPackageName() );
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

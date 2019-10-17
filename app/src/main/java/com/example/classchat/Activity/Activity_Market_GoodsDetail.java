@@ -1,7 +1,6 @@
 package com.example.classchat.Activity;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -12,24 +11,20 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.bumptech.glide.Glide;
 import com.example.classchat.Adapter.Adapter_GoodsDetail;
-import com.example.classchat.Adapter.Adapter_ShoppingCart;
 import com.example.classchat.Object.Object_Commodity;
-import com.example.classchat.Object.Object_Commodity_Shoppingcart;
+import com.example.classchat.Object.Object_Pre_Sale;
 import com.example.classchat.R;
 import com.example.classchat.Util.Util_ScreenShot;
 
@@ -37,13 +32,10 @@ import com.example.classchat.Util.Util_ToastUtils;
 import com.github.nisrulz.sensey.Sensey;
 import com.github.nisrulz.sensey.TouchTypeDetector;
 import com.hankkin.library.GradationScrollView;
-import com.hankkin.library.MyImageLoader;
 import com.hankkin.library.NoScrollListView;
 import com.hankkin.library.ScrollViewContainer;
 import com.hankkin.library.StatusBarUtil;
 import com.hch.thumbsuplib.ThumbsUpCountView;
-import com.joanzapata.android.BaseAdapterHelper;
-import com.joanzapata.android.QuickAdapter;
 
 import java.io.File;
 import java.io.IOException;
@@ -171,19 +163,18 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity implements Gr
         SharedPreferences sp = getSharedPreferences("shopping_cart_cache" , MODE_MULTI_PROCESS);
         String jsonString = sp.getString("cart_information","error");
         SharedPreferences.Editor editor = sp.edit();
-        List<Object_Commodity_Shoppingcart> datas = new ArrayList<>();
+        List<Object_Pre_Sale> datas = new ArrayList<>();
         if(!jsonString.equals("error")) {
             List<Object_Commodity> commodityList = JSON.parseObject(jsonString, new TypeReference<List<Object_Commodity>>() {
             });
             // 把缓存里的对象取出
             for (Object_Commodity object_commodity : commodityList) {
-                Object_Commodity_Shoppingcart object_commodity_shoppingcart = new Object_Commodity_Shoppingcart();
-                object_commodity_shoppingcart.setImageList(object_commodity.getImageList());
-                object_commodity_shoppingcart.setItemID(object_commodity.getItemID());
-                object_commodity_shoppingcart.setItemName(object_commodity.getItemName());
-                object_commodity_shoppingcart.setOwnerID(object_commodity.getOwnerID());
-                object_commodity_shoppingcart.setPrice(object_commodity.getPrice());
-                datas.add(object_commodity_shoppingcart);
+                Object_Pre_Sale object_preSale = new Object_Pre_Sale();
+                object_preSale.setImgurl(object_commodity.getImageList().get(0));
+                object_preSale.setItemId(object_commodity.getItemID());
+                object_preSale.setItemName(object_commodity.getItemName());
+                object_preSale.setPrice(object_commodity.getPrice());
+                datas.add(object_preSale);
             }
 
             /**
@@ -192,7 +183,7 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity implements Gr
             isAdded = false;
             if (datas != null) {
                 for (int i = 0; i < datas.size(); i++) {
-                    if ((item.getItemID()).equals(datas.get(i).getItemID())) {
+                    if ((item.getItemID()).equals(datas.get(i).getItemId())) {
                         isAdded = true;
                     }
                 }
