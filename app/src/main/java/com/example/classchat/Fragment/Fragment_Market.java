@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.example.classchat.Activity.Activity_Market_AddCommodity;
 import com.example.classchat.Activity.Activity_Market_MyGoods;
 import com.example.classchat.Activity.Activity_Market_ShoppingCart;
@@ -27,6 +28,7 @@ import com.example.classchat.Adapter.Adapter_CommodityRecycleView;
 import com.example.classchat.Object.Object_Commodity;
 import com.example.classchat.Object.Object_Commodity_PriceSort;
 import com.example.classchat.Object.Object_Main_Brief_Item;
+import com.example.classchat.Object.Object_Main_Brief_Item_PriceSort;
 import com.example.classchat.R;
 import com.example.classchat.Util.Util_NetUtil;
 import com.example.classchat.Util.Util_ToastUtils;
@@ -402,14 +404,14 @@ public class Fragment_Market extends Fragment {
             //按排序选择初始化list
             switch(sort.getCheckedRadioButtonId()){
                 case DEFAULT_SORT:
-                    list = new ArrayList<Object_Commodity>();
+                    list = new ArrayList<Object_Main_Brief_Item>();
                     break;
 //                case THUMB_SORT:
 //                    list = new ArrayList<Object_Commodity_ThumbsUpSort>();
 //                    break;
                 case UP_SORT:
                 case DOWN_SORT:
-                    list = new ArrayList<Object_Commodity_PriceSort>();
+                    list = new ArrayList<Object_Main_Brief_Item_PriceSort>();
                     break;
                 default:
                     break;
@@ -421,22 +423,17 @@ public class Fragment_Market extends Fragment {
                 String itemID = item.getItemID();
                 String itemName = item.getItemName();
                 List<String> imageList = item.getImageList();
-                String ownerID = item.getOwnerID();
                 double price = item.getPrice();
-                List<String>thumbedlist = item.getThumbedList();
-                String briefintroduction = item.getBriefIntroduction();
-                String detailinformation = item.getDetailIntroduction();
                 switch (sort.getCheckedRadioButtonId()){
                     case DEFAULT_SORT:
-                        list.add(new Object_Commodity(itemID, itemName, imageList, ownerID, price, briefintroduction, detailinformation, thumbedlist));
+                        list.add(new Object_Main_Brief_Item(itemID, itemName, imageList.get(0), price));
                         break;
 //                    case THUMB_SORT:
 //                        list.add(new Object_Commodity_ThumbsUpSort(itemID, itemName, imageList, ownerID, price, briefintroduction, detailinformation, thumbedlist));
 //                        break;
                     case UP_SORT:
                     case DOWN_SORT:
-//                        list.add(new Object_Main_Brief_Item_PriceSort(itemName, itemName, imageList, price));
-                        list.add(new Object_Commodity_PriceSort(itemID, itemName, imageList, ownerID, price, briefintroduction, detailinformation, thumbedlist));
+                        list.add(new Object_Main_Brief_Item_PriceSort(itemID, itemName, imageList.get(0), price));
                         break;
                     default:
                         break;
@@ -475,32 +472,35 @@ public class Fragment_Market extends Fragment {
         //构建requestbody
         RequestBody requestBody = new FormBody.Builder()
                 .add("mcount",String.valueOf(mCount))
-                .add("myType", type + "")
+                .add("type", type + "")
                 .build();
         // 发送网络请求，联络信息
-        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/getallitems", requestBody, new okhttp3.Callback() {
+        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/getitembytype", requestBody, new okhttp3.Callback() {
             @Override
 
             public void onResponse(Call call, Response response) throws IOException {
                 // 得到服务器返回的具体内容
                 String responseData = response.body().string();
                 // 转化为具体的对象列表
-
                 //若是新刷新的需重置itemlist
                 if(mCount == 0) {
                     itemslist.clear();
                 }
                 jsonlist = JSON.parseArray(responseData, String.class);
-                for(int i = 0; i < jsonlist.size(); i++) {
-                    Object_Commodity object_commodity = JSON.parseObject(jsonlist.get(i), Object_Commodity.class);
-                    Object_Main_Brief_Item object_main_brief_item = JSON.parseObject(jsonlist.get(i), Object_Main_Brief_Item.class);
-                    itemslist.add(object_commodity);
-//                    itemslist.add(object_main_brief_item);
-                }
+                if(jsonlist == null)
+                    message.what = RECEIVE_NULL;
+                else {
+                    for(int i = 0; i < jsonlist.size(); i++) {
+                        Object_Commodity object_commodity = JSON.parseObject(jsonlist.get(i), Object_Commodity.class);
+                        Object_Main_Brief_Item object_main_brief_item = JSON.parseObject(jsonlist.get(i), Object_Main_Brief_Item.class);
+                        itemslist.add(object_commodity);
+                        itemslist.add(object_main_brief_item);
+                    }
 
-                // 发送收到成功的信息
-                //由getQuery()按需处理后载入布局
-                message.what = RECEIVE_MID;
+                    // 发送收到成功的信息
+                    //由getQuery()按需处理后载入布局
+                    message.what = RECEIVE_MID;
+                }
                 handler.sendMessage(message);
             }
 
