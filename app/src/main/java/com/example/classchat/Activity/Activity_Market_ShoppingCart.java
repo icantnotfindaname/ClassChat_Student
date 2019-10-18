@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
@@ -23,8 +25,10 @@ import com.example.classchat.Adapter.Adapter_ShoppingCart;
 import com.example.classchat.Object.Object_Commodity;
 import com.example.classchat.Object.Object_Pre_Sale;
 import com.example.classchat.R;
+import com.example.classchat.Util.Util_ToastUtils;
 import com.github.nisrulz.sensey.Sensey;
 import com.github.nisrulz.sensey.TouchTypeDetector;
+import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
 
 import org.json.JSONException;
 
@@ -48,6 +52,8 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
     private Adapter_ShoppingCart adapter;
     private LinearLayout ll_empty_shopcart;
     private TextView tv_empty_cart_tobuy;
+
+    private PullLoadMoreRecyclerView mPullLoadMoreRecyclerView;
 
 //    private TextView check_size;
 //    private TextView item_name;
@@ -88,6 +94,8 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
         btn_delete = findViewById(R.id.btn_delete);
         ll_empty_shopcart = findViewById(R.id.ll_empty_shopcart);
         tv_empty_cart_tobuy = findViewById(R.id.tv_empty_cart_tobuy);
+
+        mPullLoadMoreRecyclerView = (PullLoadMoreRecyclerView)findViewById(R.id.pullLoadMoreRecyclerView);
 
 //        count_add = findViewById(R.id.count_add);
 //        count_sub = findViewById(R.id.count_sub);
@@ -287,6 +295,23 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
                 recyclerview.setLayoutManager(new LinearLayoutManager(this));
                 recyclerview.setAdapter(adapter);
                 adapter.setOnItemClickListener(MyItemClickListener);
+                mPullLoadMoreRecyclerView.setGridLayout(1);
+                mPullLoadMoreRecyclerView.setFooterViewText("下拉刷新");
+                mPullLoadMoreRecyclerView.setFooterViewTextColor(R.color.black);
+                mPullLoadMoreRecyclerView.setOnPullLoadMoreListener(new PullLoadMoreRecyclerView.PullLoadMoreListener() {
+                    @Override
+                    public void onRefresh() {
+                        mPullLoadMoreRecyclerView.setPushRefreshEnable(true);
+                        adapter.notifyDataSetChanged();
+                        mPullLoadMoreRecyclerView.setPullLoadMoreCompleted();
+                    }
+
+                    @Override
+                    public void onLoadMore() {
+                        mPullLoadMoreRecyclerView.setPullRefreshEnable(false);
+                    }
+                });
+                mPullLoadMoreRecyclerView.setAdapter(adapter);
             } else {
                 //显示空的
                 tvShopcartEdit.setVisibility(View.GONE);
@@ -330,7 +355,7 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
                     int max = getStorageNumber(datas.get(position).getItemId());
                     if (count_temp < max){
                         datas.get(position).setNum(count_temp + 1);
-                        adapter.notifyItemChanged(position);
+                        adapter.notifyItemChanged(position, R.id.item_count);
                     }else{
                         Toast.makeText(Activity_Market_ShoppingCart.this, "您选择的数量已达到商品的最大库存", Toast.LENGTH_SHORT).show();
                     }
@@ -339,7 +364,7 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
                     int count_temp1 = datas.get(position).getNum();
                     if (count_temp1 > 1){
                         datas.get(position).setNum(count_temp1 - 1);
-                        adapter.notifyItemChanged(position);
+                        adapter.notifyItemChanged(position, R.id.item_count);
 //                        data_changed(position);
                     }else {
                         Toast.makeText(Activity_Market_ShoppingCart.this, "已是最低数量", Toast.LENGTH_SHORT).show();
@@ -353,11 +378,19 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
                     startActivity(intent);
                     break;
                 case R.id.cb_gov:
-                    boolean b = datas.get(position).isChildSelected();
-                    datas.get(position).setChildSelected(!b);
-                    adapter.notifyItemChanged(position);
-                    adapter.showTotalPrice();
-                    adapter.checkAll();
+                    if (getStorageNumber(datas.get(position).getItemId()) < 0 ){
+                        datas.get(position).setChildSelected(false);
+                        adapter.notifyItemChanged(position, R.id.cb_gov);
+                        adapter.showTotalPrice();
+                        adapter.checkAll();
+                        Util_ToastUtils.showToast(Activity_Market_ShoppingCart.this, "商品暂时缺货，请勿勾选");
+                    }else {
+                        boolean b = datas.get(position).isChildSelected();
+                        datas.get(position).setChildSelected(!b);
+                        adapter.notifyItemChanged(position, R.id.cb_gov);
+                        adapter.showTotalPrice();
+                        adapter.checkAll();
+                    }
                     break;
                 default:
                     break;

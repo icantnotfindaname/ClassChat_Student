@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rv_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -33,7 +34,8 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/iv_gov"
@@ -41,6 +43,18 @@
                 android:layout_height="100dp"
                 android:background="@drawable/ic_new_img_loading_1"
                 android:scaleType="centerCrop" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_able_to_buy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="现在有货"/>
+
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -137,11 +151,11 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!--线-->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.6dp"
-        android:layout_marginTop="1dp"
-        android:background="#22000000" />
+<!--    &lt;!&ndash;线&ndash;&gt;-->
+<!--    <View-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0.6dp"-->
+<!--        android:layout_marginTop="1dp"-->
+<!--        android:background="#22000000" />-->
 
 </LinearLayout>

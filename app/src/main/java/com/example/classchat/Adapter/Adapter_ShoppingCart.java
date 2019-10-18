@@ -38,6 +38,10 @@ public class Adapter_ShoppingCart extends RecyclerView.Adapter<RecyclerView.View
     List<JSONObject> list ;
     SharedPreferences.Editor editor ;
 
+    public Adapter_ShoppingCart(){
+
+    }
+
     public Adapter_ShoppingCart(Context context, final List<Object_Pre_Sale> datas, TextView tvShopcartTotal, CheckBox checkboxAll,
                                 CheckBox cb_all) {
         //接收
@@ -125,7 +129,11 @@ public class Adapter_ShoppingCart extends RecyclerView.Adapter<RecyclerView.View
      */
     @Override
     public int getItemCount() {
-        return datas.size();
+        if (datas != null){
+            return datas.size();
+        }else {
+            return 0;
+        }
     }
 
     //是否全选，以下checkAll函数的反面
@@ -192,7 +200,7 @@ public class Adapter_ShoppingCart extends RecyclerView.Adapter<RecyclerView.View
         private ImageView ivGov;
         private TextView tvDescGov;
         private TextView tvPriceGov;
-
+        private TextView tvAbleToBuy;
         private TextView count;
         private ImageView count_add;
         private ImageView count_sub;
@@ -210,6 +218,7 @@ public class Adapter_ShoppingCart extends RecyclerView.Adapter<RecyclerView.View
             count_add = itemView.findViewById(R.id.count_add);
             count_sub = itemView.findViewById(R.id.count_sub);
             check_size = itemView.findViewById(R.id.check_size);
+            tvAbleToBuy = itemView.findViewById(R.id.tv_able_to_buy);
 
 
 //            //设置item的点击事件
@@ -288,14 +297,27 @@ public class Adapter_ShoppingCart extends RecyclerView.Adapter<RecyclerView.View
                             .into(ivGov);
                 }
 
-                //设置文本
+                /**
+                 * 以下是设置各种文本的语句
+                 */
+                int storage = getStorageNumber(Commodity.getItemId());
+
                 tvDescGov.setText(Commodity.getItemName()); // 商品名
+
+                // 价格
                 // 处理一下金额，保留两位小数
                 double total = Commodity.getPrice();
                 BigDecimal b = new BigDecimal(total);
                 double total_deal = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-                tvPriceGov.setText("￥ " + total_deal); // 价格
-                count.setText(Commodity.getNum() + ""); // 设置数量
+                tvPriceGov.setText("￥ " + total_deal);
+
+                // 设置数量
+                if ( Commodity.getNum() <= storage ){
+                    count.setText(Commodity.getNum() + "");
+                }else {
+                    count.setText(storage + "");
+                    Commodity.setNum(storage);
+                }
 
                 // 设置规格
                 String temp_string = "" ;
@@ -303,6 +325,13 @@ public class Adapter_ShoppingCart extends RecyclerView.Adapter<RecyclerView.View
                     temp_string += Commodity.getParamList().get(i) + " ";
                 }
                 check_size.setText(temp_string);
+
+                // 设置是否有货
+                if ( storage < 0 ){
+                    tvAbleToBuy.setText("现在有货");
+                }else {
+                    tvAbleToBuy.setText("暂时无货");
+                }
             }
         }
     }
@@ -358,5 +387,15 @@ public class Adapter_ShoppingCart extends RecyclerView.Adapter<RecyclerView.View
 
     public void setCheckboxAll(CheckBox checkboxAll) {
         this.checkboxAll = checkboxAll;
+    }
+
+    /**
+     * todo 发请求得到库存的数量
+     * @param itemID
+     * @return
+     */
+    private int getStorageNumber(String itemID){
+        int number = 15;
+        return number;
     }
 }
