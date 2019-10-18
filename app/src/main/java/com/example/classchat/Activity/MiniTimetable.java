@@ -370,6 +370,9 @@ public class  MiniTimetable extends LinearLayout {
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if(keyCode == KeyEvent.KEYCODE_BACK){
                     dialog.dismiss();
+                    Intent intent = new Intent();
+                    intent.setAction("miniTimetable.send");
+                    mContext.sendBroadcast(intent);
                 }
                 return true;
             }

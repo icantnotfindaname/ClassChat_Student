@@ -54,6 +54,7 @@ public class Activity_CompareTable extends AppCompatActivity {
     private static final int GET = 0;
     private static final int NULL = 1;
     private MyReceiver myReceiver = new MyReceiver();
+    private Boolean isChanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +121,8 @@ public class Activity_CompareTable extends AppCompatActivity {
                 .path(getCacheDir(Activity_CompareTable.this))
                 .getCache("compareTable", String.class);
         final Message message = new Message();
-        if(info == null || info.isEmpty() || info.equals("[]"))
+
+        if(info == null || info.isEmpty() || info.equals("[]") || isChanged)
         {
             RequestBody requestBody = new FormBody.Builder()
                     .add("userID", userId)
@@ -209,6 +211,7 @@ public class Activity_CompareTable extends AppCompatActivity {
             Cache.with(Activity_CompareTable.this)
                     .path(getCacheDir(Activity_CompareTable.this))
                     .remove("compareTable");
+            isChanged = true;
             initData();
         }
     }

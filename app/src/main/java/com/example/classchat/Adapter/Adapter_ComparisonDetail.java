@@ -114,13 +114,14 @@ public class Adapter_ComparisonDetail extends RecyclerView.Adapter<Adapter_Compa
         holder.name.setText(nameList.get(position).substring(11));
         final int[] i = {num.get(position)};
         holder.number.setText(i[0] + "");
-
+        if(i[0] == 1)
+            holder.sub.setEnabled(false);
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 builder = new AlertDialog.Builder(mContext)
                         .setTitle("温馨提示：")
-                        .setMessage("确定通过🐎？")
+                        .setMessage("狠心抛弃TA🐎？")
                         .setPositiveButton("确定",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -142,7 +143,7 @@ public class Adapter_ComparisonDetail extends RecyclerView.Adapter<Adapter_Compa
             @Override
             public void onClick(View v) {
                 if(i[0] == 1)
-                    holder.sub.setVisibility(View.VISIBLE);
+                    holder.sub.setEnabled(true);
                 i[0]++;
                 holder.number.setText(i[0] + "");
                 otherUserID = nameList.get(position);
@@ -155,12 +156,13 @@ public class Adapter_ComparisonDetail extends RecyclerView.Adapter<Adapter_Compa
             @Override
             public void onClick(View v) {
                 i[0] --;
+                if(i[0] == 1)
+                    holder.sub.setEnabled(false);
                 holder.number.setText(i[0] + "");
                 otherUserID = nameList.get(position);
                 newNumber = Integer.parseInt(holder.number.getText().toString());
                 editNUmber(comparisonID, otherUserID.substring(0, 11), holder.number.getText().toString());
-                if(i[0] == 1)
-                    holder.sub.setVisibility(View.GONE);
+
             }
         });
 
@@ -213,7 +215,7 @@ public class Adapter_ComparisonDetail extends RecyclerView.Adapter<Adapter_Compa
                 // 得到服务器返回的具体内容
                 String responseData = response.body().string();
                 Message message = new Message();
-                Log.e("responseData", responseData);
+                Log.e("delresponseData", responseData);
                 if(responseData.equals("ERROR")){
                     message.what = DELETE_FAIL;
                     handler.sendMessage(message);
