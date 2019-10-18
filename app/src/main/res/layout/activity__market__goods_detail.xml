@@ -108,7 +108,8 @@
                 android:id="@+id/goods_detail_choose_ll"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:onClick="choose">
                 <TextView
                     android:id="@+id/tv_choose"
                     android:layout_width="wrap_content"
