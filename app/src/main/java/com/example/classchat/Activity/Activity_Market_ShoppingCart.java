@@ -23,6 +23,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.example.classchat.Adapter.Adapter_ShoppingCart;
 import com.example.classchat.Object.Object_Commodity;
+import com.example.classchat.Object.Object_Item_Detail;
 import com.example.classchat.Object.Object_Pre_Sale;
 import com.example.classchat.R;
 import com.example.classchat.Util.Util_ToastUtils;
@@ -141,7 +142,7 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
             }else {
                 boolean tag = true;
                 for ( int i = 0 ; i < toBuy.size() ; i++ ){
-                    if ( toBuy.get(i).getNum() > getStorageNumber(toBuy.get(i).getItemId()) ){
+                    if ( toBuy.get(i).getNum() > getStorageNumber(toBuy.get(i).getItemId())){
                         Util_ToastUtils.showToast(Activity_Market_ShoppingCart.this, "存在超过库存的商品");
                         tag = false;
                         break;
@@ -155,7 +156,6 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
                     adapter.notifyDataSetChanged();
                 }
             }
-
         } else if (v == tvShopcartEdit) {
             //设置编辑按钮的点击事件
             int tag = (int) tvShopcartEdit.getTag();
@@ -294,28 +294,17 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
         // debug专用
         System.out.println("这里是从缓存取出来的information在showData里面：" +information);
 
-//        if(!information.equals("error")){
-//            commodityList = JSON.parseObject(information , new TypeReference<List<Object_Commodity>>(){});
+        /**
+         * 数据传输
+         */
+        if(!information.equals("error") && !information.equals("[{}]")){
+            List<Object_Pre_Sale> commodityList = JSON.parseObject(information , new TypeReference<List<Object_Pre_Sale>>(){});
+            for (int i = 0 ; i < commodityList.size() ; i++){
+                datas.add(commodityList.get(i));
+            }
 
-            /**
-             * 把缓存里面的每一个对象都取出来
-             * 在这里进行数据传输
-             */
-//            for(Object_Commodity object_commodity: commodityList) {
-//                Object_Pre_Sale object_item_shoppingcart = new Object_Pre_Sale();
-//
-//                // set到购物车这个类中
-//                object_item_shoppingcart.setImgurl(object_commodity.getImageList().get(0));
-//                object_item_shoppingcart.setItemId(object_commodity.getItemID());
-//                object_item_shoppingcart.setItemName(object_commodity.getItemName());
-//                object_item_shoppingcart.setPrice(object_commodity.getPrice());
-//
-//                //todo setCount
-//
-//                datas.add(object_item_shoppingcart);
-//            }
-
-            makeData();
+            // 虚拟数据
+            // makeData();
 
             // 以下是商品展示界面的语句
             if (datas != null && datas.size() > 0) {
@@ -352,27 +341,28 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
                 ll_delete.setVisibility(View.GONE);
             }
         }
-//    }
+    }
 
     private void makeData() {
         String string1 = "这是一首简单的小情歌";
         List<String> tempList = new ArrayList<>();
         tempList.add(string1);
-        Object_Pre_Sale object_pre_sale1 = new Object_Pre_Sale("我会给你怀抱", "0", tempList, 2, 2.22,
+        float temp_price = (float)2.22;
+        Object_Pre_Sale object_pre_sale1 = new Object_Pre_Sale("我会给你怀抱", "0", tempList, 2, temp_price,
                 "http://b-ssl.duitang.com/uploads/item/201209/07/20120907181244_tGiNN.jpeg");
         datas.add(object_pre_sale1);
 
         List<String> tempList1 = new ArrayList<>();
         string1 = "唱着我们心中的曲折";
         tempList1.add(string1);
-        Object_Pre_Sale object_pre_sale2 = new Object_Pre_Sale("明知道 就算大雨让这座城市颠倒", "1", tempList1, 2, 2.22,
+        Object_Pre_Sale object_pre_sale2 = new Object_Pre_Sale("明知道 就算大雨让这座城市颠倒", "1", tempList1, 2, temp_price,
                 "http://b-ssl.duitang.com/uploads/item/201209/07/20120907181244_tGiNN.jpeg");
         datas.add(object_pre_sale2);
 
         List<String> tempList2 = new ArrayList<>();
         string1 = "我想我很适合";
         tempList2.add(string1);
-        Object_Pre_Sale object_pre_sale3 = new Object_Pre_Sale("受不了 看着你背影来到", "2", tempList2, 16, 2.22,
+        Object_Pre_Sale object_pre_sale3 = new Object_Pre_Sale("受不了 看着你背影来到", "2", tempList2, 16, temp_price,
                 "http://b-ssl.duitang.com/uploads/item/201209/07/20120907181244_tGiNN.jpeg");
         datas.add(object_pre_sale3);
     }
@@ -396,7 +386,7 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
                     if (count_temp < max){
                         datas.get(position).setNum(count_temp + 1);
                         adapter.notifyItemChanged(position, R.id.item_count);
-                        // todo 修改缓存
+                        data_changed(position);
                     }else{
                         Util_ToastUtils.showToast(Activity_Market_ShoppingCart.this, "警告：超过库存");
                     }
@@ -406,7 +396,7 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
                         if (count_temp1 > 1){
                         datas.get(position).setNum(count_temp1 - 1);
                         adapter.notifyItemChanged(position, R.id.item_count);
-                        // todo 修改缓存
+                        data_changed(position);
                     }else {
                         Util_ToastUtils.showToast(Activity_Market_ShoppingCart.this, "已是最低数量");
                     }
@@ -415,8 +405,9 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
                 case R.id.iv_gov:
                 case R.id.tv_desc_gov:
                     // test
-                    // todo 跳转到特定的商品详情页面
-                    Intent intent = new Intent(Activity_Market_ShoppingCart.this, NotificationJumpBack.class);
+                    Intent intent = new Intent(Activity_Market_ShoppingCart.this, Activity_Market_GoodsDetail.class);
+                    String itemID = datas.get(position).getItemId();
+                    intent.putExtra("itemId",itemID);
                     startActivity(intent);
                     break;
                 case R.id.cb_gov:
@@ -462,7 +453,6 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
      * @param index
      */
     private void data_changed(int index){
-        datas.get(index).setNum( datas.get(index).getNum() + 1 );
         SharedPreferences sp = getSharedPreferences("shopping_cart_cache" , MODE_MULTI_PROCESS);
         SharedPreferences.Editor editor = sp.edit();
         editor.clear().commit();

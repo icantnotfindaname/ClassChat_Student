@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Object_Pre_Sale {
 
-    public Object_Pre_Sale(String itemName, String itemId, List<String> paramList, int num, double price, String imgurl) {
+    public Object_Pre_Sale(String itemName, String itemId, List<String> paramList, int num, float price, String imgurl) {
         this.itemName = itemName;
         this.itemId = itemId;
         this.paramList = paramList;
@@ -13,9 +13,7 @@ public class Object_Pre_Sale {
         this.imgurl = imgurl;
     }
 
-    public Object_Pre_Sale(){
-
-    }
+    public Object_Pre_Sale(){}
 
     //商品名
     private String itemName;
@@ -30,7 +28,7 @@ public class Object_Pre_Sale {
     private int num;
 
     //单价
-    private double price;
+    private float price;
     
     //给购物车每一条的一个缩略图
     private String imgurl;
@@ -70,11 +68,11 @@ public class Object_Pre_Sale {
         this.num = num;
     }
 
-    public double getPrice() {
+    public float getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(float price) {
         this.price = price;
     }
 

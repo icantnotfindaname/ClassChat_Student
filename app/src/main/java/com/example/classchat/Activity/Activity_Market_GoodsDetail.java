@@ -2,6 +2,7 @@ package com.example.classchat.Activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,19 +20,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.donkingliang.labels.LabelsView;
 import com.example.classchat.Adapter.Adapter_GoodsDetail;
 import com.example.classchat.Adapter.NetworkImageHolderView;
 import com.example.classchat.Object.Object_Item_Detail;
+import com.example.classchat.Object.Object_Pre_Sale;
 import com.example.classchat.Object.Object_Stock;
 import com.example.classchat.R;
 import com.example.classchat.Util.Util_NetUtil;
 import com.example.classchat.Util.Util_ToastUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.FormBody;
@@ -49,7 +54,7 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity{
     private PopupWindow popupWindow;
     private LabelsView param1, param2, param3;
     private String paramChosen1, paramChosen2, paramChosen3, itemid;
-    private TextView param1Name, param2Name, param3Name, stock, number;
+    private TextView param1Name, param2Name, param3Name, stock, number, addToShoppingCart, buy;
     private Button close, add, sub;
     private RelativeLayout rl_choose;
     private int num = 1;
@@ -69,6 +74,12 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity{
             switch (msg.what){
                 case GET_DETAIL_SUCCESS:
                     rl_choose.setEnabled(true);
+                    buy.setEnabled(true);
+                    addToShoppingCart.setEnabled(true);
+
+                    minPrice.setText(String.format("%s", object_item_detail.getItem().getPrice()));
+                    name.setText(object_item_detail.getItem().getName());
+
                     mBanner.setPages(new CBViewHolderCreator<NetworkImageHolderView>() {
                         @Override
                         public NetworkImageHolderView createHolder() {
@@ -88,6 +99,7 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity{
                     break;
                 case CAN_BUY:
                     //TODO 跳转至后续购买界面
+
                     break;
                 case CANNOT_BUY:
                     Util_ToastUtils.showToast(Activity_Market_GoodsDetail.this, "库存不足请重新选择！");
@@ -105,12 +117,13 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity{
         minPrice = findViewById(R.id.tv_price);
         name = findViewById(R.id.tv_name);
         rl_choose = findViewById(R.id.goods_detail_choose_rl);
+        addToShoppingCart = findViewById(R.id.add_to_shopping_cart);
+        buy = findViewById(R.id.buy);
         mBanner = findViewById(R.id.banner);
-
-        minPrice.setText(String.format("%s", object_item_detail.getItem().getPrice()));
-        name.setText(object_item_detail.getItem().getName());
-        //完成加载商品详情前不能选择属性！
+        //完成加载商品详情前不能选择属性！不能加购物车不能购买！
         rl_choose.setEnabled(false);
+        buy.setEnabled(false);
+        addToShoppingCart.setEnabled(false);
 
         Intent intent = getIntent();
         itemid = intent.getStringExtra("itemId");
@@ -169,6 +182,75 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity{
 
     public void addToShoppingCart(View view) {
         //TODO 添加商品到购物车
+        List<String>paramList = new ArrayList<>();
+        switch (object_item_detail.getParamList().size()){
+            case 1:
+                paramList.add(paramChosen1);
+                break;
+            case 2:
+                paramList.add(paramChosen1);
+                paramList.add(paramChosen2);
+                break;
+            case 3:
+                paramList.add(paramChosen1);
+                paramList.add(paramChosen2);
+                paramList.add(paramChosen3);
+                break;
+            default:
+                break;
+        }
+
+        Object_Pre_Sale object_pre_sale = new Object_Pre_Sale(object_item_detail.getItem().getName(), object_item_detail.getItem().getId(),
+                paramList, num, detailPrice[0], Collections.singletonList(object_item_detail.getItem().getImg_list_1()).get(0));
+
+        SharedPreferences sp = getSharedPreferences("shopping_cart_cache" , MODE_MULTI_PROCESS);
+        String jsonString = sp.getString("cart_information","error");
+        SharedPreferences.Editor editor = sp.edit();
+
+        /**
+         * 加入缓存
+         */
+        // 如果（！没有缓存或者缓存是空的）
+        if(!jsonString.equals("error") && !jsonString.equals("[{}]")) {
+            List<Object_Pre_Sale> commodityList = JSON.parseObject(jsonString, new TypeReference<List<Object_Pre_Sale>>() {});
+            boolean tag = false;
+            for (int i = 0; i < commodityList.size(); i++) {
+                boolean temp_judge = true;
+                // 如果它们的规格列表size是一样的，那就判断规格列表是不是一样的
+                if ( commodityList.get(i).getParamList().size() == object_pre_sale.getParamList().size() ){
+                    for (int j = 0; j < object_pre_sale.getParamList().size(); j++) {
+                        if (object_pre_sale.getParamList().get(j) != commodityList.get(i).getParamList().get(j)) {
+                            temp_judge = false; // 只要有一个不一样，就设置成false
+                        }
+                    }
+                }
+                // 如果规格和itemID都一样，就直接让数量加1就好了
+                if (object_pre_sale.getItemId().equals(commodityList.get(i).getItemId()) && temp_judge == true) {
+                    // 让和其一样的购物车对象的数量+1
+                    int count = commodityList.get(i).getNum();
+                    commodityList.get(i).setNum(count++);
+                    tag = true; // 把tag设置成true，表示有一个相同的东西已经在购物车里面了
+                    break; // 跳出循环
+                }
+            }
+            // 如果没有重复的，就加进去，然后重新加入缓存；如果有重复的，就直接重新加入缓存就好了
+            if ( tag == false ){
+                commodityList.add(object_pre_sale);
+                editor.clear().commit();
+                editor.putString("cart_information",JSON.toJSONString(commodityList)).commit();
+                Util_ToastUtils.showToast(getApplicationContext(),"已加入购物车");
+            }else {
+                editor.clear().commit();
+                editor.putString("cart_information",JSON.toJSONString(commodityList)).commit();
+                Util_ToastUtils.showToast(getApplicationContext(),"已加入购物车");
+            }
+        }else {
+            editor.clear().commit();
+            List<Object_Pre_Sale> list = new ArrayList<>();
+            list.add(object_pre_sale);
+            editor.putString("cart_information",JSON.toJSONString(list)).commit();
+            Util_ToastUtils.showToast(getApplicationContext(),"已加入购物车");
+        }
     }
 
     public void buy(View view) {
@@ -359,7 +441,6 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity{
                 num ++;
                 if(num == stockNum[0])
                     add.setEnabled(false);
-
                 number.setText(num);
 
             }
@@ -373,7 +454,6 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity{
                     sub.setEnabled(false);
                 if(num == (stockNum[0] - 1))
                     add.setEnabled(true);
-
                 number.setText(num);
             }
         });
