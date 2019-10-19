@@ -2,75 +2,64 @@ package com.example.classchat.Activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.net.Uri;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AlertDialog;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MotionEvent;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
-import com.bumptech.glide.Glide;
+import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
+import com.donkingliang.labels.LabelsView;
 import com.example.classchat.Adapter.Adapter_GoodsDetail;
-import com.example.classchat.Object.Object_Commodity;
-import com.example.classchat.Object.Object_Pre_Sale;
+import com.example.classchat.Adapter.NetworkImageHolderView;
+import com.example.classchat.Object.Object_Item_Detail;
+import com.example.classchat.Object.Object_Stock;
 import com.example.classchat.R;
-import com.example.classchat.Util.Util_ScreenShot;
-
+import com.example.classchat.Util.Util_NetUtil;
 import com.example.classchat.Util.Util_ToastUtils;
-import com.github.nisrulz.sensey.Sensey;
-import com.github.nisrulz.sensey.TouchTypeDetector;
-import com.hankkin.library.GradationScrollView;
-import com.hankkin.library.NoScrollListView;
-import com.hankkin.library.ScrollViewContainer;
-import com.hankkin.library.StatusBarUtil;
-import com.hch.thumbsuplib.ThumbsUpCountView;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+
+import okhttp3.Call;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
-public class Activity_Market_GoodsDetail extends AppCompatActivity implements GradationScrollView.ScrollViewListener {
+public class Activity_Market_GoodsDetail extends AppCompatActivity{
 
-    private RelativeLayout llTitle;
-    private LinearLayout llOffset;
-    private ScrollViewContainer container;
-    private  GradationScrollView scrollView;
-    private String itemID, itemName, itemDetailInfo, itemPic1, itemPic2, itemPic3,ownerID;
-    private Double itemPrice;
-    private Boolean isThumbed;
-    private int ThumbsCount;
-    private ImageView frontImage;//顶头第一张图
-    NoScrollListView nlvImgs;//图片详情
+    private TextView minPrice, name, detailprice;
+    private Object_Item_Detail object_item_detail;
+    private ConvenientBanner mBanner;
+    private RecyclerView rv;
+    private Adapter_GoodsDetail myAdapter;
+    private PopupWindow popupWindow;
+    private LabelsView param1, param2, param3;
+    private String paramChosen1, paramChosen2, paramChosen3, itemid;
+    private TextView param1Name, param2Name, param3Name, stock, number;
+    private Button close, add, sub;
+    private RelativeLayout rl_choose;
+    private int num = 1;
+    final int[] stockNum = new int[1];
+    final float[] detailPrice = new float[1];
+    final boolean[] exist = {false};
 
-    private TextView tvGoodTitle, itemname, itemprice, iteminfo, buy, addToShoppingCart;
-    private ImageView back, shoppingCart, share;
-    private ThumbsUpCountView thumbs;
-    private Object_Commodity item;
-    private boolean isAdded ;
-    private int height;
-    private int width;
-
-    protected final static int RECEIVE_SUCCESS = 1;
-    protected final static int PURCHASE_SUCCESS = 2;
-    protected final static int GET_BLOCK = 3;
-    protected final static int SURE_TO_BUY = 4;
-    protected final static int CONCEL_TO_BUY = 5;
-
-    private String shareImage;
+    private final static int GET_DETAIL_SUCCESS = 0;
+    private final static int CAN_BUY = 1;
+    private final static int CANNOT_BUY = 2;
 
     //handler处理反应回来的信息
     @SuppressLint("HandlerLeak")
@@ -78,14 +67,32 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity implements Gr
         @Override
         public void handleMessage(Message msg){
             switch (msg.what){
-                case RECEIVE_SUCCESS:
-                    setView();
+                case GET_DETAIL_SUCCESS:
+                    rl_choose.setEnabled(true);
+                    mBanner.setPages(new CBViewHolderCreator<NetworkImageHolderView>() {
+                        @Override
+                        public NetworkImageHolderView createHolder() {
+                            return new NetworkImageHolderView();
+                        }
+                    }, Collections.singletonList(object_item_detail.getItem().getImg_list_1()));
+
+                    mBanner.setPointViewVisible(true);
+                    mBanner.startTurning(2000);
+
+                    rv = findViewById(R.id.goods_detail_pic);
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(Activity_Market_GoodsDetail.this);
+                    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                    rv.setLayoutManager(layoutManager);
+                    myAdapter = new Adapter_GoodsDetail(Activity_Market_GoodsDetail.this, Collections.singletonList(object_item_detail.getItem().getImg_list_2()));
+                    rv.setAdapter(myAdapter);
                     break;
-                case PURCHASE_SUCCESS:
-                    setView();
+                case CAN_BUY:
+                    //TODO 跳转至后续购买界面
                     break;
-                case GET_BLOCK:
-                    canpurchase();
+                case CANNOT_BUY:
+                    Util_ToastUtils.showToast(Activity_Market_GoodsDetail.this, "库存不足请重新选择！");
+                    break;
+                default:
                     break;
             }
         }
@@ -95,447 +102,349 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity implements Gr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__market__goods_detail);
+        minPrice = findViewById(R.id.tv_price);
+        name = findViewById(R.id.tv_name);
+        rl_choose = findViewById(R.id.goods_detail_choose_rl);
+        mBanner = findViewById(R.id.banner);
 
-        //手势返回
-        TouchTypeDetector.TouchTypListener touchTypListener = new TouchTypeDetector.TouchTypListener() {
+        minPrice.setText(String.format("%s", object_item_detail.getItem().getPrice()));
+        name.setText(object_item_detail.getItem().getName());
+        //完成加载商品详情前不能选择属性！
+        rl_choose.setEnabled(false);
+
+        Intent intent = getIntent();
+        itemid = intent.getStringExtra("itemId");
+
+        getDetailFromWeb();
+    }
+
+    private void getDetailFromWeb() {
+        final Message message = new Message();
+        //构建requestbody
+        RequestBody requestBody = new FormBody.Builder()
+                .add("itemid", itemid)
+                .build();
+        // 发送网络请求，联络信息
+        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8090/getitemdetail", requestBody, new okhttp3.Callback() {
             @Override
-            public void onDoubleTap() {}
-            @Override
-            public void onLongPress() {}
-            @Override
-            public void onScroll(int scrollDirection) {}
-            @Override
-            public void onSingleTap() {}
-            @Override
-            public void onSwipe(int swipeDirection) {
-                switch (swipeDirection) {
-                    case TouchTypeDetector.SWIPE_DIR_RIGHT:
-                        finish();
-                        Sensey.getInstance().stopTouchTypeDetection();
+
+            public void onResponse(Call call, Response response) throws IOException {
+                // 得到服务器返回的具体内容
+                object_item_detail = JSON.parseObject(response.body().string(), Object_Item_Detail.class);
+                switch (object_item_detail.getParamList().size()){
+                    case 1:
+                        //初始化默认选项
+                        paramChosen1 = object_item_detail.getRangeList().get(0).get(0);
+                        break;
+                    case 2:
+                        paramChosen1 = object_item_detail.getRangeList().get(0).get(0);
+                        paramChosen2 = object_item_detail.getRangeList().get(1).get(0);
+                        break;
+                    case 3:
+                        paramChosen1 = object_item_detail.getRangeList().get(0).get(0);
+                        paramChosen2 = object_item_detail.getRangeList().get(1).get(0);
+                        paramChosen3 = object_item_detail.getRangeList().get(2).get(0);
                         break;
                     default:
                         break;
                 }
+                message.what = GET_DETAIL_SUCCESS;
+                handler.sendMessage(message);
             }
+
             @Override
-            public void onThreeFingerSingleTap() {}
-            @Override
-            public void onTwoFingerSingleTap() {}
-        };
-        Sensey.getInstance().startTouchTypeDetection(this,touchTypListener);
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {}
+        });
 
-        //得到上一个Activity传入得到的商品信息
-        Intent intent = getIntent();
+    }
 
-        item = JSON.parseObject(intent.getStringExtra("item"), Object_Commodity.class);
-        ownerID = item.getOwnerID();
-        itemID = item.getItemID();
-        System.out.println("这里是itemID在商品详情里：" +itemID);
-        itemName = item.getItemName();
-        itemPrice = item.getPrice();
-        itemDetailInfo = item.getDetailIntroduction();
-        itemPic1 = item.getImageList().get(0);
-        itemPic2 = item.getImageList().get(1);
-        itemPic3 = item.getImageList().get(2);
-        ThumbsCount = item.getThumbsUpCount();
+    public void back(View view) {
+        finish();
+    }
 
-//        ownerID = intent.getStringExtra("ownerID");
-//        System.out.println(ownerID); //null
-//        itemID = intent.getStringExtra("itemID");
-//        itemName = intent.getStringExtra("itemName");
-//        itemPrice = intent.getDoubleExtra("itemPrice",0);
-//        itemDetailInfo = intent.getStringExtra("itemDetailInfo");
-//        itemPic1 = intent.getStringExtra("itemPic1");
-//        itemPic2 = intent.getStringExtra("itemPic2");
-//        itemPic3 = intent.getStringExtra("itemPic3");
-
-        //ThumbsCount = Integer.parseInt(intent.getStringExtra("ThumbsCount"));
+    public void toShoppingChart(View view) {
         //TODO
-        //isThumbed = intent.getBooleanExtra("isThumbed");
+//        startActivity(new Intent(Activity_Market_GoodsDetail.this, 购物车));
+    }
 
-        //初始化控件
+    public void addToShoppingCart(View view) {
+        //TODO 添加商品到购物车
+    }
 
-        init();
-
-        /**
-         * 判断加入购物车按钮的状态
-         */
-        SharedPreferences sp = getSharedPreferences("shopping_cart_cache" , MODE_MULTI_PROCESS);
-        String jsonString = sp.getString("cart_information","error");
-        SharedPreferences.Editor editor = sp.edit();
-        List<Object_Pre_Sale> datas = new ArrayList<>();
-        if(!jsonString.equals("error")) {
-            List<Object_Commodity> commodityList = JSON.parseObject(jsonString, new TypeReference<List<Object_Commodity>>() {
-            });
-            // 把缓存里的对象取出
-            for (Object_Commodity object_commodity : commodityList) {
-                Object_Pre_Sale object_preSale = new Object_Pre_Sale();
-                object_preSale.setImgurl(object_commodity.getImageList().get(0));
-                object_preSale.setItemId(object_commodity.getItemID());
-                object_preSale.setItemName(object_commodity.getItemName());
-                object_preSale.setPrice(object_commodity.getPrice());
-                datas.add(object_preSale);
-            }
-
-            /**
-             * 判断是否已添加
-             */
-            isAdded = false;
-            if (datas != null) {
-                for (int i = 0; i < datas.size(); i++) {
-                    if ((item.getItemID()).equals(datas.get(i).getItemId())) {
-                        isAdded = true;
-                    }
-                }
-            }
-
-            if (isAdded == true) {
-                addToShoppingCart.setText("移出购物车");
-            }else{
-                addToShoppingCart.setText("添加购物车");
-            }
-        }
-
-        //透明状态栏
-        StatusBarUtil.setTranslucentForImageView(this,llOffset);
-        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) llOffset.getLayoutParams();
-        params1.setMargins(0,-StatusBarUtil.getStatusBarHeight(this)/4,0,0);
-        llOffset.setLayoutParams(params1);
-
-        container = new ScrollViewContainer(getApplicationContext());
-
-        back.setOnClickListener(new View.OnClickListener() {
+    public void buy(View view) {
+        //再次发请求确认一下是否有库存
+        final Message message = new Message();
+        RequestBody requestBody = new FormBody.Builder()
+                .add("itemid", itemid)
+                .build();
+        // 发送网络请求，联络信息
+        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8090/getitemdetail", requestBody, new okhttp3.Callback() {
             @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
-        share.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    shareImage = Util_ScreenShot.shoot(Activity_Market_GoodsDetail.this);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                Intent intent  = new Intent(Intent.ACTION_SEND);
-                File file = new File(shareImage);
-                intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-                intent.setType("image/jpeg");
-                Intent chooser = Intent.createChooser(intent, "分享商品截图");
-                if(intent.resolveActivity(getPackageManager()) != null){
-                    startActivity(chooser);
-                }
-            }
-        });
-
-        shoppingCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Activity_Market_ShoppingCart.class);
-                startActivity(intent);
-            }
-        });
-
-
-        addToShoppingCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /**
-                 * 将商品加入购物车
-                 */
-                SharedPreferences sp = getSharedPreferences("shopping_cart_cache" , MODE_MULTI_PROCESS);
-                String jsonString = sp.getString("cart_information","error");
-                SharedPreferences.Editor editor = sp.edit();
-                System.out.println("这里是jsonstring： "+jsonString);
-
-                if(!jsonString.equals("error") && !jsonString.equals("[{}]")){
-                    List<Object_Commodity> commodityList = JSON.parseObject(jsonString , new TypeReference<List<Object_Commodity>>(){});
-
-                    if(isAdded == true) {
-                        for(int k = 0 ; k < commodityList.size() ; k++){
-                            if(item.getItemID().equals(commodityList.get(k).getItemID())){
-                                commodityList.remove(k);
-                                System.out.println(k);
-                                break;
-                            }
+            public void onResponse(Call call, Response response) throws IOException {
+                // 得到服务器返回的具体内容
+                object_item_detail = JSON.parseObject(response.body().string(), Object_Item_Detail.class);
+                switch (object_item_detail.getParamList().size()){
+                    case 1:
+                        for (Object_Stock s : object_item_detail.getStockList()){
+                            if(s.getParam1().equals(paramChosen1))
+                                exist[0] = true;
                         }
-                        editor.clear().commit();
-                        editor.putString("cart_information", JSON.toJSONString(commodityList)).commit();
-                        Util_ToastUtils.showToast(getApplicationContext(),"已移出购物车");
-                        isAdded = false;
-                        addToShoppingCart.setText("添加购物车");
-                    }else {
-                        commodityList.add(item);
-                        editor.clear().commit();
-                        editor.putString("cart_information", JSON.toJSONString(commodityList)).commit();
-                        Util_ToastUtils.showToast(getApplicationContext(),"已加入购物车");
-                        isAdded = true;
-                        addToShoppingCart.setText("移出购物车");
-                    }
-                }else{
-                    editor.clear().commit();
-                    List<Object_Commodity> list = new ArrayList<>();
-                    list.add(item);
-                    editor.putString("cart_information",JSON.toJSONString(list)).commit();
-                    Util_ToastUtils.showToast(getApplicationContext(),"已加入购物车");
-                    isAdded = true;
-                    addToShoppingCart.setText("移出购物车");
+                        break;
+                    case 2:
+                        for (Object_Stock s : object_item_detail.getStockList()){
+                            if(s.getParam1().equals(paramChosen1) && s.getParam2().equals(paramChosen2))
+                                exist[0] = true;
+                        }
+                        break;
+                    case 3:
+                        for (Object_Stock s : object_item_detail.getStockList()){
+                            if(s.getParam1().equals(paramChosen1) && s.getParam2().equals(paramChosen2) && s.getParam3().equals(paramChosen3))
+                                exist[0] = true;
+                        }
+                        break;
+                    default:
+                        exist[0] = false;
+                        break;
                 }
-
+                if(!exist[0])
+                    message.what = CANNOT_BUY;
+                else message.what = CAN_BUY;
+                handler.sendMessage(message);
             }
+
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {}
         });
+    }
 
-        //从网络上获取物品的信息
-        getINFOfromweb();
+    public void choose(View view) {
+        View inflate = LayoutInflater.from(Activity_Market_GoodsDetail.this).inflate(R.layout.item_choose_goods_popupwindow, null);
+        popupWindow = new PopupWindow(inflate, RelativeLayout.LayoutParams.MATCH_PARENT,
+                 RelativeLayout.LayoutParams.WRAP_CONTENT);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(0x292421));
+        popupWindow.setAnimationStyle(R.style.Animation_Design_BottomSheetDialog);
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        //设置位置
+        popupWindow.showAtLocation(inflate, Gravity.BOTTOM, 0, 0);
+        setOnPopupViewClick(inflate);
+    }
 
-        initListeners();
+    private void setOnPopupViewClick(View view) {
+        close = view.findViewById(R.id.close_choose);
+        add = view.findViewById(R.id.add_count);
+        sub = view.findViewById(R.id.sub_count);
+        //属性选择栏
+        param1 = view.findViewById(R.id.param1);
+        param2 = view.findViewById(R.id.param2);
+        param3 = view.findViewById(R.id.param3);
+        //属性名称显示
+        param1Name = view.findViewById(R.id.param1_name);
+        param2Name = view.findViewById(R.id.param2_name);
+        param3Name = view.findViewById(R.id.param3_name);
+        //购买数量
+        number = view.findViewById(R.id.goods_detail_num);
+        //库存量
+        stock = view.findViewById(R.id.stock);
+        //具体价格
+        detailprice = view.findViewById(R.id.price);
 
-        //TODO 点击购买按钮，出现一个对话框，调用网络线程，去区块链数据库获得完整的区块链，本地用map存储，
-
-        //TODO  获得区块链之后，调用BLOCKCHAIN.getALLUTXO 判断能否支付
-
-        //TODO 如果能够支付，调用Blockchain.createnewTRANSACTION 生成一笔交易
-
-        //TODO 把这笔交易放入违背打包的交易的数据库，把对应商品删除
-
-        buy.setOnClickListener(new View.OnClickListener() {
+        close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //现在去获得用户的余额
-//                blockMap = getBlockchainUtil.getBlockchain(ItemInformationActivity.this);
-                canpurchase();
-
+                popupWindow.dismiss();
             }
         });
-    }
 
-    private void init(){
-        scrollView = findViewById(R.id.scrollview);
-        nlvImgs = findViewById(R.id.nlv_good_detial_imgs);
-        llTitle = findViewById(R.id.ll_good_detail);
-        tvGoodTitle = findViewById(R.id.tv_good_detail_title_good);
-        llOffset = findViewById(R.id.ll_offset);
-        frontImage = findViewById(R.id.iv_good_detail_front_img);
-        container = findViewById(R.id.sv_container);
-        back = findViewById(R.id.iv_goods_detail_back);
-        shoppingCart = findViewById(R.id.iv_good_detail_shopping_cart);
-        share = findViewById(R.id.iv_good_detail_share);
-        addToShoppingCart = findViewById(R.id.tv_good_detail_add_shop_cart);
-        buy = findViewById(R.id.tv_good_detail_buy);
-        itemname = findViewById(R.id.tv_market_goods_detail_item_name);
-        itemprice = findViewById(R.id.tv_market_goods_detail_item_price);
-        thumbs = findViewById(R.id.market_goods_detail_item_thumb);
-        iteminfo = findViewById(R.id.tv_market_goods_detail_item_detail_info);
-        //TODO frontImage载入url为itemPic1的图片
-        if(item.getImageList() != null){
-            Glide.with(getApplicationContext())
-                    .load(item.getImageList().get(0)) //获得图片
-                    .into(frontImage);
+        switch (object_item_detail.getParamList().size()){
+            case 1:
+                //初始化价格及库存
+                setCountAndPricefor1Param();
+                //设置属性名称
+                param1Name.setText(object_item_detail.getParamList().get(0));
+                //绑定属性选择范围列表
+                param1.setLabels(object_item_detail.getRangeList().get(0));
+
+                param1.setOnLabelSelectChangeListener(new LabelsView.OnLabelSelectChangeListener() {
+                    @Override
+                    public void onLabelSelectChange(TextView label, Object data, boolean isSelect, int position) {
+                        //label是被选中的标签，data是标签所对应的数据，isSelect是是否选中，position是标签的位置。
+                        if(isSelect){
+                            paramChosen1 = (String) data;
+                            setCountAndPricefor1Param();
+                        }
+                    }
+                });
+                break;
+            case 2:
+                setCountAndPricefor2Param();
+
+                param1Name.setText(object_item_detail.getParamList().get(0));
+                param2Name.setText(object_item_detail.getParamList().get(1));
+                param1.setLabels(object_item_detail.getRangeList().get(0));
+                param2.setLabels(object_item_detail.getRangeList().get(1));
+
+                param1.setOnLabelSelectChangeListener(new LabelsView.OnLabelSelectChangeListener() {
+                    @Override
+                    public void onLabelSelectChange(TextView label, Object data, boolean isSelect, int position) {
+                        if(isSelect){
+                            paramChosen1 = (String) data;
+                            setCountAndPricefor2Param();
+                        }
+                    }
+                });
+
+                param2.setOnLabelSelectChangeListener(new LabelsView.OnLabelSelectChangeListener() {
+                    @Override
+                    public void onLabelSelectChange(TextView label, Object data, boolean isSelect, int position) {
+                        if(isSelect){
+                            paramChosen2 = (String) data;
+                            setCountAndPricefor2Param();
+                        }
+                    }
+                });
+                break;
+            case 3:
+                setCountAndPricefor3Param();
+
+                param1Name.setText(object_item_detail.getParamList().get(0));
+                param2Name.setText(object_item_detail.getParamList().get(1));
+                param3Name.setText(object_item_detail.getParamList().get(2));
+                param1.setLabels(object_item_detail.getRangeList().get(0));
+                param2.setLabels(object_item_detail.getRangeList().get(1));
+                param3.setLabels(object_item_detail.getRangeList().get(2));
+
+                param1.setOnLabelSelectChangeListener(new LabelsView.OnLabelSelectChangeListener() {
+                    @Override
+                    public void onLabelSelectChange(TextView label, Object data, boolean isSelect, int position) {
+                        if(isSelect){
+                            paramChosen1 = (String) data;
+                            setCountAndPricefor3Param();
+                        }
+                    }
+                });
+
+                param2.setOnLabelSelectChangeListener(new LabelsView.OnLabelSelectChangeListener() {
+                    @Override
+                    public void onLabelSelectChange(TextView label, Object data, boolean isSelect, int position) {
+                        if(isSelect){
+                            paramChosen2 = (String) data;
+                            setCountAndPricefor3Param();
+                        }
+                    }
+                });
+
+                param3.setOnLabelSelectChangeListener(new LabelsView.OnLabelSelectChangeListener() {
+                    @Override
+                    public void onLabelSelectChange(TextView label, Object data, boolean isSelect, int position) {
+                        if(isSelect){
+                            paramChosen3 = (String) data;
+                            setCountAndPricefor3Param();
+                        }
+                    }
+                });
+                break;
+            default:
+                break;
         }
-    }
 
-    private void setView(){
-        itemname.setText(itemName);
-        itemprice.setText(String.valueOf(itemPrice));
-        iteminfo.setText(itemDetailInfo);
-//      thumbs.initData(isThumbed,ThumbsCount);
-        thumbs.setOnClickListener(new View.OnClickListener() {
+        number.setText(num);
+
+        add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                thumbs.priseChange();
-                //TODO 点赞设置
-//                if(isThumbed)
-//                    item.removeFromThumbedList("17690710589");
-//                else
-//                    item.addToThumbedList("17690710589");
+                if(num == 1)
+                    sub.setEnabled(true);
+                num ++;
+                if(num == stockNum[0])
+                    add.setEnabled(false);
+
+                number.setText(num);
+
             }
         });
 
-        //TODO 图片高度有待优化!!不能很好的完全显示
-
-        nlvImgs.setAdapter(new Adapter_GoodsDetail(getApplicationContext(), item.getImageList()));
-    }
-
-    private void initListeners() {
-
-        ViewTreeObserver vto = frontImage.getViewTreeObserver();
-        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        sub.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onGlobalLayout() {
-                llTitle.getViewTreeObserver().removeGlobalOnLayoutListener(
-                        this);
-                height = frontImage.getHeight();
+            public void onClick(View v) {
+                num --;
+                if(num == 1)
+                    sub.setEnabled(false);
+                if(num == (stockNum[0] - 1))
+                    add.setEnabled(true);
 
-                scrollView.setScrollViewListener(Activity_Market_GoodsDetail.this);
+                number.setText(num);
             }
         });
+
     }
 
-    /**
-     * 判断能够是否购买的函数
-     */
-    private void canpurchase() {
-////        result = Blockchain.getAllUTXO(blockMap,ownerID);
-////        Double nowdebit = result.getDebit();
-//        if(nowdebit >= item.getItemprice()){
-////            AlertDialog.Builder builder = new AlertDialog.Builder(ItemInformationActivity.this);
-////            builder.setTitle("确认购买");
-////            builder.setMessage("您当前的余额有：" + nowdebit +"LKB, 购买后还剩：" + String.valueOf(nowdebit-item.getItemprice()) + "LKB, 确认购买？" );
-////            String[] items = { "确认", "取消" };
-////            builder.setItems(items, new DialogInterface.OnClickListener() {
-////                @Override
-////                public void onClick(DialogInterface dialog, int which) {
-////                    switch (which){
-////                        case SURE_TO_BUY:
-////                            try {
-////                                purchase();
-////                            } catch (IOException e) {
-////                                e.printStackTrace();
-////                            }
-////                            break;
-////                        case CONCEL_TO_BUY:
-////                            break;
-////                    }
-////                }
-////            });
-////            builder.create().show();
-//            AlertDialog.Builder builder = new AlertDialog.Builder(ItemInformationActivity.this);
-//            builder.setTitle("余额不足，购买失败");
-//            builder.setNegativeButton("确定",null);
-//            builder.setMessage("您当前的余额仅有：" + nowdebit + "LKB, 不能购买");
-//            AlertDialog dialog = builder.create();
-//            dialog.show();
-//        }else{
-        AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Market_GoodsDetail.this);
-        builder.setTitle("余额不足，购买失败");
-        builder.setNegativeButton("确定", null);
-        builder.setMessage("您当前的余额仅有：" + 0 + "LKB, 不能购买");
-        AlertDialog dialog = builder.create();
-        dialog.show();
-//        }
-    }
-
-    /**
-     * 购买函数
-     */
-    private void purchase() throws IOException {
-//        Transaction transaction = Blockchain.createNewTransaction(userID,item.getOwnerid(),item.getItemprice(),blockMap,result,item.getItemname());
-//        //打开网络线程
-//        new Thread(new Runnable() {
-//            private final OkHttpClient client = new OkHttpClient();
-//            @Override
-//            public void run() {
-//                try {
-//                    byte[] bytes = SerializeUtils.serialize(transaction);
-//                    Request request = new Request.Builder().addHeader("Connection" , "close").url("http://203.195.184.213:8081/uploadtransaction?id=" + ownerID + item.getOwnerid() + item.getItemname() + "&ref=" + Arrays.toString(bytes)).build();
-//                    client.newCall(request).enqueue(new Callback() {
-//                        @Override
-//                        public void onFailure(Call call, IOException e) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onResponse(Call call, Response response) throws IOException {
-//
-//                        }
-//                    });
-//                    request = new Request.Builder().addHeader("Connection" , "close").url("http://203.195.184.213:8081/deleteitem?id=" + item.getItemid()).build();
-//                    client.newCall(request).enqueue(new Callback() {
-//                        @Override
-//                        public void onFailure(Call call, IOException e) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onResponse(Call call, Response response) throws IOException {
-//                            Message message = new Message();
-//                            message.what = PURCHASE_SUCCESS;
-//                            handler.sendMessage(message);
-//                        }
-//                    });
-//                }catch (Exception e){
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
-    }
-
-    /**
-     * 从网络上获得显示的基本信息
-     */
-    private void getINFOfromweb(){
-        //HTTP client 的申请
-//        final OkHttpClient httpclient = new OkHttpClient();
-//        final Request request = new Request.Builder().url("http://203.195.184.213:8081/getoneitem?id=" + itemID).build();
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    //获取商品的其他信息
-//                    httpclient.newCall(request).enqueue(new Callback() {
-//                        @Override
-//                        public void onFailure(Call call, IOException e) {
-//                            //TODO
-//                        }
-//                        @Override
-//                        public void onResponse(Call call, Response response) throws IOException {
-//                            String responsedata = response.body().string();
-//                            try {
-//                                JSONArray array= new JSONArray(responsedata);
-//                                for(int i = 0 ; i < array.length() ; i++){
-//                                    JSONObject obj = array.getJSONObject(i);
-//                                    item = (TransmitItems) SerializeUtils.deserialize(SerializeUtils.splitArray(obj.getString("serializz")));
-//                                }
-//                            }catch (Exception e){
-//                                e.printStackTrace();
-//                            }
-        Message message = new Message();
-        message.what = RECEIVE_SUCCESS;
-        handler.sendMessage(message);
-//                        }
-//                    });
-//                }catch (Exception e){
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
-    }
-
-    @Override
-    public void onScrollChanged(GradationScrollView scrollView, int x, int y, int oldx, int oldy) {
-        if (y <= 0) {   //设置标题的背景颜色
-            llTitle.setBackgroundColor(Color.argb((int) 0, 255,255,255));
-        } else if (y > 0 && y <= height) { //滑动距离小于banner图的高度时，设置背景和字体颜色颜色透明度渐变
-            float scale = (float) y / height;
-            float alpha = (255 * scale);
-            tvGoodTitle.setTextColor(Color.argb((int) alpha, 1,24,28));
-            llTitle.setBackgroundColor(Color.argb((int) alpha, 255,255,255));
-        } else {    //滑动到banner下面设置普通颜色
-            llTitle.setBackgroundColor(Color.argb((int) 255, 255,255,255));
+    private void setCountAndPricefor1Param(){
+        for (Object_Stock s : object_item_detail.getStockList()){
+            if(s.getParam1().equals(paramChosen1)){
+                exist[0] = true;
+                stockNum[0] = s.getCount();
+                detailPrice[0] = s.getPrice();
+            }
         }
-    }
 
-
-    //用于手势监听
-    @Override public boolean dispatchTouchEvent(MotionEvent event) {
-        // Setup onTouchEvent for detecting type of touch gesture
-        Sensey.getInstance().setupDispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }
-
-    @Override
-    public Resources getResources() {//禁止app字体大小跟随系统字体大小调节
-        Resources resources = super.getResources();
-        if (resources != null && resources.getConfiguration().fontScale != 1.0f) {
-            android.content.res.Configuration configuration = resources.getConfiguration();
-            configuration.fontScale = 1.0f;
-            resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+        if(!exist[0]){
+            stockNum[0] = 0;
+            detailPrice[0] = 0;
         }
-        return resources;
+
+        detailprice.setText(detailPrice[0] + "");
+        stock.setText(stockNum[0]);
+
+        if(num > stockNum[0])
+            Util_ToastUtils.showToast(Activity_Market_GoodsDetail.this, "库存不足，请修改购买数量！");
+        if(num < stockNum[0])
+            add.setEnabled(true);
     }
 
+    private void setCountAndPricefor2Param(){
+        for (Object_Stock s : object_item_detail.getStockList()){
+            if(s.getParam1().equals(paramChosen1) && s.getParam2().equals(paramChosen2)){
+                exist[0] = true;
+                stockNum[0] = s.getCount();
+                detailPrice[0] = s.getPrice();
+            }
+        }
+        if(!exist[0]){
+            stockNum[0] = 0;
+            detailPrice[0] = 0;
+        }
+
+        detailprice.setText(detailPrice[0] + "");
+        stock.setText(stockNum[0]);
+        if(num > stockNum[0])
+            Util_ToastUtils.showToast(Activity_Market_GoodsDetail.this, "库存不足，请修改购买数量！");
+        if(num < stockNum[0])
+            add.setEnabled(true);
+    }
+
+    private void setCountAndPricefor3Param(){
+        for (Object_Stock s : object_item_detail.getStockList()){
+            if(s.getParam1().equals(paramChosen1) && s.getParam2().equals(paramChosen2) && s.getParam3().equals(paramChosen3)){
+                exist[0] = true;
+                stockNum[0] = s.getCount();
+                detailPrice[0] = s.getPrice();
+            }
+        }
+
+        if(!exist[0]){
+            stockNum[0] = 0;
+            detailPrice[0] = 0;
+        }
+        detailprice.setText(detailPrice[0] + "");
+        stock.setText(stockNum[0]);
+
+        if(num > stockNum[0])
+            Util_ToastUtils.showToast(Activity_Market_GoodsDetail.this, "库存不足，请修改购买数量！");
+        if(num < stockNum[0])
+            add.setEnabled(true);
+    }
 }
 
 

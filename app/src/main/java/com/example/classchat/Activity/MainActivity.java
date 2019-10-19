@@ -260,26 +260,52 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.menu_classtable:
                         setFragmentPosition(0);
+                        if (Build.VERSION.SDK_INT >= 21) {
+                            Window window = getWindow();
+                            //After LOLLIPOP not translucent status bar
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                            //Then call setStatusBarColor.
+                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                            window.setStatusBarColor(getResources().getColor(R.color.theme));
+                        }
                         break;
                     case R.id.menu_forum:
                         setFragmentPosition(1);
+                        // 设置沉浸式状态栏
+                        if (Build.VERSION.SDK_INT >= 21) {
+                            Window window = getWindow();
+                            //After LOLLIPOP not translucent status bar
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                            //Then call setStatusBarColor.
+                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                            window.setStatusBarColor(getResources().getColor(R.color.theme));
+                        }
                         break;
                     case R.id.menu_market:
                         setFragmentPosition(2);
+                        if (Build.VERSION.SDK_INT >= 21) {
+                            Window window = getWindow();
+                            //After LOLLIPOP not translucent status bar
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                            //Then call setStatusBarColor.
+                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                            window.setStatusBarColor(getResources().getColor(R.color.theme));
+                        }
+
                         break;
                     case R.id.menu_home:
                         setFragmentPosition(3);
+                        if (Build.VERSION.SDK_INT >= 21) {
+                            Window window = getWindow();
+                            //After LOLLIPOP not translucent status bar
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                            //Then call setStatusBarColor.
+                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                            window.setStatusBarColor(getResources().getColor(R.color.theme));
+                        }
                         break;
                     default:
                         break;
-                }
-                if (Build.VERSION.SDK_INT >= 21) {
-                    Window window = getWindow();
-                    //After LOLLIPOP not translucent status bar
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                    //Then call setStatusBarColor.
-                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                    window.setStatusBarColor(getResources().getColor(R.color.theme));
                 }
                 // 这里注意返回true,否则点击失效
                 return true;

@@ -3,6 +3,7 @@ package com.example.classchat.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.example.classchat.Activity.Activity_Market_GoodsDetail;
 import com.example.classchat.Object.Object_Commodity;
+import com.example.classchat.Object.Object_Main_Brief_Item;
 import com.example.classchat.R;
 import com.hch.thumbsuplib.ThumbsUpCountView;
 
@@ -22,24 +24,25 @@ import java.util.List;
 public class Adapter_CommodityRecycleView extends RecyclerView.Adapter<Adapter_CommodityRecycleView.ViewHolder> {
 
     private Context mContext;
-    private List<Object_Commodity> itemList;
+    private List<Object_Main_Brief_Item> itemList;
 
-    public Adapter_CommodityRecycleView(Context context, List<Object_Commodity> itemList ) {
+    public Adapter_CommodityRecycleView(Context context, List<Object_Main_Brief_Item> itemList ) {
         this.itemList = itemList;
         mContext = context;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView itemName, itemIntroduction, itemPrice;
-        public ImageView itemPic;
+        private TextView itemName, itemPrice;
+        private ImageView itemPic;
+        private CardView card;
 //        ThumbsUpCountView thumbs;
 
         public ViewHolder(View itemView) {
             super(itemView);
             itemName = itemView.findViewById(R.id.tv_market_item_name);
-            itemIntroduction = itemView.findViewById(R.id.tv_market_item_intro);
             itemPrice = itemView.findViewById(R.id.tv_market_item_price);
             itemPic = itemView.findViewById(R.id.iv_market_item_pic);
+            card = itemView.findViewById(R.id.card_view);
 //            thumbs =  itemView.findViewById(R.id.market_item_thumb);
         }
     }
@@ -52,12 +55,10 @@ public class Adapter_CommodityRecycleView extends RecyclerView.Adapter<Adapter_C
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final Object_Commodity item = itemList.get(position);
-        holder.itemName.setText(item.getItemName());
-        holder.itemIntroduction.setText(item.getBriefIntroduction());
+        final Object_Main_Brief_Item item = itemList.get(position);
+        holder.itemName.setText(item.getName());
         holder.itemPrice.setText(Double.toString(item.getPrice()));
-
-        Glide.with(mContext).load(item.getImageList().get(0)).override(720,480).into(holder.itemPic);
+        Glide.with(mContext).load(item.getImage()).override(720,(480 + (int)(Math.random() * 50))).into(holder.itemPic);
 //        //TODO 点赞设置
 
 //        //TODO 获取用户信息
@@ -73,27 +74,13 @@ public class Adapter_CommodityRecycleView extends RecyclerView.Adapter<Adapter_C
 //            }
 //        });
 
-        holder.itemPic.setOnClickListener(new View.OnClickListener() {
+        holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, Activity_Market_GoodsDetail.class);
-
                 intent.putExtra("item", JSON.toJSONString(item));
                 System.out.println("这里是价格在rv适配器里："+ item.getPrice());
-
-                intent.putExtra("itemID",item.getItemID());
-                System.out.println("这里是itemID在rv适配器里：" + item.getItemID());
-                intent.putExtra("itemName",item.getItemName());
-                intent.putExtra("itemPrice",item.getPrice());
-                intent.putExtra("itemDetailInfo",item.getDetailIntroduction());
-                intent.putExtra("itemPic1",item.getImageList().get(0));
-                intent.putExtra("itemPic2",item.getImageList().get(1));
-                intent.putExtra("itemPic3",item.getImageList().get(2));
-                intent.putExtra("ThumbsCount",item.getThumbsUpCount());
-
-                //TODO 获取user id
-//                intent.putExtra("isThumbed",item.getThumbsUpState(user id));
-
+                intent.putExtra("itemId",item.getId());
                 mContext.startActivity(intent);
             }
         });

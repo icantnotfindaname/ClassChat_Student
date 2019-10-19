@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:orientation="horizontal"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_margin="2dp"
+        app:cardBackgroundColor="#F8FCF3"
+        app:cardCornerRadius="5dp"
+        android:clickable="true"
+        app:cardElevation="5dp"
+        android:focusable="true">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+                <TextView
+                    android:id="@+id/comparison_detail_name"
+                    android:layout_width="0dip"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:layout_gravity="center_vertical"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:text="黄梓楷" />
+                <RelativeLayout
+                    android:layout_width="0dip"
+                    android:layout_weight="2"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center">
+                    <Button
+                        android:id="@+id/sub_count"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/sub_count"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="5dp"/>
+
+                    <TextView
+                        android:id="@+id/comparison_detail_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"/>
+
+                    <Button
+                        android:id="@+id/add_count"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/add_count"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="5dp"/>
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/comparison_detail_delete"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:padding="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/close"
+                    android:layout_gravity="center_vertical"
+                    android:singleLine="true"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

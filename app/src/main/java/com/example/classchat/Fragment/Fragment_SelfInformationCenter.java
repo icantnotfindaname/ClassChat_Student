@@ -59,6 +59,7 @@ import com.example.classchat.R;
 import com.example.classchat.Util.AlarmTimer;
 import com.example.classchat.Util.Util_NetUtil;
 import com.example.classchat.Util.Util_ToastUtils;
+import com.example.library_cache.Cache;
 import com.maning.updatelibrary.InstallUtils;
 import com.yzq.zxinglibrary.encode.CodeCreator;
 
@@ -115,6 +116,9 @@ public class Fragment_SelfInformationCenter extends Fragment {
     private final static int UPDATE = 100;
 
     private ImageButton guideButton; // 指引按键
+
+    // 搞一个自己的变量
+    Fragment_SelfInformationCenter myContext = this;
 
     //handler处理反应回来的信息
     @SuppressLint("HandlerLeak")
@@ -275,6 +279,9 @@ public class Fragment_SelfInformationCenter extends Fragment {
                                 setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                Cache.with(myContext.getActivity())
+                                        .path(getCacheDir(myContext.getActivity()))
+                                        .remove("classBox");
                                 // 这里不应该只是一个简单的页面跳转
                                 Intent outIntent = new Intent(getActivity(),
                                         Activity_Enter.class);
@@ -655,6 +662,20 @@ public class Fragment_SelfInformationCenter extends Fragment {
             alarmTimer.cancelAlarmTimer(getContext());
             Log.e("delete_id", obj.getId() + "");
         }
+    }
+
+    /*
+     * 获得缓存地址
+     * */
+    public String getCacheDir(Context context) {
+        String cachePath;
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+                || !Environment.isExternalStorageRemovable()) {
+            cachePath = context.getExternalCacheDir().getPath();
+        } else {
+            cachePath = context.getCacheDir().getPath();
+        }
+        return cachePath;
     }
 }
 

@@ -62,7 +62,7 @@
             android:textAlignment="center"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:hint="标题(不可修改)"
+            android:hint="标题(不可修改不带标点符号)"
             android:textSize="15sp"
             android:background="@null"
             android:layout_height="match_parent"/>
@@ -167,11 +167,6 @@
         android:layout_width="fill_parent"
         android:id="@+id/main_scrollview"
         android:fillViewport="false">
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_member_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 
     <com.example.classchat.Activity.MiniTimetable
         android:id="@+id/mini_timetable"

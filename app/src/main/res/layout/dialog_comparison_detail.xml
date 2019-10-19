@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/theme"
+        android:padding="5dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="人员"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:textColor="#fff"/>
+
+        <Button
+            android:id="@+id/close_dialog"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/white_close"
+            android:layout_marginLeft="5dp"/>
+    </RelativeLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_comparison_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"/>
+</LinearLayout>
