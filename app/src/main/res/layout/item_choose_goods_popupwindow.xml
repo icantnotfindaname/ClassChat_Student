@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:padding="5dp"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_centerVertical="true">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="库存:"/>
+
+                <TextView
+                    android:id="@+id/stock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="件"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:layout_marginLeft="10dp"
+                android:layout_toLeftOf="@+id/price"
+                android:text="￥"
+                android:layout_centerVertical="true"
+                android:textColor="#FF5722"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:layout_marginLeft="10dp"
+                android:layout_centerInParent="true"
+                android:padding="2dp"
+                android:textColor="#FF5722"
+                android:textSize="20sp"/>
+
+            <Button
+                android:id="@+id/close_choose"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/close"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="5dp"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/param1_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:textSize="10sp"/>
+
+            <com.donkingliang.labels.LabelsView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/param1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:layout_gravity="center"
+                app:labelTextSize="14sp"
+                app:labelTextPaddingBottom="5dp"
+                app:labelTextColor="@drawable/label_text_color"
+                app:labelBackground="@drawable/label_bg"
+                app:labelTextPaddingLeft="10dp"
+                app:labelTextPaddingRight="10dp"
+                app:labelTextPaddingTop="5dp"
+                app:lineMargin="10dp"
+                app:wordMargin="10dp"
+                app:selectType="SINGLE_IRREVOCABLY"
+                app:maxLines="-1"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#CFCFCF"
+                android:layout_margin="2dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/param2_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:textSize="10sp"/>
+
+        <com.donkingliang.labels.LabelsView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/param2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:layout_gravity="center"
+            app:labelTextSize="14sp"
+            app:labelTextPaddingBottom="5dp"
+            app:labelTextColor="@drawable/label_text_color"
+            app:labelBackground="@drawable/label_bg"
+            app:labelTextPaddingLeft="10dp"
+            app:labelTextPaddingRight="10dp"
+            app:labelTextPaddingTop="5dp"
+            app:lineMargin="10dp"
+            app:wordMargin="10dp"
+            app:selectType="SINGLE_IRREVOCABLY"
+            app:maxLines="-1"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#CFCFCF"
+                android:layout_margin="2dp"/>
+    </LinearLayout>
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/param3_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:textSize="10sp"/>
+
+        <com.donkingliang.labels.LabelsView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/param3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:layout_gravity="center"
+            app:labelTextSize="14sp"
+            app:labelTextPaddingBottom="5dp"
+            app:labelTextColor="@drawable/label_text_color"
+            app:labelBackground="@drawable/label_bg"
+            app:labelTextPaddingLeft="10dp"
+            app:labelTextPaddingRight="10dp"
+            app:labelTextPaddingTop="5dp"
+            app:lineMargin="10dp"
+            app:wordMargin="10dp"
+            app:selectType="SINGLE_IRREVOCABLY"
+            app:maxLines="-1"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#CFCFCF"
+                android:layout_margin="2dp"/>
+    </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="购买数量"
+                android:textColor="#000"
+                android:layout_centerVertical="true"/>
+
+            <RelativeLayout
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true">
+                <Button
+                    android:id="@+id/sub_count"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/sub_count"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"/>
+
+                <TextView
+                    android:id="@+id/goods_detail_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12"
+                    android:layout_centerInParent="true"/>
+
+                <Button
+                    android:id="@+id/add_count"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/add_count"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="5dp"/>
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</RelativeLayout>

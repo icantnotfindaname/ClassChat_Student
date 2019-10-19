@@ -1,20 +1,30 @@
 package com.example.classchat.Object;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Object_MiniTimeTable {
 	private int startnum;
 	private int endnum;
 	private int week;
-	private String name="";
+	private String name = "";//当总节课人数
+	private List<String>nameList = new ArrayList<>();
+	private List<Integer>numList = new ArrayList<>();
+	private String comparisonID;
 
-
-	@Override
-	public String toString() {
-		return "Object_MiniTimeTable [startnum=" + startnum
-				+ ", endnum=" + endnum + ", week=" + week + ", name=" + name
-				 + "]";
+	public Object_MiniTimeTable() {
+		// TODO Auto-generated constructor stub
 	}
 
-
+	public Object_MiniTimeTable(int startnum, int endnum, int week, String name, List<String> nameList, List<Integer> numList, String comparisonID) {
+		this.startnum = startnum;
+		this.endnum = endnum;
+		this.week = week;
+		this.name = name;
+		this.nameList = nameList;
+		this.numList = numList;
+		this.comparisonID = comparisonID;
+	}
 
 	public int getStartnum() {
 		return startnum;
@@ -48,16 +58,38 @@ public class Object_MiniTimeTable {
 		this.name = name;
 	}
 
-	public Object_MiniTimeTable() {
-		// TODO Auto-generated constructor stub
+
+	public List<String> getNameList() {
+		return nameList;
 	}
 
-	public Object_MiniTimeTable(int startnum, int endnum, int week, String name) {
-		super();
-		this.startnum = startnum;
-		this.endnum = endnum;
-		this.week = week;
-		this.name = name;
+	public void setNameList(List<String> nameList) {
+		this.nameList = nameList;
 	}
+
+	public List<Integer> getNumList() {
+		return numList;
+	}
+
+	public void setNumList(List<Integer> numList) {
+		this.numList = numList;
+	}
+
+
+	public String getComparisonID() {
+		return comparisonID;
+	}
+
+	public void setComparisonID(String comparisonID) {
+		this.comparisonID = comparisonID;
+	}
+
+	@Override
+	public String toString() {
+		return "Object_MiniTimeTable [startnum=" + startnum
+				+ ", endnum=" + endnum + ", week=" + week + ", name=" + name
+				+ "]";
+	}
+
 
 }

@@ -1,24 +1,50 @@
 package com.example.classchat.Activity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
+import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.classchat.Adapter.Adapter_ComparisonDetail;
 import com.example.classchat.Object.Object_MiniTimeTable;
 import com.example.classchat.R;
+import com.example.classchat.Util.Util_NetUtil;
+import com.example.classchat.Util.Util_ToastUtils;
+import com.example.library_cache.disklrucache.Util;
+
+import org.jetbrains.annotations.NotNull;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * 课表显示View
@@ -67,6 +93,11 @@ public class  MiniTimetable extends LinearLayout {
     private List<Object_MiniTimeTable> mListTimeTable = new ArrayList<Object_MiniTimeTable>();
 
     private Context mContext;
+
+    private Dialog dialog;
+
+    private RecyclerView rv;
+    private Button close;
 
     public MiniTimetable(Context context) {
         super(context);
@@ -236,14 +267,6 @@ public class  MiniTimetable extends LinearLayout {
             blank.addView(classView);
             blank.addView(getWeekHorizontalLine());
             final int num = i;
-            //这里可以处理空白处点击添加课表
-            classView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    Toast.makeText(getContext(), "星期" + week + "第" + (start + num) + "节", Toast.LENGTH_LONG).show();
-                }
-            });
-
         }
         return blank;
     }
@@ -311,12 +334,51 @@ public class  MiniTimetable extends LinearLayout {
         mTimeTableView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(getContext(), model.getName() , Toast.LENGTH_LONG).show();
+//                设置点击有人格子事件
+                showDialog(model.getNameList(), model.getNumList(), model.getComparisonID());
             }
         });
         return mTimeTableView;
     }
 
+    private void showDialog(List<String>nameList, List<Integer>numList, String comparisonID){
+        // 自定义对话框
+        final LayoutInflater inflater= LayoutInflater.from(mContext);
+        View myView = inflater.inflate(R.layout.dialog_comparison_detail,null);//引用自定义布局
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(mContext);
+        rv = myView.findViewById(R.id.rv_comparison_dialog);
+        close = myView.findViewById(R.id.close_dialog);
+        close.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent intent = new Intent();
+                intent.setAction("miniTimetable.send");
+                mContext.sendBroadcast(intent);
+            }
+        });
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rv.setLayoutManager(layoutManager);
+        rv.setAdapter(new Adapter_ComparisonDetail(mContext, nameList, numList, comparisonID));
+        builder.setView(myView);
+        dialog = builder.create();  //创建对话框
+        dialog.show();  //显示对话框
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if(keyCode == KeyEvent.KEYCODE_BACK){
+                    dialog.dismiss();
+                    Intent intent = new Intent();
+                    intent.setAction("miniTimetable.send");
+                    mContext.sendBroadcast(intent);
+                }
+                return true;
+            }
+        });
+
+    }
     /**
      * 转换dp
      *
@@ -388,4 +450,5 @@ public class  MiniTimetable extends LinearLayout {
         }
         return num;
     }
+
 }

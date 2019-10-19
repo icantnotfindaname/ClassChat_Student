@@ -233,6 +233,7 @@ public class MainActivity extends AppCompatActivity {
 //
 //    }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     protected void onSaveInstanceState(Bundle outState) {
 //        super.onSaveInstanceState(outState);
@@ -245,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
         mFragments = new ArrayList<>();
         mFragments.add(new Fragment_ClassBox());
         mFragments.add(new Fragment_Memo());
-        //mFragments.add(new Fragment_Market());
+        mFragments.add(new Fragment_Market());
         mFragments.add(new Fragment_SelfInformationCenter());
         // 初始化展示MessageFragment
         setFragmentPosition(0);
@@ -280,20 +281,20 @@ public class MainActivity extends AppCompatActivity {
                             window.setStatusBarColor(getResources().getColor(R.color.theme));
                         }
                         break;
-//                    case R.id.menu_market:
-//                        setFragmentPosition(3);
-//                        if (Build.VERSION.SDK_INT >= 21) {
-//                            Window window = getWindow();
-//                            //After LOLLIPOP not translucent status bar
-//                            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//                            //Then call setStatusBarColor.
-//                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//                            window.setStatusBarColor(getResources().getColor(R.color.theme));
-//                        }
-//
-//                        break;
-                    case R.id.menu_home:
+                    case R.id.menu_market:
                         setFragmentPosition(2);
+                        if (Build.VERSION.SDK_INT >= 21) {
+                            Window window = getWindow();
+                            //After LOLLIPOP not translucent status bar
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                            //Then call setStatusBarColor.
+                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                            window.setStatusBarColor(getResources().getColor(R.color.theme));
+                        }
+
+                        break;
+                    case R.id.menu_home:
+                        setFragmentPosition(3);
                         if (Build.VERSION.SDK_INT >= 21) {
                             Window window = getWindow();
                             //After LOLLIPOP not translucent status bar

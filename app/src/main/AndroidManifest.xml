@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.classchat">
-    <!-- 这个权限用于进行网络定位 -->
+
+    <!-- 这个权限用于访问GPS定位 -->
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon_logo"
@@ -12,35 +13,51 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activity.Activity_ComparisonDetail"
-            android:screenOrientation="portrait"></activity>
-        <activity android:name=".Activity.Activity_AddNewComparison"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_CompareTable"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_AllTodo"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.NotificationJumpBack"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_TodoDetail"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_AddTodo"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_FindPassword"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_Add"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_Select"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_Register"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_Modify"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_Password"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_Enter"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_Flash"
+        <activity
+            android:name=".Activity.Activity_ComparisonDetail"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".Activity.Activity_AddNewComparison"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_CompareTable"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_AllTodo"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.NotificationJumpBack"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_TodoDetail"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_AddTodo"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_FindPassword"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_Add"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_Select"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_Register"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_Modify"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_Password"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_Enter"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_Flash"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,54 +65,79 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.Activity_AccountInfo"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_SearchAddCourse"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_AddSearchCourse"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_AddCourse"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_TransactionHistory"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_MyCourse"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_AboutUs"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_HelpAndFeedback"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_InformationReminder"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_IdAuthentation"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_ChangeAccountInformation"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_AddCommodity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_CommodityDetailInformation"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_AddNoteToCourse"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_CourseNote"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_CourseData"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_ClassGroupChat"
+        <activity
+            android:name=".Activity.Activity_AccountInfo"
             android:screenOrientation="portrait" />
-        <activity android:name=".Activity.Activity_Market_GoodsDetail"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_Market_ShoppingCart"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_AutoPullCourseFromWeb"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_Market_MyGoods"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_Option"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.Activity_Market_AddCommodity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity.WelcomeGuideActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Activity.Activity_SearchAddCourse"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_AddSearchCourse"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_AddCourse"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_TransactionHistory"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_MyCourse"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_AboutUs"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_HelpAndFeedback"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_InformationReminder"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_IdAuthentation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_ChangeAccountInformation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_AddCommodity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_CommodityDetailInformation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_AddNoteToCourse"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_CourseNote"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_CourseData"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_ClassGroupChat"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_Market_GoodsDetail"
+            android:screenOrientation="portrait"
+            android:usesCleartextTraffic="true" />
+        <activity
+            android:name=".Activity.Activity_Market_ShoppingCart"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_AutoPullCourseFromWeb"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_Market_MyGoods"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_Option"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_Market_AddCommodity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.WelcomeGuideActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.Activity_Conversation"
             android:launchMode="singleTask"
@@ -116,15 +158,14 @@
             android:name=".Activity.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <meta-data
             android:name="classchat"
             android:value="84aabe90489f136d6b2aa104263862aa" />
+
         <meta-data
             android:name="com.example.classchat.API_KEY"
             android:value="efIOrRcslG8bYttDU2sVnvOcANS84TaQ" />
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.example.classchat.FileProvider"
@@ -134,22 +175,23 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/rc_file_path" />
         </provider>
+
         <receiver android:name=".Util.AlarmReceiver">
-        <intent-filter>
-            <action android:name="TIMER_ACTION" />
-        </intent-filter>
+            <intent-filter>
+                <action android:name="TIMER_ACTION" />
+            </intent-filter>
         </receiver>
-    </application> <!-- 这个权限用于访问GPS定位 -->
-    <uses-feature android:name="android.hardware.camera" /> <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
-    <uses-feature android:name="android.hardware.camera.autofocus" /> <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK.STATE" /> <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
+    </application> <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
+    <uses-feature android:name="android.hardware.camera" /> <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
+    <uses-feature android:name="android.hardware.camera.autofocus" /> <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK.STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> -->
     <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />

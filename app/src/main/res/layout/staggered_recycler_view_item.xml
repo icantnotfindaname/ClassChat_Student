@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -45,40 +46,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
-
                 <TextView
-                    android:layout_width="0dip"
-                    android:text="LKB"
-                    android:textColor="@color/theme"
-                    android:textSize="10sp"
+                    android:layout_width="wrap_content"
+                    android:text="￥"
+                    android:textColor="#FF5722"
+                    android:textSize="12sp"
                     android:textAlignment="center"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center"
-                    android:layout_weight="2"
-                    android:paddingLeft="2dp" />
+                    android:paddingLeft="5dp" />
 
                 <TextView
                     android:id="@+id/tv_market_item_price"
-                    android:layout_width="0dip"
-                    android:layout_weight="5"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:textAlignment="center"
                     android:text="435"
                     android:textSize="15sp"
-                    android:textColor="@color/theme"
+                    android:textColor="#FF5722"
                     android:textStyle="bold"/>
 
-
-
-                <!--<com.hch.thumbsuplib.ThumbsUpCountView-->
-                    <!--android:id="@+id/market_item_thumb"-->
-                    <!--android:layout_width="0dip"-->
-                    <!--android:layout_weight="4"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_marginTop="5dp">-->
-                <!--</com.hch.thumbsuplib.ThumbsUpCountView>-->
             </LinearLayout>
 
             <LinearLayout

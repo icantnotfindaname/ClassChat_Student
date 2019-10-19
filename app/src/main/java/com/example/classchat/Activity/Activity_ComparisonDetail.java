@@ -3,9 +3,11 @@ package com.example.classchat.Activity;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,8 +21,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.NumberPicker;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.example.classchat.Object.Object_Comparison;
@@ -37,6 +39,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.Call;
@@ -47,7 +50,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class Activity_ComparisonDetail extends AppCompatActivity {
+public class Activity_ComparisonDetail extends AppCompatActivity{
     private Button picker_back, picker_save, delete;
     private TextView setWeek, getTitle;
     private NumberPicker weekPicker;
@@ -69,6 +72,8 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
     private static final int DELETE_FAILED = 3;
     private static final int WRONG_TYPE = 4;
 
+    private MyReceiver myReceiver = new MyReceiver();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +93,11 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
 
         initList();
         mTimaTableView.setTimeTable(mList);
+
+        IntentFilter intentFilter = new IntentFilter("miniTimetable.send");
+        registerReceiver(myReceiver, intentFilter);
+        Intent intent1 = new Intent(Activity_ComparisonDetail.this, MyReceiver.class);
+        startService(intent1);
 
         //沉浸式状态栏
         if (Build.VERSION.SDK_INT >= 21) {
@@ -164,33 +174,8 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
                     importTable();
                     break;
                 case GET_RESULT:
-                    String comparisonData =activity.getComparisonData();
                     mList = new ArrayList<>();
-                    List<Integer> cData = JSON.parseArray(comparisonData,Integer.class);
-                    for(int n = 0; n < cData.size();n+=12) {
-                        for (int i = n; i < n + 12; i++) {
-                            if (cData.get(i) != 0) {
-                                int low = i;
-                                int up = i;
-                                for (int ii = i + 1; ii < n + 12; ii++) {
-                                    if (cData.get(ii) != cData.get(i)) {
-                                        i = ii - 1;
-                                        up = ii - 1;
-                                        break;
-                                    }
-                                    else if (ii == n + 11){
-                                        i = ii;
-                                        up = ii;
-                                    }
-                                }
-                                int week = (i + 1)/12 + 1;
-                                int start = ((low+1) %12 == 0)? 12 :((low+1) %12 );
-                                int end =((up+1) %12 == 0)? 12 :((up+1) %12 );
-                                String name = cData.get(i).toString() + "人";
-                                mList.add(new Object_MiniTimeTable(start, end, week, name));
-                            }
-                        }
-                    }
+                    initList();
                     mTimaTableView.refreshTimeTable(mList);
 
                     compareActivity.remove(index);
@@ -393,33 +378,87 @@ public class Activity_ComparisonDetail extends AppCompatActivity {
     }
 
     private void initList(){
-        String comparisonData = activity.getComparisonData();
-        mList = new ArrayList<>();
-        List<Integer> cData = JSON.parseArray(comparisonData,Integer.class);
-        for(int n = 0; n < cData.size();n+=12) {
-            for (int i = n; i < n + 12; i++) {
-                if (cData.get(i) != 0) {
-                    int low = i;
-                    int up = i;
-                    for (int ii = i + 1; ii < n + 12; ii++) {
-                        if (cData.get(ii) != cData.get(i)) {
-                            i = ii - 1;
-                            up = ii - 1;
-                            break;
-                        }
-                        else if (ii == n + 11){
-                            i = ii;
-                            up = ii;
-                        }
-                    }
-                    int week = (i + 1)/12 + 1;
-                    int start = ((low+1) %12 == 0)? 12 :((low+1) %12 );
-                    int end =((up+1) %12 == 0)? 12 :((up+1) %12 );
-                    String name = cData.get(i).toString() + "人";
-                    mList.add(new Object_MiniTimeTable(start, end, week, name));
+        List<String>rawData = (List<String>) JSON.parse(activity.getComparisonData());
+        Log.e("rawData", rawData.toString());
+        List<List<String>>name = new ArrayList<>();
+        for (int i = 0; i < 84 ; ++i)
+            name.add(new ArrayList<String>());
+        List<List<Integer>>num = new ArrayList<>();
+        for (int i = 0; i < 84 ; ++i)
+            num.add(new ArrayList<Integer>());
+        for(int i = 0; i < rawData.size(); ++ i){
+            List<String> templist = new ArrayList<>(Arrays.asList(rawData.get(i).split("a")));
+            Log.e("tempList", templist.toString());
+            Log.e("tempList.size()", templist.size()+"");
+            if(templist.size() == 1 && templist.get(0).equals("")){
+                name.get(i).add("");
+                num.get(i).add(0);
+            }else {
+                for(int j = 0; j < templist.size(); ++j){
+                    name.get(i).add(templist.get(j).split("\\*")[0]);
+                    num.get(i).add(Integer.valueOf(templist.get(j).split("\\*")[1]));
                 }
+
             }
         }
+
+        Log.e("name", name.toString());
+        Log.e("num", num.toString());
+
+        mList = new ArrayList<>();
+        List<Integer> cData = new ArrayList<>();//每节课总人数
+        for(int i = 0; i < num.size(); ++i){
+            int totalnumber = 0;
+            for(int j = 0; j < num.get(i).size(); ++j){
+                totalnumber += num.get(i).get(j);
+            }
+            Log.e("totalNumber", totalnumber + "");
+            cData.add(totalnumber);
+        }
+
+        for(int i = 0; i < cData.size(); i ++) {
+            Log.e("cdata, i", cData.toString() + i);
+            if (cData.get(i) != 0) {
+                int week = (i + 1)/12 + 1;
+                String count = cData.get(i).toString();
+                mList.add(new Object_MiniTimeTable((i + 1) % 12, (i + 1) % 12, week, count, name.get(i), num.get(i), comparisonID));
+            }
+        }
+    }
+
+    public class MyReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            RequestBody requestBody = new FormBody.Builder()
+                    .add("comparisonID", comparisonID)
+                    .add("comparisonWeekChosen", setWeek.getText().toString().substring(1, setWeek.getText().toString().length() - 1))
+                    .build();
+
+            Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/updateweekchosen", requestBody,new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {}
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    // 得到服务器返回的具体内容
+                    String responseData = response.body().string();
+                    activity = JSON.parseObject(responseData, Object_Comparison.class);
+                    Log.e("activityAfterUpdateWeek", activity.toString());
+
+                    Message message = new Message();
+                    message.what = GET_RESULT;
+                    handler.sendMessage(message);
+                }
+            });
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(myReceiver);
     }
 }
 
