@@ -2,19 +2,24 @@ package com.example.classchat.Adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.provider.ContactsContract;
+import android.support.annotation.ColorRes;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.bumptech.glide.Glide;
 import com.example.classchat.Object.Object_Pre_Sale;
 import com.example.classchat.R;
+import com.example.classchat.Util.Util_ToastUtils;
+import com.example.library_cache.disklrucache.Util;
 
 import org.json.JSONObject;
 
@@ -83,6 +88,7 @@ public class Adapter_ShoppingCart extends RecyclerView.Adapter<RecyclerView.View
 
         //设置全选点击事件
 
+        // 完成界面的全选按钮
         checkboxAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,14 +98,13 @@ public class Adapter_ShoppingCart extends RecyclerView.Adapter<RecyclerView.View
             }
         });
 
-        //全部选中就把全选框勾上
+        // 删除界面的全选按钮
         cb_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //得到状态
                 boolean checked = getCb_all().isChecked();
-                checkAll_none(checked);
-                //根据状态设置全选或者非全选
+                check_all_none(checked);
                 showTotalPrice();
             }
         });
@@ -138,6 +143,29 @@ public class Adapter_ShoppingCart extends RecyclerView.Adapter<RecyclerView.View
 
     //是否全选，以下checkAll函数的反面
     public void checkAll_none(boolean checked) {
+        int temp = 0;
+        if (datas != null && datas.size() > 0) {
+            for (int i = 0; i < datas.size(); i++) {
+                if ( getStorageNumber(datas.get(i).getItemId()) < datas.get(i).getNum() || getStorageNumber(datas.get(i).getItemId()) == 0){
+                    datas.get(i).setChildSelected(false);
+                    temp += 1;
+                }else {
+                    datas.get(i).setChildSelected(checked);
+                }
+                notifyItemChanged(i);
+            }
+            if ( temp == datas.size() ){
+                checkboxAll.setChecked(false);
+                Util_ToastUtils.showToast(mContext, "无可选商品");
+            }else {
+                checkboxAll.setChecked(checked);
+            }
+        } else {
+            checkboxAll.setChecked(false);
+        }
+    }
+
+    public void check_all_none(boolean checked){
         if (datas != null && datas.size() > 0) {
             for (int i = 0; i < datas.size(); i++) {
                 datas.get(i).setChildSelected(checked);
@@ -205,6 +233,7 @@ public class Adapter_ShoppingCart extends RecyclerView.Adapter<RecyclerView.View
         private ImageView count_add;
         private ImageView count_sub;
         private TextView check_size;
+        private LinearLayout ll_item_name;
 
         public ViewHolder(View itemView) {
             //转换
@@ -219,6 +248,7 @@ public class Adapter_ShoppingCart extends RecyclerView.Adapter<RecyclerView.View
             count_sub = itemView.findViewById(R.id.count_sub);
             check_size = itemView.findViewById(R.id.check_size);
             tvAbleToBuy = itemView.findViewById(R.id.tv_able_to_buy);
+            ll_item_name = itemView.findViewById(R.id.ll_itemName);
 
 
 //            //设置item的点击事件
@@ -277,6 +307,16 @@ public class Adapter_ShoppingCart extends RecyclerView.Adapter<RecyclerView.View
                 }
                 }
             });
+
+            ll_item_name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onItemClickListener != null){
+                        onItemClickListener.onItemClickListener(v, getLayoutPosition());
+                    }
+                }
+            });
+
         }
 
         /**
@@ -312,12 +352,13 @@ public class Adapter_ShoppingCart extends RecyclerView.Adapter<RecyclerView.View
                 tvPriceGov.setText("￥ " + total_deal);
 
                 // 设置数量
-                if ( Commodity.getNum() <= storage ){
-                    count.setText(Commodity.getNum() + "");
-                }else {
-                    count.setText(storage + "");
-                    Commodity.setNum(storage);
-                }
+                count.setText(Commodity.getNum() + "");
+//                if ( Commodity.getNum() <= storage ){
+//                    count.setText(Commodity.getNum() + "");
+//                }else {
+//                    count.setText(storage + "");
+//                    Commodity.setNum(storage);
+//                }
 
                 // 设置规格
                 String temp_string = "" ;
@@ -325,12 +366,20 @@ public class Adapter_ShoppingCart extends RecyclerView.Adapter<RecyclerView.View
                     temp_string += Commodity.getParamList().get(i) + " ";
                 }
                 check_size.setText(temp_string);
+                check_size.setTextColor(Color.parseColor("#c0c0c0"));
 
                 // 设置是否有货
-                if ( storage < 0 ){
-                    tvAbleToBuy.setText("现在有货");
+                if ( storage > 0 ){
+                    if ( Commodity.getNum() > storage ){
+                        tvAbleToBuy.setText("仅剩" + storage + "件");
+                        tvAbleToBuy.setTextColor(Color.parseColor("#ff0000"));
+                    }else {
+                        tvAbleToBuy.setText("现在有货");
+                        tvAbleToBuy.setTextColor(Color.parseColor("#BB00D8A0"));
+                    }
                 }else {
                     tvAbleToBuy.setText("暂时无货");
+                    tvAbleToBuy.setTextColor(Color.parseColor("#ff0000"));
                 }
             }
         }
@@ -395,7 +444,9 @@ public class Adapter_ShoppingCart extends RecyclerView.Adapter<RecyclerView.View
      * @return
      */
     private int getStorageNumber(String itemID){
-        int number = 15;
+        int number = Integer.parseInt(itemID);
+//        int number = 0;
         return number;
+
     }
 }

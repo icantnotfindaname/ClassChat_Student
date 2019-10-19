@@ -26,12 +26,15 @@ import com.example.classchat.Object.Object_Commodity;
 import com.example.classchat.Object.Object_Pre_Sale;
 import com.example.classchat.R;
 import com.example.classchat.Util.Util_ToastUtils;
+import com.example.library_cache.disklrucache.Util;
 import com.github.nisrulz.sensey.Sensey;
 import com.github.nisrulz.sensey.TouchTypeDetector;
+import com.googlecode.mp4parser.authoring.tracks.TextTrackImpl;
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
 
 import org.json.JSONException;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +67,6 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
 //    private TextView item_count;
 
     private List<Object_Pre_Sale> datas = new ArrayList<>();
-    private  List<Object_Commodity> commodityList = new ArrayList<>();
 
     /**
      * 编辑状态
@@ -94,7 +96,6 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
         btn_delete = findViewById(R.id.btn_delete);
         ll_empty_shopcart = findViewById(R.id.ll_empty_shopcart);
         tv_empty_cart_tobuy = findViewById(R.id.tv_empty_cart_tobuy);
-
         mPullLoadMoreRecyclerView = (PullLoadMoreRecyclerView)findViewById(R.id.pullLoadMoreRecyclerView);
 
 //        count_add = findViewById(R.id.count_add);
@@ -123,17 +124,47 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
             // 设置返回按钮的监听事件
             finish(); // 直接退出
         } else if (v == btnCheckOut) {
-            //todo 设置结算按钮的点击事件 应该是进入确认订单界面
-            Toast.makeText(Activity_Market_ShoppingCart.this, "结算", Toast.LENGTH_SHORT).show();
+            // 结算按钮的点击事件
+            List<Object_Pre_Sale> toBuy = new ArrayList();
+            int no_choose = 0 ;
+            if ( datas != null ){
+                for (int i = 0 ; i < datas.size() ; i++ ){
+                    if ( datas.get(i).isChildSelected() ){
+                        toBuy.add(datas.get(i));
+                        no_choose += 1 ;
+                    }
+                }
+            }
+            if ( no_choose == 0 ){
+                Util_ToastUtils.showToast(Activity_Market_ShoppingCart.this, "请先选择想要购买的商品");
+                adapter.notifyDataSetChanged();
+            }else {
+                boolean tag = true;
+                for ( int i = 0 ; i < toBuy.size() ; i++ ){
+                    if ( toBuy.get(i).getNum() > getStorageNumber(toBuy.get(i).getItemId()) ){
+                        Util_ToastUtils.showToast(Activity_Market_ShoppingCart.this, "存在超过库存的商品");
+                        tag = false;
+                        break;
+                    }
+                }
+                if ( tag ){
+                    // todo 跳转到确认订单界面 传值
+                    Toast.makeText(Activity_Market_ShoppingCart.this, "跳转成功", Toast.LENGTH_SHORT).show();
+                }else{
+                    Util_ToastUtils.showToast(Activity_Market_ShoppingCart.this, "结算失败");
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
         } else if (v == tvShopcartEdit) {
             //设置编辑按钮的点击事件
             int tag = (int) tvShopcartEdit.getTag();
             // 检查状态
             if (tag == ACTION_EDIT) {
-                // 变成完成状态
+                // 如果是编辑字样，点击就可以编辑
                 showDelete();
             } else {
-                // 变成编辑状态
+                // 如果是完成字样，点击就不能编辑了
                 hideDelete();
             }
         } else if (v == btn_delete) {
@@ -167,7 +198,7 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
         tvShopcartEdit.setText("编辑");
         tvShopcartEdit.setTag(ACTION_EDIT);
 
-        adapter.checkAll_none(false);
+        adapter.check_all_none(false);
         ll_delete.setVisibility(View.GONE);
         ll_check_all.setVisibility(View.VISIBLE);
 
@@ -181,7 +212,7 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
         tvShopcartEdit.setText("完成");
         tvShopcartEdit.setTag(ACTION_COMPLETE);
 
-        adapter.checkAll_none(false);
+        adapter.check_all_none(false);
         cb_all.setChecked(false);
         checkboxAll.setChecked(false);
 
@@ -296,13 +327,14 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
                 recyclerview.setAdapter(adapter);
                 adapter.setOnItemClickListener(MyItemClickListener);
                 mPullLoadMoreRecyclerView.setGridLayout(1);
-                mPullLoadMoreRecyclerView.setFooterViewText("下拉刷新");
-                mPullLoadMoreRecyclerView.setFooterViewTextColor(R.color.black);
                 mPullLoadMoreRecyclerView.setOnPullLoadMoreListener(new PullLoadMoreRecyclerView.PullLoadMoreListener() {
                     @Override
                     public void onRefresh() {
                         mPullLoadMoreRecyclerView.setPushRefreshEnable(true);
+                        mPullLoadMoreRecyclerView.setFooterViewText("下拉刷新");
+                        mPullLoadMoreRecyclerView.setFooterViewTextColor(R.color.black);
                         adapter.notifyDataSetChanged();
+                        Util_ToastUtils.showToast(Activity_Market_ShoppingCart.this, "刷新成功");
                         mPullLoadMoreRecyclerView.setPullLoadMoreCompleted();
                     }
 
@@ -323,18 +355,26 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
 //    }
 
     private void makeData() {
-        String string1 = "rlsadkfjskljflakjdlakjsdlaskjd";
+        String string1 = "这是一首简单的小情歌";
         List<String> tempList = new ArrayList<>();
         tempList.add(string1);
-        Object_Pre_Sale object_pre_sale1 = new Object_Pre_Sale("1", "1", tempList, 2, 2.22,
+        Object_Pre_Sale object_pre_sale1 = new Object_Pre_Sale("我会给你怀抱", "0", tempList, 2, 2.22,
                 "http://b-ssl.duitang.com/uploads/item/201209/07/20120907181244_tGiNN.jpeg");
         datas.add(object_pre_sale1);
 
         List<String> tempList1 = new ArrayList<>();
+        string1 = "唱着我们心中的曲折";
         tempList1.add(string1);
-        Object_Pre_Sale object_pre_sale2 = new Object_Pre_Sale("adaksdlkajhskfhajshfkjashfkjashkdjahksjhdakjshd", "1", tempList1, 2, 2.22,
+        Object_Pre_Sale object_pre_sale2 = new Object_Pre_Sale("明知道 就算大雨让这座城市颠倒", "1", tempList1, 2, 2.22,
                 "http://b-ssl.duitang.com/uploads/item/201209/07/20120907181244_tGiNN.jpeg");
         datas.add(object_pre_sale2);
+
+        List<String> tempList2 = new ArrayList<>();
+        string1 = "我想我很适合";
+        tempList2.add(string1);
+        Object_Pre_Sale object_pre_sale3 = new Object_Pre_Sale("受不了 看着你背影来到", "2", tempList2, 16, 2.22,
+                "http://b-ssl.duitang.com/uploads/item/201209/07/20120907181244_tGiNN.jpeg");
+        datas.add(object_pre_sale3);
     }
 
     //用于手势监听
@@ -356,40 +396,59 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
                     if (count_temp < max){
                         datas.get(position).setNum(count_temp + 1);
                         adapter.notifyItemChanged(position, R.id.item_count);
+                        // todo 修改缓存
                     }else{
-                        Toast.makeText(Activity_Market_ShoppingCart.this, "您选择的数量已达到商品的最大库存", Toast.LENGTH_SHORT).show();
+                        Util_ToastUtils.showToast(Activity_Market_ShoppingCart.this, "警告：超过库存");
                     }
                     break;
                 case R.id.count_sub:
                     int count_temp1 = datas.get(position).getNum();
-                    if (count_temp1 > 1){
+                        if (count_temp1 > 1){
                         datas.get(position).setNum(count_temp1 - 1);
                         adapter.notifyItemChanged(position, R.id.item_count);
-//                        data_changed(position);
+                        // todo 修改缓存
                     }else {
-                        Toast.makeText(Activity_Market_ShoppingCart.this, "已是最低数量", Toast.LENGTH_SHORT).show();
+                        Util_ToastUtils.showToast(Activity_Market_ShoppingCart.this, "已是最低数量");
                     }
                     break;
-                case R.id.tv_desc_gov:
+                case R.id.ll_itemName:
                 case R.id.iv_gov:
+                case R.id.tv_desc_gov:
                     // test
                     // todo 跳转到特定的商品详情页面
                     Intent intent = new Intent(Activity_Market_ShoppingCart.this, NotificationJumpBack.class);
                     startActivity(intent);
                     break;
                 case R.id.cb_gov:
-                    if (getStorageNumber(datas.get(position).getItemId()) < 0 ){
-                        datas.get(position).setChildSelected(false);
-                        adapter.notifyItemChanged(position, R.id.cb_gov);
-                        adapter.showTotalPrice();
-                        adapter.checkAll();
-                        Util_ToastUtils.showToast(Activity_Market_ShoppingCart.this, "商品暂时缺货，请勿勾选");
-                    }else {
+                    int tag = (int) tvShopcartEdit.getTag();
+                    if (tag == ACTION_COMPLETE) {
+                        // 如果是完成字样
                         boolean b = datas.get(position).isChildSelected();
                         datas.get(position).setChildSelected(!b);
                         adapter.notifyItemChanged(position, R.id.cb_gov);
                         adapter.showTotalPrice();
                         adapter.checkAll();
+                    } else {
+                        // 如果是编辑字样
+                        if ( getStorageNumber(datas.get(position).getItemId()) == 0 ){
+                            datas.get(position).setChildSelected(false);
+                            adapter.notifyItemChanged(position, R.id.cb_gov);
+                            adapter.showTotalPrice();
+                            adapter.checkAll();
+                            Util_ToastUtils.showToast(Activity_Market_ShoppingCart.this, "商品暂时缺货，请勿勾选");
+                        }else if ( getStorageNumber(datas.get(position).getItemId()) > 0 && datas.get(position).getNum() <= getStorageNumber(datas.get(position).getItemId())){
+                            boolean b = datas.get(position).isChildSelected();
+                            datas.get(position).setChildSelected(!b);
+                            adapter.notifyItemChanged(position, R.id.cb_gov);
+                            adapter.showTotalPrice();
+                            adapter.checkAll();
+                        }else if ( getStorageNumber(datas.get(position).getItemId()) > 0 && datas.get(position).getNum() > getStorageNumber(datas.get(position).getItemId())){
+                            datas.get(position).setChildSelected(false);
+                            adapter.notifyItemChanged(position, R.id.cb_gov);
+                            adapter.showTotalPrice();
+                            adapter.checkAll();
+                            Util_ToastUtils.showToast(Activity_Market_ShoppingCart.this, "警告：超过库存");
+                        }
                     }
                     break;
                 default:
@@ -403,11 +462,11 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
      * @param index
      */
     private void data_changed(int index){
-//        commodityList.get(index).setNum(commodityList.get(0).getNum() + 1 );
+        datas.get(index).setNum( datas.get(index).getNum() + 1 );
         SharedPreferences sp = getSharedPreferences("shopping_cart_cache" , MODE_MULTI_PROCESS);
         SharedPreferences.Editor editor = sp.edit();
         editor.clear().commit();
-        editor.putString("cart_information", JSON.toJSONString(commodityList)).commit();
+        editor.putString("cart_information", JSON.toJSONString(datas)).commit();
     }
 
     /**
@@ -416,7 +475,8 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
      * @return
      */
     private int getStorageNumber(String itemID){
-        int number = 15;
+        int number = Integer.parseInt(itemID);
+//        int number = 0;
         return number;
     }
 }
