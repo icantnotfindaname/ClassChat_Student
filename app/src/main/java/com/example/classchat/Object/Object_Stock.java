@@ -6,15 +6,17 @@ public class Object_Stock {
     private String param1;
     private String param2;
     private String param3;
+    private float price;
 
     public Object_Stock(){}
 
-    public Object_Stock(String id, int count, String param1, String param2, String param3) {
+    public Object_Stock(String id, int count, String param1, String param2, String param3, float price) {
         this.id = id;
         this.count = count;
         this.param1 = param1;
         this.param2 = param2;
         this.param3 = param3;
+        this.price = price;
     }
 
     public String getId() {
@@ -57,6 +59,12 @@ public class Object_Stock {
         this.param3 = param3;
     }
 
+    public float getPrice() {
+        return price;
+    }
 
+    public void setPrice(float price) {
+        this.price = price;
+    }
 
 }

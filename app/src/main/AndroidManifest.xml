@@ -118,7 +118,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.Activity_Market_GoodsDetail"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:usesCleartextTraffic="true" />
         <activity
             android:name=".Activity.Activity_Market_ShoppingCart"
             android:screenOrientation="portrait" />
