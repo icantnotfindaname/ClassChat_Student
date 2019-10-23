@@ -92,4 +92,9 @@ dependencies {
     //商品属性选择
     implementation 'com.github.donkingliang:LabelsView:1.6.1'
 
+
+    implementation 'com.coolerfall:android-app-daemon:1.2.0'
+
+    implementation 'com.github.ozodrukh:CircularReveal:2.1.0'
+    implementation 'com.github.yalantis:Side-Menu.Android:1.0.1'
 }

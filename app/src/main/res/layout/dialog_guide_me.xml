@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        >
+        <TextView
+            android:id="@+id/textView_guide"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:textSize="20sp"
+            android:textColor="#000000"
+            android:text="我的页面指引：\n\n\t 1.点击头像弹出二维码，用于导入课表及对比课表。 \n\n\t 2.账号信息: 修改昵称，头像，密码。\n\n\t 3.我的课程:查看您目前在读的所有课程及对应的签到次数。\n\n\t 4.我的收藏: 浏览你收藏的文件。\n\n\t 5.帮助与反馈: 联系客服寻求帮助或提出宝贵意见。\n"
+            />
+    </LinearLayout>
+</ScrollView>

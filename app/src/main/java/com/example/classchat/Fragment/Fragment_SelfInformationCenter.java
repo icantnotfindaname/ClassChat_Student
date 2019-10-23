@@ -25,13 +25,17 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v4.provider.DocumentFile;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -93,6 +97,7 @@ public class Fragment_SelfInformationCenter extends Fragment {
     private LinearLayout linearLayoutforGuanyu;
     private LinearLayout linearLayoutforUpdate;
     private LinearLayout linearLayoutQuit;
+    private LinearLayout linearLayout_user_manual;
     private TextView textViewforName;
     private TextView textViewforId;
 
@@ -109,6 +114,8 @@ public class Fragment_SelfInformationCenter extends Fragment {
     //  private Context context;
     private String downloadUrl;
     private final static int UPDATE = 100;
+
+    private ImageButton guideButton; // 指引按键
 
     // 搞一个自己的变量
     Fragment_SelfInformationCenter myContext = this;
@@ -151,6 +158,9 @@ public class Fragment_SelfInformationCenter extends Fragment {
         textViewforId = view.findViewById(R.id.user_stuID);
         textViewforName = view.findViewById(R.id.user_name);
 
+        guideButton = view.findViewById(R.id.btn_guide_me);
+
+        linearLayout_user_manual = view.findViewById(R.id.user_manual);
 
         //获得用户ID
         MainActivity activity = (MainActivity) getActivity();
@@ -246,6 +256,14 @@ public class Fragment_SelfInformationCenter extends Fragment {
                 }
             }
         });
+
+        linearLayout_user_manual.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                show_guide_dialog();
+            }
+        });
+
         linearLayoutQuit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -299,6 +317,16 @@ public class Fragment_SelfInformationCenter extends Fragment {
             }
         });
 
+        /**
+         * 指引的点击事件
+         */
+        guideButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                show_guide_dialog();
+            }
+        });
+
 
     }
 
@@ -309,6 +337,27 @@ public class Fragment_SelfInformationCenter extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+    }
+
+    Dialog dialog1;
+    private void show_guide_dialog() {
+        // 自定义对话框
+        LayoutInflater inflater= LayoutInflater.from(getContext());
+        View myView = inflater.inflate(R.layout.dialog_guide_me,null);//引用自定义布局
+//        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getContext());
+//        builder.setView(myView);
+//        dialog = builder.create();  //创建对话框
+        dialog1 = new Dialog(getActivity(),R.style.dialog);
+        dialog1.setContentView(myView);
+        dialog1.show();  //显示对话框
+
+        Window dialogWindow = dialog1.getWindow();
+        WindowManager m = getActivity().getWindowManager();
+        Display d = m.getDefaultDisplay(); // 获取屏幕宽、高度
+        WindowManager.LayoutParams p = dialogWindow.getAttributes(); // 获取对话框当前的参数值
+        p.height = (int) (d.getHeight() * 0.7); // 高度设置为屏幕的0.6，根据实际情况调整
+        p.width = (int) (d.getWidth() * 0.7); // 宽度设置为屏幕的0.65，根据实际情况调整
+        dialogWindow.setAttributes(p);
     }
 
     /*
@@ -484,7 +533,6 @@ public class Fragment_SelfInformationCenter extends Fragment {
             }
         });
         progressBar = myView.findViewById(R.id.download_progress);
-//        cancelDownload = myView.findViewById(R.id.cancelDownload);
     }
 
     private void initCallBack() {

@@ -4,6 +4,18 @@ import java.util.List;
 
 public class Object_Pre_Sale {
 
+    public Object_Pre_Sale(String itemName, String itemId, List<String> paramList, int num, float price, String imgurl) {
+        this.itemName = itemName;
+        this.itemId = itemId;
+        this.paramList = paramList;
+        this.num = num;
+        this.price = price;
+        this.imgurl = imgurl;
+    }
+
+    public Object_Pre_Sale(){}
+
+    //商品名
     private String itemName;
 
     //商品Id
@@ -17,18 +29,12 @@ public class Object_Pre_Sale {
 
     //单价
     private float price;
-
+    
     //给购物车每一条的一个缩略图
     private String imgurl;
 
-    public Object_Pre_Sale(String itemName, String itemId, List<String> paramList, int num, float price, String imgurl) {
-        this.itemName = itemName;
-        this.itemId = itemId;
-        this.paramList = paramList;
-        this.num = num;
-        this.price = price;
-        this.imgurl = imgurl;
-    }
+    //是否选中
+    private boolean isChildSelected;
 
     public String getItemName() {
         return itemName;
@@ -78,4 +84,11 @@ public class Object_Pre_Sale {
         this.imgurl = imgurl;
     }
 
+    public boolean isChildSelected() {
+        return isChildSelected;
+    }
+
+    public void setChildSelected(boolean childSelected) {
+        isChildSelected = childSelected;
+    }
 }

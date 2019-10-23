@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        >
+        <TextView
+            android:id="@+id/textView_guide"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:textSize="20sp"
+            android:textColor="#000000"
+            android:text="课程表页面指引\n\n\t 1.进行操作前请确保您已通过实名认证，若未通过，请前往我的页面进行实名认证。\n\n\t 2.点击右上方图标可一次性导入课表（目前仅限华工学生），使用统一认证账号登陆之后即可(导入时需要校园网)。\n\n\t 3.点击扫码图标可扫描他人的二维码，导入其课表或与其进行课表比对。\n\n\t 4.点击上方第几周字样可选择开学日期以及周数。\n\n\t 5.可在课表空白处点击添加便签。\n\n\t6.点击课表中对应课程可进入对应课程的聊天群，进行上传文件，签到等操作。并可删除该课程。\n"
+            />
+    </LinearLayout>
+</ScrollView>

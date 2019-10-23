@@ -30,11 +30,14 @@ import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -138,6 +141,7 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
     WeekView mWeekView;
     ImageButton moreButton;
     ImageButton scanButton;
+    ImageButton guideButton;
     LinearLayout layout;
     TextView titleTextView;
     List<MySubject> mySubjects = new ArrayList<MySubject>();
@@ -299,6 +303,7 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
         imageUrl = mainActivity.getImageUrl();
         scanButton = getActivity().findViewById(R.id.id_scan);
         moreButton = getActivity().findViewById(R.id.id_more);
+        guideButton = getActivity().findViewById(R.id.btn_guide);
         moreButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -350,6 +355,16 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
             }
         });
 
+        /**
+         * 指引的点击事件
+         */
+        guideButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                show_guide_dialog();
+            }
+        });
+
         titleTextView = getActivity().findViewById(R.id.id_title);
         layout = getActivity().findViewById(R.id.id_layout);
         layout.setOnClickListener(this);
@@ -380,6 +395,26 @@ public class Fragment_ClassBox extends Fragment implements OnClickListener {
         initTimetableView();
     }
 
+    Dialog dialog;
+    private void show_guide_dialog() {
+        // 自定义对话框
+        LayoutInflater inflater= LayoutInflater.from(getContext());
+        View myView = inflater.inflate(R.layout.dialog_guide_classbox,null);//引用自定义布局
+//        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getContext());
+//        builder.setView(myView);
+//        dialog = builder.create();  //创建对话框
+        dialog = new Dialog(getActivity(),R.style.dialog);
+        dialog.setContentView(myView);
+        dialog.show();  //显示对话框
+
+        Window dialogWindow = dialog.getWindow();
+        WindowManager m = getActivity().getWindowManager();
+        Display d = m.getDefaultDisplay(); // 获取屏幕宽、高度
+        WindowManager.LayoutParams p = dialogWindow.getAttributes(); // 获取对话框当前的参数值
+        p.height = (int) (d.getHeight() * 0.7); // 高度设置为屏幕的0.6，根据实际情况调整
+        p.width = (int) (d.getWidth() * 0.7); // 宽度设置为屏幕的0.65，根据实际情况调整
+        dialogWindow.setAttributes(p);
+    }
 
     private void importTable(){
         if (!isAuthentation) {
