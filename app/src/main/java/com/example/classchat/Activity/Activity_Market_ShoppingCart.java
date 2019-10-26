@@ -97,7 +97,7 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
         btn_delete = findViewById(R.id.btn_delete);
         ll_empty_shopcart = findViewById(R.id.ll_empty_shopcart);
         tv_empty_cart_tobuy = findViewById(R.id.tv_empty_cart_tobuy);
-        mPullLoadMoreRecyclerView = (PullLoadMoreRecyclerView)findViewById(R.id.pullLoadMoreRecyclerView);
+        mPullLoadMoreRecyclerView = findViewById(R.id.pullLoadMoreRecyclerView);
 
 //        count_add = findViewById(R.id.count_add);
 //        count_sub = findViewById(R.id.count_sub);
@@ -226,33 +226,6 @@ public class Activity_Market_ShoppingCart extends Activity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__market__shopping_cart);
-
-        TouchTypeDetector.TouchTypListener touchTypListener = new TouchTypeDetector.TouchTypListener() {
-            @Override
-            public void onDoubleTap() {}
-            @Override
-            public void onLongPress() {}
-            @Override
-            public void onScroll(int scrollDirection) {}
-            @Override
-            public void onSingleTap() {}
-            @Override
-            public void onSwipe(int swipeDirection) {
-                switch (swipeDirection) {
-                    case TouchTypeDetector.SWIPE_DIR_RIGHT:
-                        finish();
-                        Sensey.getInstance().stopTouchTypeDetection();
-                        break;
-                    default:
-                        break;
-                }
-            }
-            @Override
-            public void onThreeFingerSingleTap() {}
-            @Override
-            public void onTwoFingerSingleTap() {}
-        };
-        Sensey.getInstance().startTouchTypeDetection(this,touchTypListener);
 
         findViews();
         try {

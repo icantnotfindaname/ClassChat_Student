@@ -406,34 +406,29 @@ public class Fragment_Market extends Fragment {
                 case DEFAULT_SORT:
                     list = new ArrayList<Object_Main_Brief_Item>();
                     break;
-//                case THUMB_SORT:
-//                    list = new ArrayList<Object_Commodity_ThumbsUpSort>();
-//                    break;
-                case UP_SORT:
-                case DOWN_SORT:
-                    list = new ArrayList<Object_Main_Brief_Item_PriceSort>();
-                    break;
                 default:
+                    list = new ArrayList<Object_Main_Brief_Item_PriceSort>();
                     break;
             }
 
             //对商品排序处理
             for (int i = 0;i < itemslist.size();i++){
-                Object_Commodity item = (Object_Commodity) itemslist.get(i);
-                String itemID = item.getItemID();
-                String itemName = item.getItemName();
-                List<String> imageList = item.getImageList();
+                Object_Main_Brief_Item item = (Object_Main_Brief_Item) itemslist.get(i);
+                String itemID = item.getId();
+                String itemName = item.getName();
+                String imageList = item.getImage();
                 double price = item.getPrice();
+
                 switch (sort.getCheckedRadioButtonId()){
                     case DEFAULT_SORT:
-                        list.add(new Object_Main_Brief_Item(itemID, itemName, imageList.get(0), price));
+                        list.add(new Object_Main_Brief_Item(itemID, itemName, imageList, price));
                         break;
 //                    case THUMB_SORT:
 //                        list.add(new Object_Commodity_ThumbsUpSort(itemID, itemName, imageList, ownerID, price, briefintroduction, detailinformation, thumbedlist));
 //                        break;
                     case UP_SORT:
                     case DOWN_SORT:
-                        list.add(new Object_Main_Brief_Item_PriceSort(itemID, itemName, imageList.get(0), price));
+                        list.add(new Object_Main_Brief_Item_PriceSort(itemID, itemName, imageList, price));
                         break;
                     default:
                         break;
@@ -475,7 +470,7 @@ public class Fragment_Market extends Fragment {
                 .add("type", type + "")
                 .build();
         // 发送网络请求，联络信息
-        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8081/getitembytype", requestBody, new okhttp3.Callback() {
+        Util_NetUtil.sendOKHTTPRequest("http://106.12.105.160:8090/getitembytype", requestBody, new okhttp3.Callback() {
             @Override
 
             public void onResponse(Call call, Response response) throws IOException {
@@ -491,12 +486,10 @@ public class Fragment_Market extends Fragment {
                     message.what = RECEIVE_NULL;
                 else {
                     for(int i = 0; i < jsonlist.size(); i++) {
-                        Object_Commodity object_commodity = JSON.parseObject(jsonlist.get(i), Object_Commodity.class);
                         Object_Main_Brief_Item object_main_brief_item = JSON.parseObject(jsonlist.get(i), Object_Main_Brief_Item.class);
-                        itemslist.add(object_commodity);
                         itemslist.add(object_main_brief_item);
                     }
-
+                    Log.e("itemlist", itemslist.toString());
                     // 发送收到成功的信息
                     //由getQuery()按需处理后载入布局
                     message.what = RECEIVE_MID;

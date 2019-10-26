@@ -1,19 +1,23 @@
 package com.example.classchat.Object;
 
+import android.support.annotation.NonNull;
+
 public class Object_Item {
     private String id;
     private String name;
-    private int type;
+    private String type;
     private String img_list_1;
     private String img_list_2;
-    private float price;
+    private String price;
     private String seller;
     private String comment_list;
     private String attribute_kv;
+    private String count;
+    private String params;
 
     public Object_Item(){}
 
-    public Object_Item(String id, String name, int type, String img_list_1, String img_list_2, float price, String seller, String comment_list, String attribute_kv) {
+    public Object_Item(String id, String name, String type, String img_list_1, String img_list_2, String price, String seller, String comment_list, String attribute_kv, String count, String params) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -23,6 +27,8 @@ public class Object_Item {
         this.seller = seller;
         this.comment_list = comment_list;
         this.attribute_kv = attribute_kv;
+        this.count = count;
+        this.params = params;
     }
 
     public String getId() {
@@ -41,11 +47,11 @@ public class Object_Item {
         this.name = name;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -65,11 +71,11 @@ public class Object_Item {
         this.img_list_2 = img_list_2;
     }
 
-    public float getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
@@ -97,4 +103,25 @@ public class Object_Item {
         this.attribute_kv = attribute_kv;
     }
 
+    public String getCount() {
+        return count;
+    }
+
+    public void setCount(String count) {
+        this.count = count;
+    }
+
+    public String getParams() {
+        return params;
+    }
+
+    public void setParams(String params) {
+        this.params = params;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return id + name + type;
+    }
 }
