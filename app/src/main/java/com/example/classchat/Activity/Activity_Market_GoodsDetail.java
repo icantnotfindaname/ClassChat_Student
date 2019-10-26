@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +21,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.donkingliang.labels.LabelsView;
 import com.example.classchat.Adapter.Adapter_GoodsDetail;
 import com.example.classchat.Adapter.NetworkImageHolderView;
+import com.example.classchat.Object.Object_Item;
 import com.example.classchat.Object.Object_Item_Detail;
 import com.example.classchat.Object.Object_Pre_Sale;
 import com.example.classchat.Object.Object_Stock;
@@ -77,7 +80,8 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity{
                     buy.setEnabled(true);
                     addToShoppingCart.setEnabled(true);
 
-                    minPrice.setText(String.format("%s", object_item_detail.getItem().getPrice()));
+                    //TODO 对价格列表？排序取最小值！！
+//                    minPrice.setText(String.format("%s", object_item_detail.getItem().getPrice()));
                     name.setText(object_item_detail.getItem().getName());
 
                     mBanner.setPages(new CBViewHolderCreator<NetworkImageHolderView>() {
@@ -85,8 +89,7 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity{
                         public NetworkImageHolderView createHolder() {
                             return new NetworkImageHolderView();
                         }
-                    }, Collections.singletonList(object_item_detail.getItem().getImg_list_1()));
-
+                    }, JSON.parseArray(object_item_detail.getItem().getImg_list_1(), String.class));
                     mBanner.setPointViewVisible(true);
                     mBanner.startTurning(2000);
 
@@ -94,12 +97,11 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity{
                     LinearLayoutManager layoutManager = new LinearLayoutManager(Activity_Market_GoodsDetail.this);
                     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                     rv.setLayoutManager(layoutManager);
-                    myAdapter = new Adapter_GoodsDetail(Activity_Market_GoodsDetail.this, Collections.singletonList(object_item_detail.getItem().getImg_list_2()));
+                    myAdapter = new Adapter_GoodsDetail(Activity_Market_GoodsDetail.this, JSON.parseArray(object_item_detail.getItem().getImg_list_2(), String.class));
                     rv.setAdapter(myAdapter);
                     break;
                 case CAN_BUY:
                     //TODO 跳转至后续购买界面
-
                     break;
                 case CANNOT_BUY:
                     Util_ToastUtils.showToast(Activity_Market_GoodsDetail.this, "库存不足请重新选择！");
@@ -134,7 +136,7 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity{
     private void getDetailFromWeb() {
         final Message message = new Message();
         //构建requestbody
-        RequestBody requestBody = new FormBody.Builder()
+        final RequestBody requestBody = new FormBody.Builder()
                 .add("itemid", itemid)
                 .build();
         // 发送网络请求，联络信息
@@ -144,23 +146,24 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity{
             public void onResponse(Call call, Response response) throws IOException {
                 // 得到服务器返回的具体内容
                 object_item_detail = JSON.parseObject(response.body().string(), Object_Item_Detail.class);
-                switch (object_item_detail.getParamList().size()){
-                    case 1:
+
+//                switch (object_item_detail.getParamList().size()){
+//                    case 1:
                         //初始化默认选项
                         paramChosen1 = object_item_detail.getRangeList().get(0).get(0);
-                        break;
-                    case 2:
-                        paramChosen1 = object_item_detail.getRangeList().get(0).get(0);
-                        paramChosen2 = object_item_detail.getRangeList().get(1).get(0);
-                        break;
-                    case 3:
-                        paramChosen1 = object_item_detail.getRangeList().get(0).get(0);
-                        paramChosen2 = object_item_detail.getRangeList().get(1).get(0);
-                        paramChosen3 = object_item_detail.getRangeList().get(2).get(0);
-                        break;
-                    default:
-                        break;
-                }
+//                        break;
+//                    case 2:
+//                        paramChosen1 = object_item_detail.getRangeList().get(0).get(0);
+//                        paramChosen2 = object_item_detail.getRangeList().get(1).get(0);
+//                        break;
+//                    case 3:
+//                        paramChosen1 = object_item_detail.getRangeList().get(0).get(0);
+//                        paramChosen2 = object_item_detail.getRangeList().get(1).get(0);
+//                        paramChosen3 = object_item_detail.getRangeList().get(2).get(0);
+//                        break;
+//                    default:
+//                        break;
+//                }
                 message.what = GET_DETAIL_SUCCESS;
                 handler.sendMessage(message);
             }
@@ -176,29 +179,28 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity{
     }
 
     public void toShoppingChart(View view) {
-        //TODO
-//        startActivity(new Intent(Activity_Market_GoodsDetail.this, 购物车));
+        startActivity(new Intent(Activity_Market_GoodsDetail.this, Activity_Market_ShoppingCart.class));
     }
 
     public void addToShoppingCart(View view) {
         //TODO 添加商品到购物车
         List<String>paramList = new ArrayList<>();
-        switch (object_item_detail.getParamList().size()){
-            case 1:
+//        switch (object_item_detail.getParamList().size()){
+//            case 1:
                 paramList.add(paramChosen1);
-                break;
-            case 2:
-                paramList.add(paramChosen1);
-                paramList.add(paramChosen2);
-                break;
-            case 3:
-                paramList.add(paramChosen1);
-                paramList.add(paramChosen2);
-                paramList.add(paramChosen3);
-                break;
-            default:
-                break;
-        }
+//                break;
+//            case 2:
+//                paramList.add(paramChosen1);
+//                paramList.add(paramChosen2);
+//                break;
+//            case 3:
+//                paramList.add(paramChosen1);
+//                paramList.add(paramChosen2);
+//                paramList.add(paramChosen3);
+//                break;
+//            default:
+//                break;
+//        }
 
         Object_Pre_Sale object_pre_sale = new Object_Pre_Sale(object_item_detail.getItem().getName(), object_item_detail.getItem().getId(),
                 paramList, num, detailPrice[0], Collections.singletonList(object_item_detail.getItem().getImg_list_1()).get(0));
@@ -269,20 +271,29 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity{
                 switch (object_item_detail.getParamList().size()){
                     case 1:
                         for (Object_Stock s : object_item_detail.getStockList()){
-                            if(s.getParam1().equals(paramChosen1))
-                                exist[0] = true;
+                            if(s.getParam1().equals(paramChosen1)){
+                                if(s.getCount() != 0)
+                                    exist[0] = true;
+
+                            }
                         }
                         break;
                     case 2:
                         for (Object_Stock s : object_item_detail.getStockList()){
-                            if(s.getParam1().equals(paramChosen1) && s.getParam2().equals(paramChosen2))
-                                exist[0] = true;
+                            if(s.getParam1().equals(paramChosen1) && s.getParam2().equals(paramChosen2)) {
+                                if(s.getCount() != 0)
+                                    exist[0] = true;
+
+                            }
                         }
                         break;
                     case 3:
                         for (Object_Stock s : object_item_detail.getStockList()){
-                            if(s.getParam1().equals(paramChosen1) && s.getParam2().equals(paramChosen2) && s.getParam3().equals(paramChosen3))
-                                exist[0] = true;
+                            if(s.getParam1().equals(paramChosen1) && s.getParam2().equals(paramChosen2) && s.getParam3().equals(paramChosen3)) {
+                                if(s.getCount() != 0)
+                                    exist[0] = true;
+
+                            }
                         }
                         break;
                     default:
@@ -339,14 +350,22 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity{
             }
         });
 
-        switch (object_item_detail.getParamList().size()){
-            case 1:
+//        switch (object_item_detail.getParamList().size()){
+//            case 1:
+                param2.setVisibility(View.GONE);
+                param3.setVisibility(View.GONE);
                 //初始化价格及库存
                 setCountAndPricefor1Param();
                 //设置属性名称
-                param1Name.setText(object_item_detail.getParamList().get(0));
+//                param1Name.setText(object_item_detail.getParamList().get(0));
+                param1Name.setText("颜色");
                 //绑定属性选择范围列表
-                param1.setLabels(object_item_detail.getRangeList().get(0));
+                List<String>temp = new ArrayList<>();
+                temp.add("黄色");
+                temp.add("绿色");
+                temp.add("红色");
+//                param1.setLabels(object_item_detail.getRangeList().get(0));
+                param1.setLabels(temp);
 
                 param1.setOnLabelSelectChangeListener(new LabelsView.OnLabelSelectChangeListener() {
                     @Override
@@ -358,80 +377,82 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity{
                         }
                     }
                 });
-                break;
-            case 2:
-                setCountAndPricefor2Param();
+//                break;
+//            case 2:
+//                param3.setVisibility(View.GONE);
 
-                param1Name.setText(object_item_detail.getParamList().get(0));
-                param2Name.setText(object_item_detail.getParamList().get(1));
-                param1.setLabels(object_item_detail.getRangeList().get(0));
-                param2.setLabels(object_item_detail.getRangeList().get(1));
+//                setCountAndPricefor2Param();
+//
+//                param1Name.setText(object_item_detail.getParamList().get(0));
+//                param2Name.setText(object_item_detail.getParamList().get(1));
+//                param1.setLabels(object_item_detail.getRangeList().get(0));
+//                param2.setLabels(object_item_detail.getRangeList().get(1));
+//
+//                param1.setOnLabelSelectChangeListener(new LabelsView.OnLabelSelectChangeListener() {
+//                    @Override
+//                    public void onLabelSelectChange(TextView label, Object data, boolean isSelect, int position) {
+//                        if(isSelect){
+//                            paramChosen1 = (String) data;
+//                            setCountAndPricefor2Param();
+//                        }
+//                    }
+//                });
+//
+//                param2.setOnLabelSelectChangeListener(new LabelsView.OnLabelSelectChangeListener() {
+//                    @Override
+//                    public void onLabelSelectChange(TextView label, Object data, boolean isSelect, int position) {
+//                        if(isSelect){
+//                            paramChosen2 = (String) data;
+//                            setCountAndPricefor2Param();
+//                        }
+//                    }
+//                });
+//                break;
+//            case 3:
+//                setCountAndPricefor3Param();
+//
+//                param1Name.setText(object_item_detail.getParamList().get(0));
+//                param2Name.setText(object_item_detail.getParamList().get(1));
+//                param3Name.setText(object_item_detail.getParamList().get(2));
+//                param1.setLabels(object_item_detail.getRangeList().get(0));
+//                param2.setLabels(object_item_detail.getRangeList().get(1));
+//                param3.setLabels(object_item_detail.getRangeList().get(2));
+//
+//                param1.setOnLabelSelectChangeListener(new LabelsView.OnLabelSelectChangeListener() {
+//                    @Override
+//                    public void onLabelSelectChange(TextView label, Object data, boolean isSelect, int position) {
+//                        if(isSelect){
+//                            paramChosen1 = (String) data;
+//                            setCountAndPricefor3Param();
+//                        }
+//                    }
+//                });
+//
+//                param2.setOnLabelSelectChangeListener(new LabelsView.OnLabelSelectChangeListener() {
+//                    @Override
+//                    public void onLabelSelectChange(TextView label, Object data, boolean isSelect, int position) {
+//                        if(isSelect){
+//                            paramChosen2 = (String) data;
+//                            setCountAndPricefor3Param();
+//                        }
+//                    }
+//                });
+//
+//                param3.setOnLabelSelectChangeListener(new LabelsView.OnLabelSelectChangeListener() {
+//                    @Override
+//                    public void onLabelSelectChange(TextView label, Object data, boolean isSelect, int position) {
+//                        if(isSelect){
+//                            paramChosen3 = (String) data;
+//                            setCountAndPricefor3Param();
+//                        }
+//                    }
+//                });
+//                break;
+//            default:
+//                break;
+//        }
 
-                param1.setOnLabelSelectChangeListener(new LabelsView.OnLabelSelectChangeListener() {
-                    @Override
-                    public void onLabelSelectChange(TextView label, Object data, boolean isSelect, int position) {
-                        if(isSelect){
-                            paramChosen1 = (String) data;
-                            setCountAndPricefor2Param();
-                        }
-                    }
-                });
-
-                param2.setOnLabelSelectChangeListener(new LabelsView.OnLabelSelectChangeListener() {
-                    @Override
-                    public void onLabelSelectChange(TextView label, Object data, boolean isSelect, int position) {
-                        if(isSelect){
-                            paramChosen2 = (String) data;
-                            setCountAndPricefor2Param();
-                        }
-                    }
-                });
-                break;
-            case 3:
-                setCountAndPricefor3Param();
-
-                param1Name.setText(object_item_detail.getParamList().get(0));
-                param2Name.setText(object_item_detail.getParamList().get(1));
-                param3Name.setText(object_item_detail.getParamList().get(2));
-                param1.setLabels(object_item_detail.getRangeList().get(0));
-                param2.setLabels(object_item_detail.getRangeList().get(1));
-                param3.setLabels(object_item_detail.getRangeList().get(2));
-
-                param1.setOnLabelSelectChangeListener(new LabelsView.OnLabelSelectChangeListener() {
-                    @Override
-                    public void onLabelSelectChange(TextView label, Object data, boolean isSelect, int position) {
-                        if(isSelect){
-                            paramChosen1 = (String) data;
-                            setCountAndPricefor3Param();
-                        }
-                    }
-                });
-
-                param2.setOnLabelSelectChangeListener(new LabelsView.OnLabelSelectChangeListener() {
-                    @Override
-                    public void onLabelSelectChange(TextView label, Object data, boolean isSelect, int position) {
-                        if(isSelect){
-                            paramChosen2 = (String) data;
-                            setCountAndPricefor3Param();
-                        }
-                    }
-                });
-
-                param3.setOnLabelSelectChangeListener(new LabelsView.OnLabelSelectChangeListener() {
-                    @Override
-                    public void onLabelSelectChange(TextView label, Object data, boolean isSelect, int position) {
-                        if(isSelect){
-                            paramChosen3 = (String) data;
-                            setCountAndPricefor3Param();
-                        }
-                    }
-                });
-                break;
-            default:
-                break;
-        }
-
-        number.setText(num);
+        number.setText(num + "");
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -441,7 +462,7 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity{
                 num ++;
                 if(num == stockNum[0])
                     add.setEnabled(false);
-                number.setText(num);
+                number.setText(num + "");
 
             }
         });
@@ -454,33 +475,34 @@ public class Activity_Market_GoodsDetail extends AppCompatActivity{
                     sub.setEnabled(false);
                 if(num == (stockNum[0] - 1))
                     add.setEnabled(true);
-                number.setText(num);
+                number.setText(num +"");
             }
         });
 
     }
 
     private void setCountAndPricefor1Param(){
-        for (Object_Stock s : object_item_detail.getStockList()){
-            if(s.getParam1().equals(paramChosen1)){
-                exist[0] = true;
-                stockNum[0] = s.getCount();
-                detailPrice[0] = s.getPrice();
-            }
-        }
-
-        if(!exist[0]){
-            stockNum[0] = 0;
-            detailPrice[0] = 0;
-        }
-
-        detailprice.setText(detailPrice[0] + "");
-        stock.setText(stockNum[0]);
-
-        if(num > stockNum[0])
-            Util_ToastUtils.showToast(Activity_Market_GoodsDetail.this, "库存不足，请修改购买数量！");
-        if(num < stockNum[0])
-            add.setEnabled(true);
+        stockNum[0] = 10;
+//        for (Object_Stock s : object_item_detail.getStockList()){
+//            if(s.getParam1().equals(paramChosen1)){
+//                exist[0] = true;
+//                stockNum[0] = s.getCount();
+//                detailPrice[0] = s.getPrice();
+//            }
+//        }
+//
+//        if(!exist[0]){
+//            stockNum[0] = 0;
+//            detailPrice[0] = 0;
+//        }
+//
+//        detailprice.setText(detailPrice[0] + "");
+//        stock.setText(stockNum[0]);
+//
+//        if(num > stockNum[0])
+//            Util_ToastUtils.showToast(Activity_Market_GoodsDetail.this, "库存不足，请修改购买数量！");
+//        if(num < stockNum[0])
+//            add.setEnabled(true);
     }
 
     private void setCountAndPricefor2Param(){

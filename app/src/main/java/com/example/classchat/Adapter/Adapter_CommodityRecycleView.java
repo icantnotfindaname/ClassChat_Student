@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.bumptech.glide.Glide;
 import com.example.classchat.Activity.Activity_Market_GoodsDetail;
 import com.example.classchat.Object.Object_Commodity;
@@ -19,6 +21,7 @@ import com.example.classchat.Object.Object_Main_Brief_Item;
 import com.example.classchat.R;
 import com.hch.thumbsuplib.ThumbsUpCountView;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Adapter_CommodityRecycleView extends RecyclerView.Adapter<Adapter_CommodityRecycleView.ViewHolder> {
@@ -58,28 +61,14 @@ public class Adapter_CommodityRecycleView extends RecyclerView.Adapter<Adapter_C
         final Object_Main_Brief_Item item = itemList.get(position);
         holder.itemName.setText(item.getName());
         holder.itemPrice.setText(Double.toString(item.getPrice()));
-        Glide.with(mContext).load(item.getImage()).override(720,(480 + (int)(Math.random() * 50))).into(holder.itemPic);
-//        //TODO 点赞设置
-
-//        //TODO 获取用户信息
-//        holder.thumbs.initData(item.getThumbsUpState("17690710589"),item.getThumbsUpCount());
-//        holder.thumbs.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                holder.thumbs.priseChange();
-//                if(item.getThumbsUpState("17690710589"))
-//                    item.removeFromThumbedList("17690710589");
-//                else
-//                 item.addToThumbedList("17690710589");
-//            }
-//        });
+        JSONArray list = JSON.parseArray(item.getImage());
+        Glide.with(mContext).load(String.valueOf(list.get(0))).override(720,(480 + (int)(Math.random() * 50))).into(holder.itemPic);
 
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, Activity_Market_GoodsDetail.class);
                 intent.putExtra("item", JSON.toJSONString(item));
-                System.out.println("这里是价格在rv适配器里："+ item.getPrice());
                 intent.putExtra("itemId",item.getId());
                 mContext.startActivity(intent);
             }

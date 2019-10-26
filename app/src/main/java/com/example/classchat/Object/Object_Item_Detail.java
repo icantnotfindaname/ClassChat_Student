@@ -8,6 +8,7 @@ public class Object_Item_Detail {
     private Object_Item item;
     private List<Object_Stock> stockList;
 
+
     public Object_Item_Detail(){}
 
     public Object_Item_Detail(List<String> paramList, List<List<String>> rangeList, Object_Item item, List<Object_Stock> stockList) {
@@ -15,6 +16,7 @@ public class Object_Item_Detail {
         this.rangeList = rangeList;
         this.item = item;
         this.stockList = stockList;
+
     }
 
     public List<String> getParamList() {
@@ -48,4 +50,7 @@ public class Object_Item_Detail {
     public void setStockList(List<Object_Stock> stockList) {
         this.stockList = stockList;
     }
+
+
+
 }

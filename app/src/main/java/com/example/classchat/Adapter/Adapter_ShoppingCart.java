@@ -43,9 +43,7 @@ public class Adapter_ShoppingCart extends RecyclerView.Adapter<RecyclerView.View
     List<JSONObject> list ;
     SharedPreferences.Editor editor ;
 
-    public Adapter_ShoppingCart(){
-
-    }
+    public Adapter_ShoppingCart(){}
 
     public Adapter_ShoppingCart(Context context, final List<Object_Pre_Sale> datas, TextView tvShopcartTotal, CheckBox checkboxAll,
                                 CheckBox cb_all) {
@@ -239,11 +237,11 @@ public class Adapter_ShoppingCart extends RecyclerView.Adapter<RecyclerView.View
             //转换
             super(itemView);
 
-            cbGov = (CheckBox) itemView.findViewById(R.id.cb_gov);
-            ivGov = (ImageView) itemView.findViewById(R.id.iv_gov);
-            tvDescGov = (TextView) itemView.findViewById(R.id.tv_desc_gov);
-            tvPriceGov = (TextView) itemView.findViewById(R.id.tv_price_gov);
-            count = (TextView)itemView.findViewById(R.id.item_count);
+            cbGov = itemView.findViewById(R.id.cb_gov);
+            ivGov = itemView.findViewById(R.id.iv_gov);
+            tvDescGov = itemView.findViewById(R.id.tv_desc_gov);
+            tvPriceGov = itemView.findViewById(R.id.tv_price_gov);
+            count = itemView.findViewById(R.id.item_count);
             count_add = itemView.findViewById(R.id.count_add);
             count_sub = itemView.findViewById(R.id.count_sub);
             check_size = itemView.findViewById(R.id.check_size);
